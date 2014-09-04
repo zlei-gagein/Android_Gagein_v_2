@@ -1175,11 +1175,19 @@ public class CommonUtil {
 				if (!TextUtils.isEmpty(Constant.ANYWORDS)) {
 					searchKeywords = searchKeywords + " " + "(" + Constant.ANYWORDS + ")";
 				} 
-				if (!TextUtils.isEmpty(Constant.NONEWORDS)) {
-					String noneWords = Constant.NONEWORDS;
-					noneWords.replace(" ", "-");//TODO 如果遇到两个空格怎么办
-					searchKeywords = searchKeywords + " " + "-" + noneWords;
+				
+				if (!TextUtils.isEmpty(Constant.NONEWORDS.trim())) {
+					String noneWords = Constant.NONEWORDS.trim();
+					String[] result = noneWords.split("\\s+");
+					for (int i = 0; i < result.length; i++) {
+						String word = result[i];
+						searchKeywords = searchKeywords + " " + "-" + word;
+					}
+					
+//					noneWords.replace(" ", " -");//TODO 如果遇到两个空格怎么办
+//					searchKeywords = searchKeywords + " " + "-" + noneWords;
 				}
+				Log.v("silen", "keyword = " + searchKeywords);
 				jsonObject.put("event_search_keywords", searchKeywords);
 				
 				for (int i = 0; i < mDateRanges.size(); i ++) {
