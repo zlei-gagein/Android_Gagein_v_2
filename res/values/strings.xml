@@ -121,6 +121,7 @@
     <string name="none_of_these_words">None of these words</string>
     <string name="enter_search_name">Enter a name for this search.</string>
     <string name="enter_pending_website">Enter the website for this company.</string>
+    <string name="enter_pending_name_and_website">Enter the name and the website for this company.</string>
     <string name="show_details">Show Details</string>
     <string name="hide_details">Hide Details</string>
     <string name="no_results">No Results</string>
@@ -385,6 +386,7 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="your_new_company">Your New Company</string>
+    <string name="no_linked_companies">No Linked Companies</string>
     <string name="no_followed_companies">No Followed Companies</string>
     <string name="no_followed_companies_pt">You can find companies to follow by tapping \"Edit,\" or building a company list in search.</string>
     <string name="sort">Sort</string>

@@ -187,16 +187,15 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 			adapter.notifyDataSetChanged();
 			setRightButton(edit ? R.string.done : R.string.edit);
 			if (edit) {
-//				listView.addHeaderView(headSelectAll);
 				setHeadSelectAllHeight(headSelectAllHeight);
 			} else {
-//				listView.removeHeaderView(headSelectAll);
 				setHeadSelectAllHeight(1);
 			}
 			
 			if (!edit) deleteBtn.setVisibility(View.GONE);
 			
 		} else if (v == deleteBtn) {
+			
 			final DeleteCompanyDialog dialog = new DeleteCompanyDialog(mContext);
 			dialog.showDialog(new OnClickListener() {
 				

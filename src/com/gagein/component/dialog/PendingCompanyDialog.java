@@ -117,6 +117,8 @@ public class PendingCompanyDialog implements OnClickListener {
 		} else if (v == save) {
 			final String name = nameEdt.getText().toString().trim();
 			final String website = websiteEdt.getText().toString().trim();
+			
+			if (TextUtils.isEmpty(name) || TextUtils.isEmpty(website)) return;
 			if (TextUtils.isEmpty(name)) {
 				CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_name));
 				return;
@@ -125,8 +127,6 @@ public class PendingCompanyDialog implements OnClickListener {
 				CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_website));
 				return;
 			}
-			
-			dismissDialog();
 			
 			Pattern pattern1 = Pattern.compile(Utils.regular_url1);
 			Matcher matcher1 = pattern1.matcher(website);
@@ -138,8 +138,11 @@ public class PendingCompanyDialog implements OnClickListener {
 	
 					@Override
 					public void onResponse(JSONObject jsonObject) {
+						
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							dismissDialog();
 							
 							CommonUtil.showShortToast(mContext.getResources().getString(R.string.website_added));
 							// sent a broadcast to finish activity and refresh website
@@ -149,9 +152,18 @@ public class PendingCompanyDialog implements OnClickListener {
 							
 						} else if (parser.messageCode() == MessageCode.CompanyWebConnectFailed){
 							
-							VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
+							final VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
 							dialog.setCancelable(false);
-							dialog.showDialog(website);
+							dialog.showDialog(website, new OnClickListener() {
+								
+								@Override
+								public void onClick(View arg0) {
+									
+									dismissDialog();
+									
+									dialog.dismissDialog();
+								}
+							});
 							
 				            
 				        } else if (parser.messageCode() == MessageCode.CompanyWebConnectTimeout) {
@@ -170,6 +182,8 @@ public class PendingCompanyDialog implements OnClickListener {
 
 										@Override
 										public void onResponse(JSONObject jsonObject) {
+											
+											dismissDialog();
 											
 											CommonUtil.dissmissLoadingDialog();
 											APIParser parser = new APIParser(jsonObject);

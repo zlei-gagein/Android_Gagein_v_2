@@ -15,7 +15,7 @@ import com.gagein.util.CommonUtil;
  * 
  * @author silen
  */
-public class VerifingWebsiteConnectTimeOutDialog implements OnClickListener {
+public class VerifingWebsiteConnectTimeOutDialog {
 	private Context mContext;
 	private Dialog dialog;
 	private View view;
@@ -35,26 +35,19 @@ public class VerifingWebsiteConnectTimeOutDialog implements OnClickListener {
 		view = inflater.inflate(R.layout.dialog_verifingwebsite_connect_timeout, null);
 		okay = (Button) view.findViewById(R.id.okay);
 		verifyingWebsite = (TextView) view.findViewById(R.id.verifyingWebsite);
-		okay.setOnClickListener(this);
 		dialog.setContentView(view);
 		
 	}
 
-	public void showDialog(String website) {
+	public void showDialog(String website, OnClickListener clickListener) {
 		
+		okay.setOnClickListener(clickListener);
 		verifyingWebsite.setText(String.format(mContext.getResources().getString(R.string.verifying_website), website));
 		CommonUtil.setDialogWith(dialog);
 		dialog.show();
 		
 	}
 
-	@Override
-	public void onClick(View v) {
-		if (v == okay) {
-			dismissDialog();
-		}
-	}
-	
 	public void dismissDialog() {
 		dialog.dismiss();
 	}

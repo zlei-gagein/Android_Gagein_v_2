@@ -18,11 +18,9 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.gagein.R;
 import com.gagein.adapter.search.FilterAdapter;
-import com.gagein.model.SavedSearch;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.main.BaseActivity;
-import com.gagein.ui.search.people.filter.PeopleFilterCompaniesActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -33,8 +31,7 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 	private EditText edit;
 	private FilterAdapter adapter;
 	private Filters mFilters;
-	private List<FilterItem> companyTypes;
-	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
+	private List<FilterItem> companyTypes = new ArrayList<FilterItem>();
 	private LinearLayout savedSearchLayout;
 	
 	@Override
@@ -94,6 +91,15 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 		CommonUtil.setListViewHeight(listView);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
+		for (int i = 0; i < companyTypes.size(); i ++) {
+			if (companyTypes.get(i).getValue().equalsIgnoreCase("Specific Companies")) {
+				if (companyTypes.get(i).getChecked()) {
+					savedSearchLayout.setVisibility(View.VISIBLE);
+					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
+				}
+			}
+		}
 		
 	}
 	

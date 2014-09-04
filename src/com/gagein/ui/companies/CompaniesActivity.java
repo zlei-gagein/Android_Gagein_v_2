@@ -284,8 +284,9 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	private void setNoCompaniesPromt() {
 		
 		if (isSystemGroup) {
-			if (isLinkedCompanies) {//TODO
-				
+			if (isLinkedCompanies) {
+				noCompaniesTitle.setText(R.string.no_linked_companies);
+				noCompaniesPt.setText("");
 			} else {
 				noCompaniesTitle.setText(R.string.no_followed_companies);
 				noCompaniesPt.setText(R.string.no_followed_companies_pt);
@@ -593,13 +594,17 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	 * @param companiesIds companies's id
 	 */
 	private void removeFromGroup(ArrayList<String> companiesIds) {
+		
 		showLoadingDialog();
 		mApiHttp.removeCompanies(groupId, companiesIds, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
+					nextPage = "";
 					getCompaniesOfGroup(false, false);
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_REMOVE_COMPANIES);
@@ -615,12 +620,14 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 				showConnectionError();
 			}
 		});
+		
 	}
 
 	/**
 	 * add companies to group
 	 */
 	private void addCompaniesToGroup() {
+		
 		ArrayList<String> companiesId = new ArrayList<String>();
 		for (int i = 0; i < companies.size(); i ++) {
 			if (companies.get(i).select) 

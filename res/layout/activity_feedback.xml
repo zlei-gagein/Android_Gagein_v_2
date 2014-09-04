@@ -101,7 +101,7 @@
                             android:text="@string/u_minor"
                             android:checked="true"
                             android:textColor="@drawable/text_yellow_white_color"
-                            android:textSize="16sp" />
+                            android:textSize="13sp" />
 
                         <RadioButton
                             android:id="@+id/majorBtn"
@@ -115,7 +115,7 @@
                             android:paddingTop="8dp"
                             android:text="@string/u_major"
                             android:textColor="@drawable/text_yellow_white_color"
-                            android:textSize="16sp" />
+                            android:textSize="13sp" />
                         
                         <RadioButton
                             android:id="@+id/criticalBtn"
@@ -129,7 +129,7 @@
                             android:paddingTop="8dp"
                             android:text="@string/u_critical"
                             android:textColor="@drawable/text_yellow_white_color"
-                            android:textSize="16sp" />
+                            android:textSize="13sp" />
                     </RadioGroup>
                 </RelativeLayout>
             </LinearLayout>

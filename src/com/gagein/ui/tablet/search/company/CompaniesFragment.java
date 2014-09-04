@@ -22,7 +22,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.gagein.R;
 import com.gagein.adapter.search.FilterAdapter;
 import com.gagein.http.APIHttp;
-import com.gagein.model.SavedSearch;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
@@ -36,8 +35,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private EditText edit;
 	private FilterAdapter adapter;
 	private Filters mFilters;
-	private List<FilterItem> companyTypes;
-	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
+	private List<FilterItem> companyTypes = new ArrayList<FilterItem>();
 	private LinearLayout savedSearchLayout;
 	private OnCompaniesFinish onCompaniesFinish;
 	private OnSearchFromCompanies onSearchFromCompanies;
@@ -97,19 +95,27 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		listView = (ListView) view.findViewById(R.id.listView);
 		edit = (EditText) view.findViewById(R.id.edit);
 		
-		edit.setOnEditorActionListener(new OnEditorActionListener() {//TODO
-		
+		edit.setOnEditorActionListener(new OnEditorActionListener() {
+			
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {//TODO COMPANY_SEARCH_KEYWORDS
+				
+				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
+					
 					String text = textView.getText().toString();
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					
 					if (TextUtils.isEmpty(text)) {
 						return false;
 					} else {
-						Constant.COMPANY_SEARCH_KEYWORDS = text;
-						onSearchFromCompanies.onSearchFromCompanies();
+						if (text.trim().length() < 2) {
+							showShortToast("Keywords must be at least two characters long.");
+							return false;
+						} else {
+							Constant.COMPANY_SEARCH_KEYWORDS = text;
+						}
 					}
+					
 				}
 				return false;
 			}
@@ -129,6 +135,15 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		CommonUtil.setListViewHeight(listView);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
+		for (int i = 0; i < companyTypes.size(); i ++) {
+			if (companyTypes.get(i).getValue().equalsIgnoreCase("Specific Companies")) {
+				if (companyTypes.get(i).getChecked()) {
+					savedSearchLayout.setVisibility(View.VISIBLE);
+					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
+				}
+			}
+		}
 		
 	}
 	

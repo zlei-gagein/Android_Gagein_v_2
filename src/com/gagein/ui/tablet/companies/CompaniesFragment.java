@@ -44,7 +44,6 @@ import com.gagein.model.Group;
 import com.gagein.ui.BaseFragment;
 import com.gagein.ui.companies.AddCompaniesFromFollowedCompaniesActivity;
 import com.gagein.ui.companies.AddToGroupActivity;
-import com.gagein.ui.companies.CompaniesFilterActivity;
 import com.gagein.ui.companies.ImportCompaniesActivity;
 import com.gagein.ui.companies.ProfileHelpActivity;
 import com.gagein.ui.companies.SuggestedCompaniesActivity;
@@ -153,8 +152,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	protected void initData() {
 		super.initData();
 		
-		//TODO
-//		group = (Group) getIntent().getSerializableExtra(Constant.GROUP);
 		groupId = group.getMogid();
 		groupName = group.getName();
 		isSystemGroup = group.getIsSsystem();
@@ -256,9 +253,11 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	}
 	
 	private void setNoCompaniesPromt() {
+		
 		if (isSystemGroup) {
-			if (isLinkedCompanies) {//TODO
-				
+			if (isLinkedCompanies) {
+				noCompaniesTitle.setText(R.string.no_linked_companies);
+				noCompaniesPt.setText("");
 			} else {
 				noCompaniesTitle.setText(R.string.no_followed_companies);
 				noCompaniesPt.setText(R.string.no_followed_companies_pt);
@@ -267,6 +266,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			noCompaniesTitle.setText(R.string.no_companies);
 			noCompaniesPt.setText(R.string.no_companies_pt);
 		}
+		
 	}
 	
 	/**
@@ -537,17 +537,22 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	 * @param companiesIds companies's id
 	 */
 	private void removeFromGroup(ArrayList<String> companiesIds) {
+		
 		CommonUtil.showLoadingDialog(mContext);
 		mApiHttp.removeCompanies(groupId, companiesIds, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
+					nextPage = "";
 					getCompaniesOfGroup(false, false);
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_REMOVE_COMPANIES);
 					mContext.sendBroadcast(intent);
+					
 				} else {
 					alertMessageForParser(parser);
 				}

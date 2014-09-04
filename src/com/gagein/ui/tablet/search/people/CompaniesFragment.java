@@ -44,7 +44,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private EditText edit;
 	private FilterAdapter adapter;
 	private Filters mFilters;
-	private List<FilterItem> companyTypes;
+	private List<FilterItem> companyTypes = new ArrayList<FilterItem>();
 	private int PAGENUM = 1;
 	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
 	private PeopleFilterCompaniesAdapter companiesAdapter;
@@ -151,6 +151,17 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
 		
+		for (int i = 0; i < companyTypes.size(); i ++) {
+			if (companyTypes.get(i).getValue().equalsIgnoreCase("Specific Companies")) {
+				if (companyTypes.get(i).getChecked()) {
+					specificLayout.setVisibility(View.VISIBLE);
+					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
+				}
+			}
+		}
+		
+		getSavedCompany(false);
+		
 		getSavedCompany(false);
 	}
 	
@@ -236,17 +247,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					savedSearchLayout.setVisibility(View.GONE);
 					specificLayout.setVisibility(View.VISIBLE);
 					setCompanyTypesSelected(position);
-					
-//				} else if (companyTypes.get(position).getValue().equalsIgnoreCase("All Companies")) {
-//					
-//					savedSearchLayout.setVisibility(View.GONE);
-//					specificLayout.setVisibility(View.GONE);
-//					for (int i = 0; i < companyTypes.size(); i ++) {
-//						companyTypes.get(i).setChecked(false);
-//					}
-//					companyTypes.get(position).setChecked(true);
-//					adapter.notifyDataSetChanged();
-//					return;
 					
 				} else {
 					

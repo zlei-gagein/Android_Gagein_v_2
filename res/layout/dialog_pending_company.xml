@@ -27,7 +27,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="@string/enter_pending_website"
+        android:text="@string/enter_pending_name_and_website"
         android:textColor="@color/text_dark"
         android:textSize="16sp" />
     

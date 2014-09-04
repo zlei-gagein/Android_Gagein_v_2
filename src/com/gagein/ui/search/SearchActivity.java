@@ -557,7 +557,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		
 		final String name = nameWebsite.get(0);
 		final String website = nameWebsite.get(1);
-		dialog.dismissDialog();
+		
 		
 		final APIHttp mApiHttp = new APIHttp(mContext);
 		Pattern pattern1 = Pattern.compile(Utils.regular_url1);
@@ -579,6 +579,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					
 					if (parser.isOK()) {
 						
+						dialog.dismissDialog();
+						
 						NewCompanySubmittedPromtDialog dialog = new NewCompanySubmittedPromtDialog(mContext);
 						dialog.setCancelable(false);
 						dialog.showDialog(name, website);
@@ -588,6 +590,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						mContext.sendBroadcast(intent);
 						
 					} else if (status == MessageCode.CompanyBuzExists) {
+						
+						dialog.dismissDialog();
 						
 						noResultsLayout.setVisibility(View.GONE);
 						companyFoundLayout.setVisibility(View.VISIBLE);
@@ -683,9 +687,16 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						
 					} else if (parser.messageCode() == MessageCode.CompanyWebConnectFailed){
 						
-						VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
+						final VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
 						dialog.setCancelable(false);
-						dialog.showDialog(website);
+						dialog.showDialog(website, new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								
+								dialog.dismissDialog();
+							}
+						});
 						
 			            
 			        } else if (parser.messageCode() == MessageCode.CompanyWebConnectTimeout) {
@@ -696,6 +707,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 							
 							@Override
 							public void onClick(View arg0) {
+								
 								dialog.dismissDialog();
 								
 								showLoadingDialog();
