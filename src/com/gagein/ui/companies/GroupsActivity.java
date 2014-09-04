@@ -55,18 +55,38 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void handleNotifications(Context aContext, Intent intent) {
 		super.handleNotifications(aContext, intent);
+		
 		String actionName = intent.getAction();
-		if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES) || actionName.equals(Constant.BROADCAST_ADD_COMPANYGROUP) || 
+		if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES) || 
+				
 				actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY) || 
 				actionName.equals(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES) || actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)
 				) {
 			getAllCompanyGroups(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
+			
 			getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
+			
 			getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			
 			getPendingCompany();
+			
+		} else if (actionName.equals(Constant.BROADCAST_ADD_COMPANYGROUP)) {
+			
+			String groupId = intent.getStringExtra(Constant.GROUPID);
+			String groupName = intent.getStringExtra(Constant.GROUPNAME);
+			Intent intentTo = new Intent();
+			intentTo.putExtra(Constant.GROUPID, groupId);
+			intentTo.putExtra(Constant.GROUPNAME, groupName);
+			intentTo.setClass(mContext, AddCompaniesFromFollowedCompaniesActivity.class);
+			startActivity(intentTo);
+			
+			getAllCompanyGroups(false);
 		}
 	}
 	
@@ -243,6 +263,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		super.onClick(v);
 		
 		if (v == leftImageBtn) {
+			
 			isEdit = false;
 			setRightButton(isEdit ? R.string.done : R.string.u_edit);
 			adapter.setEdit(isEdit);
@@ -250,7 +271,9 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			
 			NewGroupDialog dialog = new NewGroupDialog(mContext);
 			dialog.showDialog();
+			
 		} else if (v == rightBtn) {
+			
 			isEdit = !isEdit;
 			listView.setPullRefreshEnable(isEdit ? false : true);
 			
@@ -258,8 +281,11 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			setLeftImageButtonVisible(isEdit ? View.GONE : View.VISIBLE);
 			adapter.setEdit(isEdit);
 			adapter.notifyDataSetChanged();
+			
 		} else if (v == pending) {
+			
 			startActivitySimple(PendingCompaniesActivity.class);
+			
 		}
 		
 	}

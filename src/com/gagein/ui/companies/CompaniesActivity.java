@@ -504,7 +504,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		} else if (v == addCompaniesBtn) {
 			
 			Intent intent = new Intent();
-			intent.putExtra(Constant.GROUP, group);
+			intent.putExtra(Constant.GROUPID, group.getMogid());
+			intent.putExtra(Constant.GROUPNAME, group.getName());
 			intent.setClass(mContext, AddCompaniesFromFollowedCompaniesActivity.class);
 			startActivity(intent);
 			

@@ -50,6 +50,7 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
 		try {
 			onJobTitleFinish = (OnJobTitleFinish) activity;
 		} catch (ClassCastException e) {
@@ -60,22 +61,25 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement OnSearchFromJobTitle");
 		}
+		
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
 		view = inflater.inflate(R.layout.activity_search_company_filter_headquarters, container, false);
 		mContext = getActivity();
 		mApiHttp = new APIHttp(mContext);
 		
 		doInit();
 		return view;
+		
 	}
 	
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setTitle(R.string.job_title);
 		setLeftImageButton(R.drawable.back_arrow);
 		
@@ -86,7 +90,10 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 		
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
+				
+				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					
+					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					if (TextUtils.isEmpty(textView.getText().toString())) {
 						return false;
 					}
@@ -97,13 +104,14 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 					jobTitle.setName(textView.getText().toString());
 					jobTitle.setChecked(true);
 					mJobTitles.add(jobTitle);
-					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					adapter.notifyDataSetChanged();
 					CommonUtil.setListViewHeight(listView);
 					addEdt.setText("");
 					addEdt.requestFocus();
 					onSearchFromJobTitle.onSearchFromJobTitle();
 					return true;
 				}
+				
 				return false;
 			}
 		});

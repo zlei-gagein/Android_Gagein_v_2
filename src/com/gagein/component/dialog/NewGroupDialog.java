@@ -85,7 +85,7 @@ public class NewGroupDialog implements OnClickListener {
 		if (v == cancel) {
 			dismissDialog();
 		} else if (v == save) {
-			String groupName = nameEdt.getText().toString().trim();
+			final String groupName = nameEdt.getText().toString().trim();
 			if (TextUtils.isEmpty(groupName)) return;
 			dismissDialog();
 			
@@ -105,6 +105,7 @@ public class NewGroupDialog implements OnClickListener {
 						String groupId = jsonObject.optString("mogid");
 						Intent intent = new Intent();
 						intent.putExtra(Constant.GROUPID, groupId);
+						intent.putExtra(Constant.GROUPNAME, groupName);
 						intent.setAction(Constant.BROADCAST_ADD_COMPANYGROUP);
 						mContext.sendBroadcast(intent);
 						
@@ -114,7 +115,7 @@ public class NewGroupDialog implements OnClickListener {
 						if (MessageCode.MemberHasAlreadyOwnedGroup == Integer.parseInt(msgCode)) {
 							CommonUtil.showPromotDialog(mContext, R.string.group_already);
 						}
-//						CommonUtil.alertMessageForParser(parser);
+						
 					}
 				}
 			}, new Response.ErrorListener() {

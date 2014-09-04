@@ -18,15 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.adapter.CompaniesNoSectionIndexAdapter;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
-import com.gagein.model.Group;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -40,8 +39,8 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 	private View headSelectAll;
 	private ImageView selectAllBtn;
 	private CompaniesNoSectionIndexAdapter adapter;
-	private Group group;
 	private String groupName;
+	private String groupId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,9 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 	protected void initData() {
 		super.initData();
 		
-		group = (Group) getIntent().getSerializableExtra(Constant.GROUP);
-		groupName = group.getName();
+		groupId = getIntent().getStringExtra(Constant.GROUPID);
+		groupName = getIntent().getStringExtra(Constant.GROUPNAME);
+		
 		String toGroup = mContext.getResources().getString(R.string.add_companies_to_group);
 		addCompaniesTo.setText(String.format(toGroup, groupName));
 		
@@ -82,15 +82,18 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 	@Override
 	protected void setData() {
 		super.setData();
+		
 		adapter = new CompaniesNoSectionIndexAdapter(mContext, companies);
 		adapter.setEdit(true);
 		if (companies.size() > 0) listView.addHeaderView(headSelectAll);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	private void getFollowedCompanies() {
+		
 		showLoadingDialog();
 		companies = new ArrayList<Company>();
 		mApiHttp.getFollowedCompanies(0, Constant.INDUSTRYID, APIHttpMetadata.kGGExceptPendingFollowCompanies, true, new Listener<JSONObject>() {
@@ -160,7 +163,7 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 				finish();
 				return;
 			}
-			addCompaniesToGroup(group.getMogid(), companiesId);
+			addCompaniesToGroup(groupId, companiesId);
 			
 		}
 	}
@@ -175,11 +178,13 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 				Log.v("silen", "jsonObject = " + jsonObject.toString());
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					//sent broadcast to groups activity
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES);
 					sendBroadcast(intent);
 					finish();
+					
 				} else {
 				}
 				dismissLoadingDialog();

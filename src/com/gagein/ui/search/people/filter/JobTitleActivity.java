@@ -1,5 +1,6 @@
 package com.gagein.ui.search.people.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 	private Filters mFilters;
 	private EditText addEdt;
 	private ListView listView;
-	private List<JobTitle> mJobTitles;
+	private List<JobTitle> mJobTitles = new ArrayList<JobTitle>();
 	private JobTitleAdapter adapter;
 	
 	@Override
@@ -51,10 +52,12 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 		
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					if (TextUtils.isEmpty(textView.getText().toString())) {
-						return false;
-					}
+				
+				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					
+					CommonUtil.hideSoftKeyBoard(mContext, JobTitleActivity.this);
+					if (TextUtils.isEmpty(textView.getText().toString())) return false;
+					
 					for (int i = 0; i < mJobTitles.size(); i ++) {
 						mJobTitles.get(i).setChecked(false);
 					}
@@ -62,13 +65,15 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 					jobTitle.setName(textView.getText().toString());
 					jobTitle.setChecked(true);
 					mJobTitles.add(jobTitle);
-					CommonUtil.hideSoftKeyBoard(mContext, JobTitleActivity.this);
+					adapter.notifyDataSetChanged();
+					showShortToast("00000000000");
 					CommonUtil.setListViewHeight(listView);
 					addEdt.setText("");
 					addEdt.requestFocus();
 					return true;
 				}
 				return false;
+				
 			}
 		});
 	}
@@ -76,6 +81,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 	@Override
 	protected void initData() {
 		super.initData();
+		
 		mFilters = Constant.MFILTERS;
 		mJobTitles = mFilters.getJobTitles();
 		
@@ -84,6 +90,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 		CommonUtil.setListViewHeight(listView);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override
@@ -95,15 +102,18 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
 			finish();
 			CommonUtil.hideSoftKeyBoard(mContext, JobTitleActivity.this);
 			addEdt.setText("");
 		}
+		
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		
 		Boolean checked = mJobTitles.get(position).getChecked();
 		if (checked) {
 			mJobTitles.get(position).setChecked(!checked);
@@ -114,6 +124,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 			mJobTitles.get(position).setChecked(true);//set checked item
 		}
 		adapter.notifyDataSetChanged();
+		
 	}
 
 }

@@ -455,12 +455,17 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			}
 			
 		} else if (v == addCompaniesBtn) {
+			
 			Intent intent = new Intent();
-			intent.putExtra(Constant.GROUP, group);
+			intent.putExtra(Constant.GROUPID, group.getMogid());
+			intent.putExtra(Constant.GROUPNAME, group.getName());
 			intent.setClass(mContext, AddCompaniesFromFollowedCompaniesActivity.class);
 			startActivity(intent);
+			
 		} else if (v == addToBtn) {
+			
 			addCompaniesToGroup();
+			
 		} else if (v == removeBtn) {
 			
 			final RemoveFromGroupDialog dialog = new RemoveFromGroupDialog(mContext);
@@ -476,11 +481,17 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			});
 			
 		} else if (v == unfollowBtn) {
+			
 			showUnfollowDialog();
+			
 		} else if (v == addToBtnLinkedCompanies) {
+			
 			addCompaniesToGroup();
+			
 		} else if (v == unfollowBtnLinkedCompanies) {
+			
 			showUnfollowDialog();
+			
 		}
 	}
 
