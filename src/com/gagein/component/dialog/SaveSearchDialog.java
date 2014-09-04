@@ -56,6 +56,22 @@ public class SaveSearchDialog implements OnClickListener {
 		cancel = (Button) view.findViewById(R.id.cancel);
 		save = (Button) view.findViewById(R.id.save);
 		
+		// bug fix: 461378# saved search时,name长度限制在50个字符，如果第50个字符时某个单词的中间字符的时候，最后的整个单词都截取掉 -start
+		if (queryInfoResult.length() > 50) {
+			String lastStr = queryInfoResult.substring(queryInfoResult.length() - 1);
+			if (lastStr.equalsIgnoreCase(";") || lastStr.equalsIgnoreCase(",")) {
+				queryInfoResult = queryInfoResult.substring(0, queryInfoResult.length() - 1);
+			}
+			
+			while (queryInfoResult.length() > 50) {
+				int index1 = queryInfoResult.lastIndexOf(";");
+				int index2 = queryInfoResult.lastIndexOf(",");
+				int maxIndex = (index1 > index2 ? index1 : index2);
+				queryInfoResult = queryInfoResult.substring(0, maxIndex);
+			}
+		}
+		// bug fix: 461378# saved search时,name长度限制在50个字符，如果第50个字符时某个单词的中间字符的时候，最后的整个单词都截取掉 -end
+		
 		//设置QueryInfoResult
 		websiteEdt.setText(queryInfoResult);
 		setSaveButtonColor(mContext, queryInfoResult);
