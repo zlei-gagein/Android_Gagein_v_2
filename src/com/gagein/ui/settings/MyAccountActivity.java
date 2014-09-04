@@ -34,6 +34,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	private LinearLayout clearJobTitle;
 	private LinearLayout layout;
 	private UserProfile profile;
+	private UserProfile temporaryProfile;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,21 +172,35 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 				showShortToast(stringFromResID(R.string.invalid_email_format));
 				return false;
 			}
-			if (v == nameEdt) {
+			
+			boolean canSave = false;
+			if (v == nameEdt && !name.isEmpty()) {
 				clearName.setVisibility(View.GONE);
 				nameEdt.clearFocus();
-			} else if (v == emailEdt) {
+				canSave = true;
+			} else if (v == emailEdt && !email.isEmpty()) {
 				clearEmail.setVisibility(View.GONE);
 				emailEdt.clearFocus();
-			} else if (v == companyEdt) {
+				canSave = true;
+			} else if (v == companyEdt && !company.isEmpty()) {
 				clearCompany.setVisibility(View.GONE);
 				companyEdt.clearFocus();
-			} else if (v == jobTitleEdt) {
+				canSave = true;
+			} else if (v == jobTitleEdt && !jobTitle.isEmpty()) {
 				clearJobTitle.setVisibility(View.GONE);
 				jobTitleEdt.clearFocus();
+				canSave = true;
 			}
-			hideSoftKey();
-			saveProfile(name, email, company, jobTitle);
+			
+			// 468494# setting-my account,name, company, job title为空的时候不允许保存
+			if (canSave) {
+				hideSoftKey();
+				saveProfile(name.isEmpty() ? profile.firstName : name
+						, email.isEmpty() ? profile.email : email
+								, company.isEmpty() ? profile.orgName : company
+										, jobTitle.isEmpty() ? profile.orgTitle : jobTitle);
+			}
+			
 			return true;
 		}
 
@@ -194,6 +209,12 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	
 	private void saveProfile(String name, String email, String company, String jobTitle) {
 		showLoadingDialog();
+		temporaryProfile = new UserProfile();
+		temporaryProfile.firstName = name;
+		temporaryProfile.email = email;
+		temporaryProfile.orgName = company;
+		temporaryProfile.orgTitle = jobTitle;
+		
 		mApiHttp.changeProfile(name, email, company, jobTitle,
 				new Listener<JSONObject>() {
 
@@ -204,6 +225,17 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 						if (parser.isOK()) {
 //							profile.fullName() = name;
 							showShortToast(mContext.getResources().getString(R.string.Saved));
+							
+							profile.firstName = temporaryProfile.firstName;
+							profile.email = temporaryProfile.email;
+							profile.orgName = temporaryProfile.orgName;
+							profile.orgTitle = temporaryProfile.orgTitle;
+							
+							nameEdt.setText(temporaryProfile.firstName);
+							emailEdt.setText(temporaryProfile.email);
+							companyEdt.setText(temporaryProfile.orgName);
+							jobTitleEdt.setText(temporaryProfile.orgTitle);
+							
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
 							if (msg != null && msg.length() > 0) {
