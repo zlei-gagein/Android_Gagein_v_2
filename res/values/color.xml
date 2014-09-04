@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="yellow">#FF8C44</color>
+    <color name="yellow_bright">#FECA22</color>
+    <color name="yellow_shallow">#FFFBEB</color>
+    
+    <color name="c424242">#424242</color>
+    <color name="cf3f3ef">#f3f3ef</color>
+    <color name="cd2d2d2">#d2d2d2</color>
+    <color name="c777777">#777777</color>
+    <color name="c393939">#393939</color>
+    <color name="c575757">#575757</color>
+    <color name="c8d8d8d">#8d8d8d</color>
+    <color name="cfa9433">#fa9433</color>
+    <color name="cc24c26">#c24c26</color>
+    <color name="c999999">#999999</color>
+    <color name="dialog_bg">#F8F8F8</color>
+    <color name="location_bg">#FAFAFA</color>
+    <color name="line_bg">#ECECEC</color>
+    <color name="line_dialog">#A8ABAB</color>
+    <color name="C8C8C8">#C8C8C8</color>
+    <color name="C0C0C0">#C0C0C0</color>
+    <color name="C7C7C7">#C7C7C7</color>
+    
+    <color name="c8f8f8f">#8F8F8F</color>
+    <color name="blue">#0000ff</color>
+    <color name="blue_dialog">#117BFB</color>
+    <color name="cc4c4cd">#C4C4CD</color>
+    <color name="text_weak">#969696</color>
+    <color name="text_dark">#343434</color>
+    <color name="orange_bar">#fa9433</color>
+    <color name="gray_bg">#eaeaea</color>
+    <color name="black_menubg">#2b2b2b</color>
+    <color name="red_dark">#AA1E1E</color>
+    <color name="orange">#DA9432</color>
+    <color name="orange_dark">#E06125</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_transparent">#90FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#666666</color>
+    <color name="gray_transparent">#99666666</color>
+    <color name="gray_shallow">#999999</color>
+    <color name="gray_dark">#333333</color>
+    <color name="gray_iron">#393939</color>
+    <color name="gray_weak">#CCCCCC</color>
+    <color name="silver">#F5F5F5</color>
+    <color name="silver_drak">#A2A2A2</color>
+    <color name="silver_weak">#F0F0F0</color>
+    <color name="red">#FF3B30</color>
+    <color name="red_transparent">#66FF0000</color>
+    <color name="black_transparent">#66000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="ge1e1e1">#e1e1e1</color>
+
+</resources>

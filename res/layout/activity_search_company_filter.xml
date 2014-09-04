@@ -1,0 +1,177 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="15dp" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/company_info"
+                android:textColor="@color/text_weak"
+                android:textSize="16sp" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/newsTriggers"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/news_triggers"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/companies"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/u_companies"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/headquarters"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/headquarters"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/industry"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/industry"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/employeeSize"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/employee_size"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/revenueSize"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/revenue_size"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/ownership"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/ownership"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/milestone"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/milestone"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/rank"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/rank"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+
+            <Button
+                android:id="@+id/fiscalYearEnd"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/edit_hight"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/fiscal_year_end"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/edit_text_size" />
+
+            <include layout="@layout/lines" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

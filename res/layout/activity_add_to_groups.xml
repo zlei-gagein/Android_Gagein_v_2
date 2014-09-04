@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp" >
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:descendantFocusability="blocksDescendants"
+                android:divider="@color/silver"
+                android:dividerHeight="1dp"
+                android:drawSelectorOnTop="true"
+                android:listSelector="@color/transparent"
+                android:scrollbars="none" />
+
+            <RelativeLayout
+                android:id="@+id/newGroup"
+                android:layout_width="fill_parent"
+                android:layout_height="70dp"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/deleteImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/button_delete"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/folderImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/deleteImg"
+                    android:src="@drawable/folder_dark" />
+
+                <RelativeLayout
+                    android:id="@+id/middleLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_toRightOf="@id/folderImg" >
+
+                    <LinearLayout
+                        android:id="@+id/rightLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/chevron"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@drawable/button_chevron"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@id/rightLayout"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/new_group_"
+                        android:textColor="@color/text_dark"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <include layout="@layout/lines" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

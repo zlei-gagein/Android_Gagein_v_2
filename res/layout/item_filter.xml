@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/edit_hight">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/all_companies"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/edit_text_size"
+            />
+        
+        <ImageButton 
+            android:id="@+id/checkBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_select"
+            />
+    </RelativeLayout>
+    
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/silver"/>
+
+</LinearLayout>

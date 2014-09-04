@@ -1,0 +1,26 @@
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:background="@drawable/sort_pressed_button"
+        android:drawablePadding="15dp"
+        android:drawableRight="@drawable/sort_clear_button"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@drawable/sort_text_color"
+        android:textSize="16sp" >
+    </Button>
+
+</LinearLayout>

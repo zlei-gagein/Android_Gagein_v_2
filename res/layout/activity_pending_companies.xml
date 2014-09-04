@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:ellipsize="end"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:text="@string/u_delete"
+        android:textColor="@color/yellow"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/top"
+        android:layout_above="@id/deleteBtn"
+        android:divider="@color/silver"
+        android:dividerHeight="1dp"
+        android:listSelector="@color/transparent"
+        android:paddingRight="@dimen/padingleft"
+        android:scrollbars="none" />
+
+</RelativeLayout>

@@ -1,0 +1,182 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="30dp" >
+
+            <include layout="@layout/lines" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/u_category"
+                    android:textColor="@color/text_dark"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/categoryBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawablePadding="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:ellipsize="end"
+                    android:gravity="right|center_vertical"
+                    android:paddingRight="15dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_weak"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/importanceLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical" >
+
+                <include layout="@layout/lines" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/u_importance"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginRight="15dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/shape_yellow"
+                        android:weightSum="3" >
+
+                        <RadioButton
+                            android:id="@+id/minorBtn"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_feedback_left"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"
+                            android:text="@string/u_minor"
+                            android:checked="true"
+                            android:textColor="@drawable/text_yellow_white_color"
+                            android:textSize="16sp" />
+
+                        <RadioButton
+                            android:id="@+id/majorBtn"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_feedback_middle"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"
+                            android:text="@string/u_major"
+                            android:textColor="@drawable/text_yellow_white_color"
+                            android:textSize="16sp" />
+                        
+                        <RadioButton
+                            android:id="@+id/criticalBtn"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_feedback_right"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:paddingBottom="8dp"
+                            android:paddingTop="8dp"
+                            android:text="@string/u_critical"
+                            android:textColor="@drawable/text_yellow_white_color"
+                            android:textSize="16sp" />
+                    </RadioGroup>
+                </RelativeLayout>
+            </LinearLayout>
+            
+            <LinearLayout 
+                android:id="@+id/subjectLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                
+            	<include layout="@layout/lines" />
+            
+			    <EditText
+	                android:id="@+id/subjectEdt"
+	                android:layout_width="fill_parent"
+	                android:layout_height="fill_parent"
+	                android:background="@null"
+	                android:gravity="left|center_vertical"
+	                android:layout_gravity="center_vertical"
+	                android:hint="@string/u_subject"
+	                android:paddingTop="6dp"
+	                android:paddingBottom="6dp"
+	                android:paddingRight="10dp"
+	                android:textColor="@color/text_dark"
+	                android:textColorHint="@color/text_weak"
+	                android:textSize="16sp" />        
+                
+            </LinearLayout>
+
+            <include layout="@layout/lines" />
+
+            <EditText
+                android:id="@+id/msgEdt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="left|top"
+                android:hint="@string/u_message"
+                android:paddingBottom="6dp"
+                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_weak"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

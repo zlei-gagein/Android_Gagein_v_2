@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gagein"
+    android:versionCode="12"
+    android:versionName="2.1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="15"
+        android:maxSdkVersion="19" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="com.android.vending.BILLING" />
+	
+	<supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name="com.gagein.ui.main.GageinApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+         <activity
+            android:name="com.gagein.ui.main.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+			    <action android:name="android.intent.action.VIEW" />
+			    <category android:name="android.intent.category.DEFAULT" />
+			    <category android:name="android.intent.category.BROWSABLE" />
+			                     
+			    <data
+			       android:host="android.app"
+			       android:scheme="gagein" />
+			</intent-filter>
+        </activity>
+        
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.WebPageActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.NavigationActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+<!--          <activity -->
+<!--             android:configChanges="orientation|keyboardHidden|screenSize"  -->
+<!--             android:name="com.gagein.ui.main.LoginActivity" -->
+<!--             android:screenOrientation="portrait" -->
+<!--             android:windowSoftInputMode="stateHidden"/> -->
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.ImportCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.AddToGroupActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.AddCompaniesFromFollowedCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.SecFilingsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.ShareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.CategoryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.GroupsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.NewsRelevanceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.PendingCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.MainTabActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.CompaniesTypeFromBuzAcivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.news.NewsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.CompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.SearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.CompanyGroupsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.bookmark.BookMarksActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.MyAccountActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.settings.SettingsNewsFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.news.StoryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.news.MentionedCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterNewsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterRelevanceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.CompanyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.EditShareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.main.ImageViewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.SubsidiaryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.DivisionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.PeopleFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.PeopleFilterSortByActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterJobLevelActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterFunctionalRoleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.FilterLinkedProfileActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+        	android:name="com.gagein.ui.company.CompetitorFilterActivity"
+        	android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.CompetitorFilterSortByActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.CompetitorFilterIndustryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.PersonActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.CompaniesFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.ProfileHelpActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.companies.SuggestedCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.CompanyFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.CompanyFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.ui.CompetitorFilterSortByActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name=".ui.TestActivity"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.NewsTriggersActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.SortBySearchCompanyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.HeadquartersActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.IndustryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.company.CompanyTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name=".ui.search.company.filter.EmployeeSizeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.RevenueSizeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.OwnershipActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.MilestoneActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.RankActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.company.filter.FiscalYearEndActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.JobTitleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.JobLevelActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.SortBySearchPersonActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.LocationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.ParentsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.JointVenturesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.FunctionalRoleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.PeopleFilterActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.people.filter.PeopleFilterCompaniesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.SearchCompanyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.search.SearchPersonActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.company.EmploymentHistoryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.news.NewsTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.search.company.CompanySearchTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.search.people.PeopleSearchTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.settins.SettingsTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.companies.CompaniesTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name=".util.oauth.OAuthWebActivity"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="cn.sharesdk.framework.ShareSDKUIShell"
+            android:windowSoftInputMode="stateHidden"/>
+    </application>
+
+</manifest>

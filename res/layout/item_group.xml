@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white" >
+
+    <HorizontalScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:background="@color/white" >
+
+            <RelativeLayout
+                android:id="@+id/leftLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <ImageView
+                    android:id="@+id/deleteImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/button_delete"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/folderImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/deleteImg"
+                    android:src="@drawable/folder_bright" />
+
+                <RelativeLayout
+                    android:id="@+id/middleLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_toRightOf="@id/folderImg" >
+
+                    <LinearLayout
+                        android:id="@+id/rightLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/chevron"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@drawable/button_chevron"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@id/rightLayout"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="@color/text_dark"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="@color/text_weak"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/modifyLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="78dp"
+                android:layout_toRightOf="@id/leftLayout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <TextView
+                    android:id="@+id/renameBtn"
+                    android:layout_width="80dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/C8C8C8"
+                    android:gravity="center"
+                    android:text="@string/u_rename"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/deleteBtn"
+                    android:layout_width="80dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/red"
+                    android:gravity="center"
+                    android:text="@string/u_delete"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+    <RelativeLayout
+        android:id="@+id/aboveLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:background="@color/white_transparent"
+        android:visibility="gone" />
+
+</RelativeLayout>

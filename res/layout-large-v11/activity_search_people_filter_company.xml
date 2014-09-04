@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null" />
+
+            <LinearLayout
+                android:id="@+id/savedSearchLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/saved_searchs"
+                    android:textColor="@color/text_weak"
+                    android:textSize="16sp" />
+
+                <ListView
+	                android:id="@+id/savedListView"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_marginTop="10dp"
+	                android:scrollbars="none"
+	                android:divider="@null" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/specificLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/saved_com_list" />
+
+                <RelativeLayout 
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp">
+                    
+	                <EditText 
+	                    android:id="@+id/edit"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="wrap_content"
+	                    android:layout_centerVertical="true"
+	                    android:layout_marginLeft="10dp"
+	                    android:gravity="center_vertical"
+	                    android:paddingTop="4dp"
+	                    android:paddingBottom="4dp"
+	                    android:textSize="16sp"
+	                    android:textColor="@color/text_dark"
+	                    android:textColorHint="@color/text_weak"
+	                    android:hint="Name,Website,Tick Symbol"
+	                    android:singleLine="true"
+	                    android:background="@null"
+	                    android:imeOptions="actionDone"
+	                    
+	                    />
+	                
+	                <TextView 
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="1dp"
+	                    android:layout_alignParentBottom="true"
+	                    android:background="@color/silver"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

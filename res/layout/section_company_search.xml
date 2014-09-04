@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#F7F7F7"
+    android:orientation="vertical" >
+
+	<TextView 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/companies"
+	    android:textColor="#969696"
+	    android:textSize="14sp"
+	    android:singleLine="true"
+	    android:layout_marginLeft="20dp"
+	    android:paddingTop="5dp"
+	    android:paddingBottom="5dp"
+	    />
+    
+</LinearLayout>

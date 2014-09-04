@@ -1,0 +1,332 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:paddingBottom="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_round_rect"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/search_gray" />
+
+            <EditText
+                android:id="@+id/searchEdt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:focusable="true"
+                android:hint="@string/u_search"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_weak"
+                android:textSize="@dimen/edit_text_size" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/build_com_list" />
+
+            <Button
+                android:id="@+id/buildCompany"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/build_company_list"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <include layout="@layout/lines" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/build_peo_list" />
+
+            <Button
+                android:id="@+id/buildPeople"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:background="@null"
+                android:drawableRight="@drawable/button_chevron"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:text="@string/build_people_list"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <include layout="@layout/lines" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/saved_searched"
+                    android:textColor="@color/text_weak"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/edit"
+                    android:textColor="@color/yellow"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/noSavedSearches"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/no_saved_search"
+                    android:textColor="@color/text_dark"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <com.gagein.component.xlistview.XListView
+                android:id="@+id/savedList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                android:divider="@color/silver"
+                android:dividerHeight="1dp"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="45dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <RadioButton
+                android:id="@+id/companiesBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_left_yellow_white_color"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/u_companies"
+                android:textColor="@drawable/text_yellow_white_color"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/peopleBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_right_yellow_white_color"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/u_people"
+                android:textColor="@drawable/text_yellow_white_color"
+                android:textSize="18sp" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/noResultsLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/no_results"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/can_not_find_the_company"
+                android:textColor="@color/text_weak"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/addNewCompany"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/add_it_now"
+                android:textColor="@color/yellow"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/companyFoundLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/companiesFoundNum"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/no_results"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/companiesFound"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/can_not_find_the_company"
+                android:textColor="@color/text_weak"
+                android:textSize="18sp" />
+            
+            <include layout="@layout/lines"/>
+
+            <ListView
+                android:id="@+id/foundCompanyListView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/silver"
+                android:dividerHeight="1dp"
+                android:listSelector="@color/transparent"
+                android:scrollbars="none" />
+            
+            <include layout="@layout/lines"/>
+
+            <TextView
+                android:id="@+id/addDifferentCompany"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_horizontal"
+                android:text="@string/add_different_company"
+                android:textColor="@color/yellow"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <com.gagein.component.xlistview.XListView
+            android:id="@+id/companyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:divider="@null"
+            android:listSelector="#00000000"
+            android:visibility="gone" />
+
+        <com.gagein.component.xlistview.XListView
+            android:id="@+id/peopleList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:divider="@null"
+            android:listSelector="#00000000"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

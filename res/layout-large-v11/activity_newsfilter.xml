@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include 
+        android:id="@+id/top"
+        layout="@layout/top"/>
+    
+<!--     <TextView -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="1dp" -->
+<!--         android:layout_marginTop="@dimen/margin_top" -->
+<!--         android:background="@color/silver" -->
+<!--         /> -->
+    
+<!--     <RelativeLayout -->
+<!--         android:id="@+id/companyGroups"  -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="@dimen/edit_hight" -->
+<!--         android:paddingLeft="15dp" -->
+<!--         android:paddingRight="15dp" -->
+<!--         android:background="@color/white"> -->
+        
+<!--         <TextView  -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_centerVertical="true" -->
+<!--             android:singleLine="true" -->
+<!--             android:text="@string/company_groups" -->
+<!--             android:textColor="@color/text_dark" -->
+<!--             android:textSize="@dimen/edit_text_size"/> -->
+        
+<!--         <Button  -->
+<!--             android:id="@+id/companyGroupsBtn" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_centerVertical="true" -->
+<!--             android:layout_alignParentRight="true" -->
+<!--             android:textColor="@color/text_weak" -->
+<!--             android:textSize="@dimen/edit_text_size" -->
+<!--             android:drawableRight="@drawable/button_chevron" -->
+<!--             android:drawablePadding="15dp" -->
+<!--             android:background="@null" -->
+<!--             /> -->
+        
+<!--     </RelativeLayout> -->
+    
+<!--     <include layout="@layout/lines"/> -->
+    
+    <RelativeLayout 
+        android:id="@+id/news"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/edit_hight"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/white">
+        
+        <TextView 
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:text="@string/u_news"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/edit_text_size"/>
+        
+        <Button 
+            android:id="@+id/newsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/text1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@color/text_weak"
+            android:textSize="@dimen/edit_text_size"
+            android:drawableRight="@drawable/button_chevron"
+            android:drawablePadding="15dp"
+            android:background="@null"
+            />
+        
+    </RelativeLayout>
+    
+    <include layout="@layout/lines"/>
+    
+    <RelativeLayout 
+        android:id="@+id/relevance"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/edit_hight"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/white">
+        
+        <TextView 
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:text="@string/u_relevance"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/edit_text_size"/>
+        
+        <Button 
+            android:id="@+id/relevanceBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_toRightOf="@id/text2"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/text_weak"
+            android:textSize="@dimen/edit_text_size"
+            android:drawableRight="@drawable/button_chevron"
+            android:drawablePadding="15dp"
+            android:background="@null"
+            />
+        
+    </RelativeLayout>
+    
+    <include layout="@layout/lines"/>
+
+</LinearLayout>

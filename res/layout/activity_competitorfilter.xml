@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <RelativeLayout
+        android:id="@+id/industry"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/edit_hight"
+        android:layout_marginTop="30dp"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:text="@string/industry"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/edit_text_size" />
+
+        <Button
+            android:id="@+id/industryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:drawablePadding="15dp"
+            android:drawableRight="@drawable/button_chevron"
+            android:textColor="@color/text_weak"
+            android:textSize="@dimen/edit_text_size" />
+    </RelativeLayout>
+
+    <include layout="@layout/lines" />
+
+</LinearLayout>

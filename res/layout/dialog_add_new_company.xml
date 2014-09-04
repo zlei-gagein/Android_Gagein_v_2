@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_round_rect_silver"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/new_company"
+        android:textColor="@color/text_dark"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/enter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="@string/enter_a_company_it_the_us_or_canada"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp" />
+    
+    <EditText
+        android:id="@+id/nameEdt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/linear_frame_silver"
+        android:hint="@string/company_name"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/text_dark"
+        android:textColorHint="#D5D5D8"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/websiteEdt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/linear_frame_silver"
+        android:hint="@string/company_website"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/text_dark"
+        android:textColorHint="#D5D5D8"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/cc4c4cd" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:text="@string/cancel"
+            android:textColor="@color/blue_dialog"
+            android:textSize="21sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0.5dp"
+                android:layout_height="fill_parent"
+                android:background="@color/cc4c4cd" />
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp"
+                android:textStyle="bold"
+                android:text="@string/add"
+                android:textColor="@color/C7C7C7"
+                android:textSize="21sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_round_rect_silver"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/triggerchart_almost_activated"
+        android:textColor="@color/text_dark"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical|left"
+        android:text="@string/linking_news_stories"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp" />
+    
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/cc4c4cd"
+        />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:text="@string/okay"
+        android:textSize="18sp"
+        android:textColor="@color/blue_dialog" />
+
+</LinearLayout>

@@ -1,0 +1,160 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:id="@+id/wholeLayout"
+    android:orientation="vertical" >
+    
+    <include 
+        android:id="@+id/top"
+        layout="@layout/top"/>
+    
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        >
+        
+        <TextView 
+            android:id="@+id/showDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/show_details"
+            android:textColor="@color/yellow"
+            android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:id="@+id/rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/yellow"
+            android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:id="@+id/sortBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/rank"
+            android:textColor="@color/yellow"
+            android:textSize="15sp"
+            />
+        
+        <TextView 
+            android:layout_toRightOf="@id/showDetails"
+            android:layout_toLeftOf="@id/sortBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="@string/sortby"
+            android:textColor="@color/text_weak"
+            android:textSize="15sp"
+            />
+        
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/sortByDetailLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+            android:text="@string/personal_info"
+            android:textColor="@color/text_weak"
+            android:textSize="16sp"
+            />
+        
+        <com.gagein.component.AutoNewLineLayout
+            android:id="@+id/pesonalInfoLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal"
+            />
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginTop="20dp"
+            android:text="@string/employer_info"
+            android:textColor="@color/text_weak"
+            android:textSize="16sp"
+            />
+        
+        <com.gagein.component.AutoNewLineLayout
+            android:id="@+id/employerInfoLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal"
+            />
+            
+    </LinearLayout>
+    
+    <com.gagein.component.xlistview.XListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:divider="@null"
+            android:listSelector="#00000000" />
+
+    <RelativeLayout 
+        android:id="@+id/emptyLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+        
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+            
+            <TextView 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_results"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:gravity="center_horizontal"
+                />
+            
+            <TextView 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_results_pt"
+                android:textColor="@color/text_weak"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:gravity="center_horizontal"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

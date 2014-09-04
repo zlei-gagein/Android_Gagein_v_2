@@ -1,0 +1,428 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="30dp" >
+
+    <LinearLayout
+        android:id="@+id/socialLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/social_profiles"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:id="@+id/social"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <include layout="@layout/lines" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/descriptionLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/description"
+                android:textColor="@color/text_dark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/more"
+                android:textColor="@color/yellow"
+                android:textSize="18sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="5"
+            android:textColor="@color/text_weak"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <include layout="@layout/lines" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/information"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/information"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/jointVenturesLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/jointVentures"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/u_joint_venture"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/parentsLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/parents"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/u_parents"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/subsidiariesLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/subsidiaries"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/u_subsidiaries"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/divisionsLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/divisions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/u_divisions"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/filingsLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/filings"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/sec_filings"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/revenuesLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/u_quarterly_revenues"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@color/white" >
+
+            <TextView
+                android:id="@+id/revenuesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="15dp"
+                android:text="@string/in_millions"
+                android:textColor="@color/text_dark"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/revenuesImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="24dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="35dp"
+                 />
+        </RelativeLayout>
+    </LinearLayout>
+    
+    <include layout="@layout/lines" />
+
+    <LinearLayout
+        android:id="@+id/contactLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/u_contact"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/phoneLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:visibility="gone"
+             >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:paddingRight="8dp"
+                android:text="@string/u_phone"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:paddingLeft="8dp"
+                android:textColor="@color/yellow"
+                android:textSize="14sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/faxLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:paddingRight="8dp"
+                android:text="@string/u_fax"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/fax"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:paddingLeft="8dp"
+                android:textColor="@color/text_weak"
+                android:textSize="14sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/addressLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:paddingRight="8dp"
+                android:text="@string/u_address"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:paddingLeft="8dp"
+                android:textColor="@color/text_weak"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+    
+    <ImageView 
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        />
+    
+    <LinearLayout
+        android:id="@+id/websiteLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include layout="@layout/lines" />
+
+        <Button
+            android:id="@+id/website"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableRight="@drawable/button_chevron"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/u_website"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+        
+        <include layout="@layout/lines" />
+    </LinearLayout>
+
+</LinearLayout>

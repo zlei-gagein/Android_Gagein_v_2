@@ -1,0 +1,230 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="80dp" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/padingleft" >
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/myAccountBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/u_account"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/newsFilterBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/triggerchart"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+<!--                 <Button -->
+<!--                     android:id="@+id/upgradeBtn" -->
+<!--                     android:layout_width="fill_parent" -->
+<!--                     android:layout_height="@dimen/edit_hight" -->
+<!--                     android:background="@null" -->
+<!--                     android:drawableRight="@drawable/button_chevron" -->
+<!--                     android:gravity="left|center_vertical" -->
+<!--                     android:paddingRight="@dimen/marginright" -->
+<!--                     android:text="@string/upgrade_to_gagein_pro" -->
+<!--                     android:textColor="@color/text_dark" -->
+<!--                     android:textSize="@dimen/button_text_size" /> -->
+
+<!--                 <include layout="@layout/lines" /> -->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/padingleft" >
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/shareBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/share"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/rateBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/u_rate"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/feedbackBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/feedback"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_top"
+                    android:background="@color/silver" />
+
+                <Button
+                    android:id="@+id/termsBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/terms_of_service"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/privacyPolicyBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/tutorial"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/button_text_size" />
+
+                    <Button
+                        android:id="@+id/tutorialBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/marginright"
+                        android:background="@drawable/tutorial_off"
+                        android:textColor="@color/text_weak"
+                        android:textSize="@dimen/button_text_size" />
+                </RelativeLayout>
+
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/loginOutBtn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/log_out"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/button_text_size" />
+
+                <include layout="@layout/lines" />
+                
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical" >
+
+                    <TextView
+                        android:id="@+id/copyright"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/copyright"
+                        android:layout_alignParentLeft="true"
+                        android:textColor="@color/text_weak"
+                        android:textSize="12sp" />
+                    
+                    <TextView
+                        android:id="@+id/versionCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15dp"
+                        android:text="@string/version_code"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/text_weak"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

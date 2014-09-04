@@ -1,0 +1,8 @@
+{
+	 "productionURL":"https://www.gagein.com",
+	 "demoURL":"http://gageincn.dyndns.org:9080",
+	 "q2URL":"http://gageincn.dyndns.org",
+	 "cnURL":"http://gageincn.dyndns.org:3031",
+	 "stagingURL":"http://gageinstaging.dyndns.org",
+	 "customURL":"http://gageinstaging.dyndns.org"
+}

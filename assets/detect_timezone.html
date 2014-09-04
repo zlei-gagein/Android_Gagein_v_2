@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>detect timezone</title>
+<script>
+	(function(b) {
+		var a = function() {
+			var j = "s", l = function(m) {
+				var i = -m.getTimezoneOffset();
+				return i !== null ? i : 0
+			}, h = function(o, i, p) {
+				var m = new Date;
+				return o !== undefined && m.setFullYear(o), m.setDate(p), m
+						.setMonth(i), m
+			}, f = function(i) {
+				return l(h(i, 0, 2))
+			}, g = function(i) {
+				return l(h(i, 5, 2))
+			}, k = function(n) {
+				var i = n.getMonth() > 7 ? g(n.getFullYear()) : f(n
+						.getFullYear()), m = l(n);
+				return i - m !== 0
+			}, d = function() {
+				var e = f(), m = g(), i = f() - g();
+				return i < 0 ? e + ",1" : i > 0 ? m + ",1," + j : e + ",0"
+			}, c = function() {
+				var i = d();
+				return new a.TimeZone(a.olson.timezones[i])
+			};
+			return {
+				determine : c,
+				date_is_dst : k
+			}
+		}();
+				a.TimeZone = function(g) {
+					var h = null, f = function() {
+						return (typeof h == "undefined" || h == null) ? "" : h
+					}, c = function() {
+						var m = a.olson.ambiguity_list[h], l = m.length, j = 0, k = m[0];
+						for (; j < l; j += 1) {
+							k = m[j];
+							if (a.date_is_dst(a.olson.dst_start_dates[k])) {
+								h = k;
+								return
+							}
+						}
+					}, d = function() {
+						return typeof a.olson.ambiguity_list[h] != "undefined"
+					};
+					return h = g, d() && c(), {
+						name : f
+					}
+				}, a.olson = {}, a.olson.timezones = {
+					"-660,0" : "Pacific/Midway",
+					"-600,0" : "US/Hawaii",
+					"-540,1" : "US/Alaska",
+					"-480,1" : "US/Pacific",
+					"-420,0" : "US/Arizona",
+					"-420,1" : "America/Chihuahua",
+					"-360,0" : "Canada/Saskatchewan",
+					"-360,1" : "Canada/Central",
+					"-300,0" : "America/Bogota",
+					"-300,1" : "US/Eastern",
+					"-270,0" : "America/Caracas",
+					"-240,1" : "Canada/Atlantic",
+					"-240,0" : "America/La_Paz",
+					"-240,1,s" : "America/Santiago",
+					"-210,1" : "Canada/Newfoundland",
+					"-180,1" : "America/Argentina/Buenos_Aires",
+					"-60,0" : "Atlantic/Cape_Verde",
+					"0,0" : "Etc/UTC",
+					"0,1" : "Europe/London",
+					"60,1" : "Europe/Berlin",
+					"120,1" : "Asia/Jerusalem",
+					"120,0" : "Africa/Harare",
+					"180,0" : "Asia/Baghdad",
+					"210,1" : "Asia/Tehran",
+					"240,0" : "Asia/Dubai",
+					"240,1" : "Asia/Baku",
+					"270,0" : "Asia/Kabul",
+					"300,0" : "Asia/Karachi",
+					"330,0" : "Asia/Kolkata",
+					"345,0" : "Asia/Kathmandu",
+					"360,0" : "Asia/Dhaka",
+					"390,0" : "Asia/Rangoon",
+					"420,0" : "Asia/Jakarta",
+					"480,0" : "Asia/Shanghai",
+					"540,0" : "Asia/Tokyo",
+					"570,0" : "Australia/Darwin",
+					"570,1,s" : "Australia/Adelaide",
+					"600,0" : "Australia/Brisbane",
+					"600,1,s" : "Australia/Sydney",
+					"720,1,s" : "Pacific/Auckland",
+					"720,0" : "Pacific/Fiji",
+					"780,0" : "Etc/GMT-13"
+				}, a.olson.dst_start_dates = function() {
+					var c = new Date(2010, 6, 15, 1, 0, 0, 0);
+					return {}
+				}(), a.olson.ambiguity_list = {},
+				typeof exports != "undefined" ? exports.jstz = a : b.jstz = a
+	})(this);
+	function getTimezone() {
+		var tz = jstz.determine();
+		alert(tz.name());
+	}
+</script>
+</head>
+<body onload="getTimezone()" bgcolor="#E6E6FA">detect timezone<br>
+</html>

@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/groupPt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/shape_top_round_dialog"
+        android:text="@string/delete_group_pt"
+        android:textColor="@color/text_weak"
+        android:textSize="16sp"
+        android:gravity="center"
+        />
+    
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/C0C0C0"/>
+    
+    <Button 
+        android:id="@+id/delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bottom_round_dialog"
+        android:text="@string/delete_group"
+        android:textColor="#FF3327"
+        android:textSize="22sp"
+        android:gravity="center"
+        />
+    
+    <Button 
+        android:id="@+id/cancel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_round_dialog_rect"
+        android:text="@string/cancel"
+        android:textColor="@color/yellow"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
+</LinearLayout>
