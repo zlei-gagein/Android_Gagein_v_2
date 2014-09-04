@@ -1,17 +1,17 @@
 package com.gagein.ui.tablet.news;
 
-import android.content.BroadcastReceiver;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.gagein.R;
+import com.gagein.ui.main.BaseFragmentActivity;
 import com.gagein.ui.tablet.news.FilterNewsFragment.OnFilterNewsLeftBtnClickListener;
 import com.gagein.ui.tablet.news.FilterNewsFragment.OnRefreshNewsFilterFromNewsListener;
 import com.gagein.ui.tablet.news.FilterRelevanceFragment.OnFilterRelevanceLeftBtnClickListener;
@@ -24,7 +24,7 @@ import com.gagein.ui.tablet.news.NewsFragment.OnFilterClickListener;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
-public class NewsTabletActivity extends FragmentActivity implements OnFilterClickListener, OnNewsFilterLeftBtnClickListener, 
+public class NewsTabletActivity extends BaseFragmentActivity implements OnFilterClickListener, OnNewsFilterLeftBtnClickListener, 
 	NewsBtnClickListener, OnFilterNewsLeftBtnClickListener, RelevanceBtnClickListener, OnFilterRelevanceLeftBtnClickListener, 
 	OnRefreshNewsFilterFromNewsListener, RefreshNewsFilterFromRelevance, CloseLeftLayoutListener{
 	
@@ -35,8 +35,43 @@ public class NewsTabletActivity extends FragmentActivity implements OnFilterClic
 	private FilterRelevanceFragment filterRelevanceFragment;
 	private FragmentTransaction transaction;
 	private LinearLayout leftLayout;
-	private BroadcastReceiver receiver;
-	private IntentFilter intentFilter = new IntentFilter();
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_SET_NEWS_LIKED
+				,Constant.BROADCAST_SET_NEWS_UNLIKE, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
+				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		if (null == newsFragment) return;
+		
+		String actionName = intent.getAction();
+		if (actionName.equals(Constant.BROADCAST_REFRESH_NEWS)) {
+			newsFragment.refreshNews(false);
+		} else if (actionName.equals(Constant.BROADCAST_REFRESH_COMPANIES)) {
+			newsFragment.refreshNews(false);
+		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_LIKED)) {
+			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
+			newsFragment.setLikeFromBroadcast(newsId, true);
+		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
+			newsFragment.setLikeFromBroadcast(newsId, false);
+		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			newsFragment.refreshNews(false);
+		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
+			newsFragment.getPendingCompany();
+		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
+			newsFragment.getPendingCompany();
+		} else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			newsFragment.refreshNews(false);
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			newsFragment.getPendingCompany();
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -54,30 +89,11 @@ public class NewsTabletActivity extends FragmentActivity implements OnFilterClic
 		
 		setLeftLayoutVisible(View.GONE);
 		
-		receiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context arg0, Intent intent) {
-				String actionName = intent.getAction();
-				if (actionName.equals(Constant.BROADCAST_SET_NEWS_LIKED)) {
-					long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
-					if (null != newsFragment) newsFragment.setLikeFromBroadcast(newsId, true);
-				} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
-					long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
-					if (null != newsFragment) newsFragment.setLikeFromBroadcast(newsId, false);
-				}
-			}
-			
-		};
-		intentFilter.addAction(Constant.BROADCAST_SET_NEWS_LIKED);
-		intentFilter.addAction(Constant.BROADCAST_SET_NEWS_UNLIKE);
-		registerReceiver(receiver, intentFilter);
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(receiver);
 		Constant.SIGNUP = false;
 	}
 

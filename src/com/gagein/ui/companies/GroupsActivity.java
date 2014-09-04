@@ -65,6 +65,8 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			getPendingCompany();
 		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
 			getPendingCompany();
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			getPendingCompany();
 		}
 	}
 	

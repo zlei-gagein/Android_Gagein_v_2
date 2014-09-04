@@ -161,6 +161,8 @@ public abstract class Constant {
 	
 	public static String BROADCAST_REMOVE_COMPANIES = "broadcast remove companies";
 	
+	public static String BROADCAST_REMOVE_PENDING_COMPANIES = "broadcast remove pending companies";
+	
 	public static String BROADCAST_ADD_COMPANYGROUP = "broadcast add company group";
 	
 	public static String BROADCAST_REFRESH_SEARCH = "broadcast refresh search";

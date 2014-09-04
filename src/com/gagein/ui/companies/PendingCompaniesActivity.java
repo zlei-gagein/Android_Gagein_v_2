@@ -266,17 +266,22 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				dismissLoadingDialog();
 				if (parser.isOK()) {
+					
 					deleteCompanies(companiesIds);
+					
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_REMOVE_COMPANIES);
 					sendBroadcast(intent);
+					
 				} else {
 					alertMessageForParser(parser);
 				}
 			}
+			
 		}, new Response.ErrorListener() {
 
 			@Override

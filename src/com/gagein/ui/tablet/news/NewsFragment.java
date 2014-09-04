@@ -206,7 +206,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 
 	};
 	
-	private void getPendingCompany() {
+	public void getPendingCompany() {
 		mApiHttp.getFollowedCompanies(0, Constant.INDUSTRYID, APIHttpMetadata.kGGPendingFollowCompanies, false, new Listener<JSONObject>() {
 
 			@Override

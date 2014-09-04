@@ -58,7 +58,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	protected List<String> observeNotifications() {
 		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_SET_NEWS_LIKED
 				,Constant.BROADCAST_SET_NEWS_UNLIKE, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
-				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES);
 	}
 	
 	@Override
@@ -83,6 +83,8 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 			getPendingCompany();
 		} else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
 			refreshNews(false);
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			getPendingCompany();
 		}
 	}
 	
