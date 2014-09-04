@@ -162,7 +162,7 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 			companiesFragment = new CompaniesFragment();
 		}
 		
-		companiesFragment.nextPage = "";
+		companiesFragment.nextPage = ""; 
 		companiesFragment.getCompaniesOfGroup(true, false);
 		setLeftLayoutVisible(View.GONE);
 	}

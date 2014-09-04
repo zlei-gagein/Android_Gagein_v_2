@@ -99,20 +99,20 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		
 		edit.setOnEditorActionListener(new OnEditorActionListener() {//TODO
 		
-		@Override
-		public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-			if (actionId == EditorInfo.IME_ACTION_DONE) {//TODO COMPANY_SEARCH_KEYWORDS
-				String text = textView.getText().toString();
-				CommonUtil.hideSoftKeyBoard(mContext, getActivity());
-				if (TextUtils.isEmpty(text)) {
-					return false;
-				} else {
-					Constant.COMPANY_SEARCH_KEYWORDS = text;
-					onSearchFromCompanies.onSearchFromCompanies();
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {//TODO COMPANY_SEARCH_KEYWORDS
+					String text = textView.getText().toString();
+					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					if (TextUtils.isEmpty(text)) {
+						return false;
+					} else {
+						Constant.COMPANY_SEARCH_KEYWORDS = text;
+						onSearchFromCompanies.onSearchFromCompanies();
+					}
 				}
+				return false;
 			}
-			return false;
-		}
 		});
 		savedSearchLayout = (LinearLayout) view.findViewById(R.id.savedSearchLayout);
 	}
@@ -148,25 +148,33 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
+		
 		// when clicked saved company search...
 		Boolean checked = companyTypes.get(position).getChecked();
 		
 		if (checked) {
 			return;
 		} else {// this item is not checked
-			if (position == 1) {
+			
+			if (companyTypes.get(position).getValue().equalsIgnoreCase("Specific Companies")) {
+				
 				savedSearchLayout.setVisibility(View.VISIBLE);
 				onCanleTask.onCanleTask();
+				
 			} else {
+				
 				savedSearchLayout.setVisibility(View.GONE);
 				edit.setText("");
 				edit.clearFocus();
 				CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+				
 			}
+			
 			for (int i = 0; i < companyTypes.size(); i ++) {
 				companyTypes.get(i).setChecked(false);
 			}
 			companyTypes.get(position).setChecked(true);//set checked item
+			
 		}
 		adapter.notifyDataSetChanged();
 		

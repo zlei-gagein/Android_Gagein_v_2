@@ -22,6 +22,7 @@ import com.gagein.model.SavedSearch;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.main.BaseActivity;
+import com.gagein.ui.search.people.filter.PeopleFilterCompaniesActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -53,21 +54,30 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 		listView = (ListView) findViewById(R.id.listView);
 		edit = (EditText) findViewById(R.id.edit);
 		
-		edit.setOnEditorActionListener(new OnEditorActionListener() {//TODO
-		
-		@Override
-		public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-			if (actionId == EditorInfo.IME_ACTION_DONE) {//TODO COMPANY_SEARCH_KEYWORDS
-				String text = textView.getText().toString();
-				CommonUtil.hideSoftKeyBoard(mContext, CompaniesTypeFromBuzAcivity.this);
-				if (TextUtils.isEmpty(text)) {
-					return false;
-				} else {
-					Constant.COMPANY_SEARCH_KEYWORDS = text;
+		edit.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				
+				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
+					
+					String text = textView.getText().toString();
+					CommonUtil.hideSoftKeyBoard(mContext, CompaniesTypeFromBuzAcivity.this);
+					
+					if (TextUtils.isEmpty(text)) {
+						return false;
+					} else {
+						if (text.trim().length() < 2) {
+							showShortToast("Keywords must be at least two characters long.");
+							return false;
+						} else {
+							Constant.COMPANY_SEARCH_KEYWORDS = text;
+						}
+					}
+					
 				}
+				return false;
 			}
-			return false;
-		}
 		});
 		savedSearchLayout = (LinearLayout) findViewById(R.id.savedSearchLayout);
 	}
@@ -109,7 +119,8 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 		if (checked) {
 			return;
 		} else {// this item is not checked
-			if (position == 1) {
+			
+			if (companyTypes.get(position).getValue().equalsIgnoreCase("Specific Companies")) {
 				savedSearchLayout.setVisibility(View.VISIBLE);
 			} else {
 				savedSearchLayout.setVisibility(View.GONE);
@@ -117,10 +128,12 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 				edit.clearFocus();
 				CommonUtil.hideSoftKeyBoard(mContext, CompaniesTypeFromBuzAcivity.this);
 			}
+			
 			for (int i = 0; i < companyTypes.size(); i ++) {
 				companyTypes.get(i).setChecked(false);
 			}
 			companyTypes.get(position).setChecked(true);//set checked item
+			
 		}
 		adapter.notifyDataSetChanged();
 		

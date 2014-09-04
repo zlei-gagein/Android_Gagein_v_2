@@ -111,19 +111,27 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		savedSearchLayout = (LinearLayout) view.findViewById(R.id.savedSearchLayout);
 		specificLayout = (LinearLayout) view.findViewById(R.id.specificLayout);
 		
-		edit.setOnEditorActionListener(new OnEditorActionListener() {//TODO
+		edit.setOnEditorActionListener(new OnEditorActionListener() {
 			
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {//TODO COMPANY_SEARCH_KEYWORDS
+				
+				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
+					
 					String text = textView.getText().toString();
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					
 					if (TextUtils.isEmpty(text)) {
 						return false;
 					} else {
-						Constant.COMPANY_SEARCH_KEYWORDS = text;
-						onSearchFromCompanies.onSearchFromCompanies();
+						if (text.trim().length() < 2) {
+							showShortToast("Keywords must be at least two characters long.");
+							return false;
+						} else {
+							Constant.COMPANY_SEARCH_KEYWORDS = text;
+						}
 					}
+					
 				}
 				return false;
 			}
@@ -208,41 +216,73 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
+		
+		CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+		
 		if (parent == listView) {
-			//TODO when clicked saved company search...
+			// when clicked saved company search...
 			Boolean checked = companyTypes.get(position).getChecked();
 			if (checked) {
+				
 				return;
+				
 			} else {// this item is not checked
+				
+				edit.setText("");
+				Constant.COMPANY_SEARCH_KEYWORDS = "";
+				
 				if (companyTypes.get(position).getValue().equalsIgnoreCase("Specific Companies")) {
-					savedSearchLayout.setVisibility(View.VISIBLE);
-					onCanleTask.onCanleTask();
 					
 					savedSearchLayout.setVisibility(View.GONE);
-				} else if (companyTypes.get(position).getValue().equalsIgnoreCase("All Companies")) {//TODO
-					savedSearchLayout.setVisibility(View.GONE);
-					return;
+					specificLayout.setVisibility(View.VISIBLE);
+					setCompanyTypesSelected(position);
+					
+//				} else if (companyTypes.get(position).getValue().equalsIgnoreCase("All Companies")) {
+//					
+//					savedSearchLayout.setVisibility(View.GONE);
+//					specificLayout.setVisibility(View.GONE);
+//					for (int i = 0; i < companyTypes.size(); i ++) {
+//						companyTypes.get(i).setChecked(false);
+//					}
+//					companyTypes.get(position).setChecked(true);
+//					adapter.notifyDataSetChanged();
+//					return;
+					
 				} else {
+					
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
-						if (companyTypes.get(position).getChecked()) {
-							savedSearchLayout.setVisibility(View.GONE);
-						} else {
-							if (mSavedSearchs.size() > 0) {
-								savedSearchLayout.setVisibility(View.VISIBLE);
-							} else {
-								showShortToast(R.string.no_saved_company_searches);
-								return;
-							}
+						
+						for (int i = 0; i < mSavedSearchs.size(); i ++) {
+							mSavedSearchs.get(i).setChecked(false);
 						}
+						mSavedSearchs.get(0).setChecked(true);
+						companiesAdapter.notifyDataSetChanged();
+						
+						if (mSavedSearchs.size() > 0) {
+							savedSearchLayout.setVisibility(View.VISIBLE);
+						} else {
+							showShortToast(R.string.no_saved_company_searches);
+							return;
+						}
+						
+						setCompanyTypesSelected(position);
+						
+						savedSearchLayout.setVisibility(View.VISIBLE);
+						specificLayout.setVisibility(View.GONE);
+						
 					} else {
+						
+						setCompanyTypesSelected(position);
+						
 						savedSearchLayout.setVisibility(View.GONE);
+						specificLayout.setVisibility(View.GONE);
+						
 					}
 				}
 			}
 			
-			adapter.notifyDataSetChanged();
-			onSearchFromCompanies.onSearchFromCompanies();
-		} else if (parent == savedListView) {//TODO
+		} else if (parent == savedListView) {
+			
 			Boolean checked = mSavedSearchs.get(position).getChecked();
 			if (checked) {
 				return;
@@ -253,9 +293,17 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				mSavedSearchs.get(position).setChecked(true);//set checked item
 			}
 			companiesAdapter.notifyDataSetChanged();
-			onSearchFromCompanies.onSearchFromCompanies();
+			
 		}
 		
+	}
+
+	private void setCompanyTypesSelected(int position) {
+		for (int i = 0; i < companyTypes.size(); i ++) {
+			companyTypes.get(i).setChecked(false);
+		}
+		companyTypes.get(position).setChecked(true);
+		adapter.notifyDataSetChanged();
 	}
 
 }
