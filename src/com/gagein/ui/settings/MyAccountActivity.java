@@ -3,6 +3,7 @@ package com.gagein.ui.settings;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -71,7 +72,9 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	@Override
 	protected void setData() {
 		super.setData();
-		nameEdt.setText(profile.firstName);
+		
+		String nameStr = TextUtils.isEmpty(profile.lastName) ? profile.firstName : profile.firstName + " " + profile.lastName;
+		nameEdt.setText(nameStr);
 		emailEdt.setText(profile.email);
 		companyEdt.setText(profile.orgName);
 		jobTitleEdt.setText(profile.orgTitle);
@@ -174,19 +177,19 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			}
 			
 			boolean canSave = false;
-			if (v == nameEdt && !name.isEmpty()) {
+			if (v == nameEdt && !TextUtils.isEmpty(name)) {
 				clearName.setVisibility(View.GONE);
 				nameEdt.clearFocus();
 				canSave = true;
-			} else if (v == emailEdt && !email.isEmpty()) {
+			} else if (v == emailEdt && !TextUtils.isEmpty(email)) {
 				clearEmail.setVisibility(View.GONE);
 				emailEdt.clearFocus();
 				canSave = true;
-			} else if (v == companyEdt && !company.isEmpty()) {
+			} else if (v == companyEdt && !TextUtils.isEmpty(company)) {
 				clearCompany.setVisibility(View.GONE);
 				companyEdt.clearFocus();
 				canSave = true;
-			} else if (v == jobTitleEdt && !jobTitle.isEmpty()) {
+			} else if (v == jobTitleEdt && !TextUtils.isEmpty(jobTitle)) {
 				clearJobTitle.setVisibility(View.GONE);
 				jobTitleEdt.clearFocus();
 				canSave = true;
@@ -195,10 +198,31 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			// 468494# setting-my account,name, company, job title为空的时候不允许保存
 			if (canSave) {
 				hideSoftKey();
-				saveProfile(name.isEmpty() ? profile.firstName : name
-						, email.isEmpty() ? profile.email : email
-								, company.isEmpty() ? profile.orgName : company
-										, jobTitle.isEmpty() ? profile.orgTitle : jobTitle);
+				
+				String firstName = null;
+				String lastName = null;
+				if (!TextUtils.isEmpty(name)) {
+					int index = name.indexOf(" ");
+					if (index > 0) {
+						firstName = name.substring(0, index);
+						lastName = name.substring(index).trim();
+					} else {
+						firstName = name;
+					}
+				}
+				
+				if (TextUtils.isEmpty(firstName)) {
+					firstName = profile.firstName;
+				}
+				
+				if (TextUtils.isEmpty(lastName)) {
+					lastName = profile.lastName;
+				}
+				
+				saveProfile(firstName, lastName
+						, TextUtils.isEmpty(email) ? profile.email : email
+								, TextUtils.isEmpty(company) ? profile.orgName : company
+										, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
 			}
 			
 			return true;
@@ -207,15 +231,16 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		return false;
 	}
 	
-	private void saveProfile(String name, String email, String company, String jobTitle) {
+	private void saveProfile(String firstName, String lastName, String email, String company, String jobTitle) {
 		showLoadingDialog();
 		temporaryProfile = new UserProfile();
-		temporaryProfile.firstName = name;
+		temporaryProfile.firstName = firstName;
+		temporaryProfile.lastName = lastName;
 		temporaryProfile.email = email;
 		temporaryProfile.orgName = company;
 		temporaryProfile.orgTitle = jobTitle;
 		
-		mApiHttp.changeProfile(name, email, company, jobTitle,
+		mApiHttp.changeProfile(firstName, lastName, email, company, jobTitle,
 				new Listener<JSONObject>() {
 
 			@Override
@@ -227,11 +252,13 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 							showShortToast(mContext.getResources().getString(R.string.Saved));
 							
 							profile.firstName = temporaryProfile.firstName;
+							profile.lastName = temporaryProfile.lastName;
 							profile.email = temporaryProfile.email;
 							profile.orgName = temporaryProfile.orgName;
 							profile.orgTitle = temporaryProfile.orgTitle;
 							
-							nameEdt.setText(temporaryProfile.firstName);
+							String nameStr = TextUtils.isEmpty(temporaryProfile.lastName) ? temporaryProfile.firstName : temporaryProfile.firstName + " " + temporaryProfile.lastName;
+							nameEdt.setText(nameStr);
 							emailEdt.setText(temporaryProfile.email);
 							companyEdt.setText(temporaryProfile.orgName);
 							jobTitleEdt.setText(temporaryProfile.orgTitle);
