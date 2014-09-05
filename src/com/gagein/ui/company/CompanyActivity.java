@@ -609,7 +609,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		if (showDialog) showLoadingDialog();
 		if (0 == mCompanyId) return;
-			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0,
+			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, 0, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0,
 					new Listener<JSONObject>() {
 
 						@Override

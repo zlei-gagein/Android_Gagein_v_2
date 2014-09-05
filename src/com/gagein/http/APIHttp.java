@@ -167,7 +167,7 @@ public class APIHttp {
 	 * @param aPageFlag
 	 * @param aPageTime
 	 */
-	public void getCompanyUpdatesNoFilter(long aCompanyID, long aNewsID, byte aPageFlag, long aPageTime, Listener<JSONObject> listener, ErrorListener errorListener) {
+	public void getCompanyUpdatesNoFilter(long aCompanyID, long agentID, long aNewsID, byte aPageFlag, long aPageTime, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "company/" + aCompanyID + "/updates";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -175,6 +175,11 @@ public class APIHttp {
 		params.put("pageflag", aPageFlag + "");
 		params.put("pagetime", aPageTime + "");
 		params.put("no_proxy", "true");
+		
+		if (agentID > 0) {
+			params.put("agentid", agentID + "");
+	    }
+		
 		connectURL(Method.GET,listener, errorListener, url, params);
 	}
 	
