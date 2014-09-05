@@ -46,7 +46,7 @@ public class APIHttp {
 	private void doCustruction() {
 		deviceID = CommonUtil.deviceID(mContext);
 		mRequestQueue = Volley.newRequestQueue(mContext);
-		apiRootPath = serverURL + "/svc/";
+		apiRootPath = serverURL + "/msvc/";
 	}
 	
 	/**
