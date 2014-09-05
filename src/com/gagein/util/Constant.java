@@ -261,7 +261,7 @@ public abstract class Constant {
 	
 	public static List<Company> CURRENT_PENDING_COMPANY = new ArrayList<Company>();
 	
-	public static Boolean REVERSE;
+	public static Boolean REVERSE = false;
 	public static Boolean DEFINEWORDS = false;
 	public static String COMPANY_SEARCH_KEYWORDS = "";
 	public static String ALLWORDS = "";

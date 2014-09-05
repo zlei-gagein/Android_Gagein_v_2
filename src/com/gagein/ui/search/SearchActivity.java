@@ -855,26 +855,26 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		}
 	}
 	
-	private void getFilter() {
-		mApiHttp.getFilter(new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-					Constant.MFILTERS = parser.parserFilters();
-				} else {
-					alertMessageForParser(parser);
-				}
-				dismissLoadingDialog();
-			}
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
-	}
+//	private void getFilter() {
+//		mApiHttp.getFilter(new Listener<JSONObject>() {
+//
+//			@Override
+//			public void onResponse(JSONObject jsonObject) {
+//				APIParser parser = new APIParser(jsonObject);
+//				if (parser.isOK()) {
+//					Constant.MFILTERS = parser.parserFilters();
+//				} else {
+//					alertMessageForParser(parser);
+//				}
+//				dismissLoadingDialog();
+//			}
+//		}, new Response.ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				showConnectionError();
+//			}
+//		});
+//	}
 
 }

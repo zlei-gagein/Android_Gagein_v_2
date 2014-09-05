@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Response.Listener;
 import com.gagein.R;
 import com.gagein.component.EmptyView;
 import com.gagein.component.dialog.ShareDialog;
@@ -31,6 +36,7 @@ import com.gagein.model.Update;
 import com.gagein.util.ActivityHelper;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.ConfigurableReceiver;
+import com.gagein.util.Constant;
 import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -295,5 +301,28 @@ public class BaseActivity extends Activity implements OnReceiveListener, OnClick
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	
+	protected void getFilter() {
+		mApiHttp.getFilter(new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					Constant.MFILTERS = parser.parserFilters();
+				} else {
+					alertMessageForParser(parser);
+				}
+				dismissLoadingDialog();
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				showConnectionError();
+			}
+		});
 	}
 }

@@ -145,6 +145,10 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 			getPendingCompany();
 			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false);
 		}
+		
+		if (Constant.MFILTERS == null) {
+			getFilter();
+		}
 	}
 	
 	@Override

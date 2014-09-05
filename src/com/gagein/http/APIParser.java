@@ -572,6 +572,7 @@ public class APIParser {
 			if (i == 0) {
 				filterItem.setKey("noe");
 				filterItem.setValue("Employee size");
+				filterItem.setChecked(true);
 			} else if (i == 1) {
 				filterItem.setKey("revenue");
 				filterItem.setValue("Revenue size");
@@ -594,6 +595,7 @@ public class APIParser {
 			if (i == 0) {
 				filterItem.setKey("joblevel");
 				filterItem.setValue("Job Level");
+				filterItem.setChecked(true);
 			} else if (i == 1) {
 				filterItem.setKey("name");
 				filterItem.setValue("Name");

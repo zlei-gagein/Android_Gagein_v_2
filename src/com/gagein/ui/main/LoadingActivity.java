@@ -125,22 +125,22 @@ public class LoadingActivity extends BaseActivity {
 		}
 	}
 	
-	private void getFilter() {
-		mApiHttp.getFilter(new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-					Constant.MFILTERS = parser.parserFilters();
-				}
-			}
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-			}
-		});
-	}
+//	private void getFilter() {
+//		mApiHttp.getFilter(new Listener<JSONObject>() {
+//
+//			@Override
+//			public void onResponse(JSONObject jsonObject) {
+//				APIParser parser = new APIParser(jsonObject);
+//				if (parser.isOK()) {
+//					Constant.MFILTERS = parser.parserFilters();
+//				}
+//			}
+//		}, new Response.ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//			}
+//		});
+//	}
 	
 }
