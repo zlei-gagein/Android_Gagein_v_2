@@ -97,8 +97,11 @@ public class FeedbackActivity extends BaseActivity {
 			categoryBtn.setText(CommonUtil.stringFromResID(R.string.u_question));
 		} 
 		
-		importanceLayout.setVisibility(type == 0 ? View.GONE : View.VISIBLE);
-		subjectLayout.setVisibility(type == 0 ? View.GONE : View.VISIBLE);
+		boolean canShowExtra = (APIHttpMetadata.kGGFeedbackCategoryBug == type 
+				|| APIHttpMetadata.kGGFeedbackCategoryFeatureRequest == type 
+				|| APIHttpMetadata.kGGFeedbackCategoryImprovement == type);
+		importanceLayout.setVisibility(canShowExtra ? View.VISIBLE : View.GONE);
+		subjectLayout.setVisibility(canShowExtra ? View.VISIBLE : View.GONE);
 	}
 	
 	private void sendFeedback(int categoryType, String importance, String message, String subject) {

@@ -644,7 +644,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		
 		if (showDialog) showLoadingDialog(mContext);
 		if (0 == mCompanyId) return;
-			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, aNewsID, aPageFlag, aPageTime,
+			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, 0, aNewsID, aPageFlag, aPageTime,
 					new Listener<JSONObject>() {
 
 						@Override
