@@ -549,11 +549,13 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	 */
 	private void removeFromGroup(ArrayList<String> companiesIds) {
 		
-		CommonUtil.showLoadingDialog(mContext);
+		showLoadingDialog(mContext);
 		mApiHttp.removeCompanies(groupId, companiesIds, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
+				dismissLoadingDialog();
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {

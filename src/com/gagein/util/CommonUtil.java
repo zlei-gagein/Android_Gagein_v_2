@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -791,6 +793,21 @@ public class CommonUtil {
 		InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (null == inputManager || null == mActivity.getCurrentFocus() || null == mActivity.getCurrentFocus().getWindowToken()) return;
 		inputManager.hideSoftInputFromWindow(mActivity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+	
+	public static void showSoftKeyBoard(int afterTime) {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+		    @Override
+		    public void run() {
+		    	InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);  
+		    	imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+		    }
+		}, afterTime);
+	}
+	
+	public static Context getContext() {
+		return GageinApplication.getContext();
 	}
 	
 	public static String urlEncodedString(String aString) {

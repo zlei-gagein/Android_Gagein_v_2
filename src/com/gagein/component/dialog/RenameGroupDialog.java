@@ -10,8 +10,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,7 +21,6 @@ import com.gagein.adapter.GroupAdapter;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Group;
-import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 
 /**

@@ -2,18 +2,13 @@ package com.gagein.component.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.gagein.R;
-import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 
 /**

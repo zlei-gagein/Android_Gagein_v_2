@@ -41,6 +41,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/u_search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
@@ -123,8 +124,10 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/noSavedSearches"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginBottom="10dp" >
 
                 <TextView
@@ -146,7 +149,6 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/noSavedSearches"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -279,14 +281,14 @@
                 android:id="@+id/companiesFound"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:text="@string/can_not_find_the_company"
                 android:textColor="@color/text_weak"
                 android:textSize="18sp" />
-            
-            <include layout="@layout/lines"/>
+
+            <include layout="@layout/lines" />
 
             <ListView
                 android:id="@+id/foundCompanyListView"
@@ -296,8 +298,8 @@
                 android:dividerHeight="1dp"
                 android:listSelector="@color/transparent"
                 android:scrollbars="none" />
-            
-            <include layout="@layout/lines"/>
+
+            <include layout="@layout/lines" />
 
             <TextView
                 android:id="@+id/addDifferentCompany"

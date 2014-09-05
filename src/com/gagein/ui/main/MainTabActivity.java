@@ -28,7 +28,6 @@ import com.gagein.ui.companies.GroupsActivity;
 import com.gagein.ui.news.NewsActivity;
 import com.gagein.ui.search.SearchActivity;
 import com.gagein.ui.settings.SettingsActivity;
-import com.gagein.ui.tablet.companies.CompaniesTabletActivity;
 import com.gagein.ui.tablet.news.NewsTabletActivity;
 import com.gagein.ui.tablet.settins.SettingsTabletActivity;
 import com.gagein.util.CommonUtil;
@@ -101,11 +100,26 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 				new Intent(mContext, CommonUtil.isTablet(mContext) ? SettingsTabletActivity.class : SettingsActivity.class));
 		
 		layout_tab = (RelativeLayout) findViewById(R.id.layout_tab);
+		
 		getTabHost().setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
 			public void onTabChanged(String tabId) {
+				
+				if (tabId.equalsIgnoreCase(TAB_ID_COMPANIES)) {
+					
+					Intent intent = new Intent();
+					intent.setAction(Constant.BROADCAST_REFRESH_GROUPSACTIVITY);
+					sendBroadcast(intent);
+					
+				} else if (tabId.equalsIgnoreCase(TAB_ID_SEARCH)) {
+					
+					return;
+					
+				}
+					
 				CommonUtil.hideSoftKeyBoard(mContext, MainTabActivity.this);
+				
 			}
 		});
 		

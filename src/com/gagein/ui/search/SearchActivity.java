@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -79,7 +80,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private int PAGE_NUM_PERSON = 1;
 	private int PAGE_NUM_SAVESEARCH= 1;
 	private LinearLayout mainLayout;
-	private LinearLayout noSavedSearches;
+	private RelativeLayout noSavedSearches;
 	private LinearLayout searchLayout;
 	private LinearLayout noResultsLayout;
 	private LinearLayout companyFoundLayout;
@@ -113,7 +114,9 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setTitle(R.string.u_search);
+		
 		
 		searchEdt = (EditText) findViewById(R.id.searchEdt);
 		addNewCompany = (TextView) findViewById(R.id.addNewCompany);
@@ -123,7 +126,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		addDifferentCompany = (TextView) findViewById(R.id.addDifferentCompany);
 		foundCompanyList = (ListView) findViewById(R.id.foundCompanyListView);
 		mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-		noSavedSearches = (LinearLayout) findViewById(R.id.noSavedSearches);
+		noSavedSearches = (RelativeLayout) findViewById(R.id.noSavedSearches);
 		searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
 		noResultsLayout = (LinearLayout) findViewById(R.id.noResultsLayout);
 		companyFoundLayout = (LinearLayout) findViewById(R.id.companyFoundLayout);
@@ -196,10 +199,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		isCompany = true;
 		isPerson = !isCompany;
 		
-		getSavedSearches(false);
+		getSavedSearches(false, false);
 		
 		setSearchCompanies();
 		setSearchPersons();
+		
+		CommonUtil.showSoftKeyBoard(300);
+		
 	}
 	
 	@Override
@@ -208,7 +214,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		String actionName = intent.getAction();
 		if (actionName.equals(Constant.BROADCAST_REFRESH_SEARCH)) {
 			PAGE_NUM_SAVESEARCH = 1;
-			getSavedSearches(false);
+			getSavedSearches(false, false);
 		}
 	}
 	
@@ -268,14 +274,17 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		personAdapter.notifyDataSetInvalidated();
 	}
 	
-	private void getSavedSearches(final Boolean loadMore) {
-		if (!loadMore) showLoadingDialog();
+	private void getSavedSearches(Boolean showDialog, final Boolean loadMore) {
+		
+		if (showDialog) showLoadingDialog();
 		mApiHttp.getSavedSearchesWithPage(PAGE_NUM_SAVESEARCH, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					if (!loadMore) mSavedSearchs.clear();
 					DataPage dataPage = parser.parseGetSavedSearch();
 					List<Object> items = dataPage.items;
@@ -286,11 +295,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						if (!loadMore) setSavedSearch();
 						
 					}
+					
 					savedList.setPullLoadEnable(dataPage.hasMore);
+					
 					if (mSavedSearchs.size() > 0) {
-						noSavedSearches.setVisibility(View.GONE);
-					} else {
 						noSavedSearches.setVisibility(View.VISIBLE);
+					} else {
+						noSavedSearches.setVisibility(View.GONE);
 					}
 					Log.v("silen", "mSavedSearchs.size = " + mSavedSearchs.size());
 					
@@ -395,13 +406,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						personAdapter.notifyDataSetChanged();
 						personAdapter.notifyDataSetInvalidated();
 					}
-					if (searchPersons.size() == 0) {
+//					if (searchPersons.size() == 0) {
 //						listView.setVisibility(View.GONE);
 //						addCompany.setVisibility(View.VISIBLE);
-					} else {
+//					} else {
 //						listView.setVisibility(View.VISIBLE);
 //						addCompany.setVisibility(View.GONE);
-					}
+//					}
 					
 					PAGE_NUM_PERSON ++;
 				}
@@ -819,7 +830,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	public void onRefresh() {
 		if (mainLayout.isShown()) {
 			PAGE_NUM_SAVESEARCH = 1;
-			getSavedSearches(false);
+			getSavedSearches(true, false);
 			return;
 		}
 //		if (isCompany) {
@@ -834,7 +845,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onLoadMore() {
 		if (mainLayout.isShown()) {
-			getSavedSearches(true);
+			getSavedSearches(false, true);
 			return;
 		}
 		if (isCompany) {

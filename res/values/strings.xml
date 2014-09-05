@@ -388,7 +388,7 @@
     <string name="your_new_company">Your New Company</string>
     <string name="no_linked_companies">No Linked Companies</string>
     <string name="no_followed_companies">No Followed Companies</string>
-    <string name="no_followed_companies_pt">You can find companies to follow by tapping \"Edit,\" or building a company list in search.</string>
+    <string name="no_followed_companies_pt">You can find companies to follow by tapping \"Edit\", or building a company list in search.</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
     <string name="linkedin_connections">LinkedIn Connections</string>

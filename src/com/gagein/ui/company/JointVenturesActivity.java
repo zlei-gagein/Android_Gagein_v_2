@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.gagein.R;
 import com.gagein.adapter.JointVenturesAdapter;
-import com.gagein.adapter.ParentsAdapter;
 import com.gagein.model.Company;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;

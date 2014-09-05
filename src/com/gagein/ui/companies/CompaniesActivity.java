@@ -602,6 +602,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			@Override
 			public void onResponse(JSONObject jsonObject) {
 				
+				dismissLoadingDialog();
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
@@ -679,19 +681,15 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	}
 	
 	private void unfollowCompany(final Long mCompanyId) {
+		
 		mApiHttp.unfollowCompany(mCompanyId, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
-					for (int i = 0; i < companies.size(); i ++) {
-						if (mCompanyId == companies.get(i).orgID) {
-							companies.remove(i);
-							if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
-						}
-					}
 					
 					if (companies.size() == 0) {
 						setFiltersVisible();
@@ -706,6 +704,14 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 					}
 					selectedNum--;
 					if (selectedNum == 0) {
+						
+						for (int i = 0; i < companies.size(); i ++) {
+							if (mCompanyId == companies.get(i).orgID) {
+								companies.remove(i);
+								if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
+							}
+						}
+						
 						Intent intent = new Intent();
 						intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
 						sendBroadcast(intent);

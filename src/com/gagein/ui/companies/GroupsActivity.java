@@ -12,9 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -49,7 +49,8 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		return stringList(Constant.BROADCAST_ADD_COMPANIES, Constant.BROADCAST_ADD_COMPANYGROUP, 
 				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_UNFOLLOW_COMPANY, 
 				Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES, Constant.BROADCAST_FOLLOW_COMPANY,
-				Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY);
+				Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
+				Constant.BROADCAST_REFRESH_GROUPSACTIVITY);
 	}
 	
 	@Override
@@ -58,11 +59,10 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		
 		String actionName = intent.getAction();
 		if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES) || 
-				
 				actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY) || 
 				actionName.equals(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES) || actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)
 				) {
-			getAllCompanyGroups(false);
+			getAllCompanyGroups(false, false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
 			
@@ -86,11 +86,16 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			intentTo.setClass(mContext, AddCompaniesFromFollowedCompaniesActivity.class);
 			startActivity(intentTo);
 			
-			getAllCompanyGroups(false);
+			getAllCompanyGroups(false, false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES)) {
 			
-			getAllCompanyGroups(false);
+			getAllCompanyGroups(false, false);
+			getPendingCompany();
+			
+		} else if (actionName.equals(Constant.BROADCAST_REFRESH_GROUPSACTIVITY)) {
+			
+			getAllCompanyGroups(false, true);
 			getPendingCompany();
 			
 		}
@@ -123,7 +128,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		super.initData();
 		
 		getPendingCompany();
-		getAllCompanyGroups(true);
+		getAllCompanyGroups(true, false);
 		
 	}
 	
@@ -161,7 +166,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		
 	}
 	
-	public void getAllCompanyGroups(Boolean showDialog) {
+	public void getAllCompanyGroups(Boolean showDialog, final Boolean tabChanged) {
 		
 		if (showDialog) showLoadingDialog();
 		
@@ -188,7 +193,8 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 								groups.add(group);
 							}
 						}
-						setData();
+						
+						if (!tabChanged) setData();
 					}
 				} else {
 				}
@@ -304,7 +310,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 	public void onRefresh() {
 		if (isEdit) return;
 		getPendingCompany();
-		getAllCompanyGroups(true);
+		getAllCompanyGroups(true, false);
 	}
 
 	@Override

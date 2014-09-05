@@ -149,6 +149,8 @@ public abstract class Constant {
 	
 	public static String BROADCAST_REFRESH_COMPANIES = "broadcast refresh companies";
 	
+	public static String BROADCAST_REFRESH_GROUPSACTIVITY = "broadcast refresh groupsActivity";
+	
 	public static String BROADCAST_ADD_COMPANIES = "broadcast add companies";
 	
 	public static String BROADCAST_ADD_NEW_COMPANIES = "broadcast add new companies";

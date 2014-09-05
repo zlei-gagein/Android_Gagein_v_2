@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.gagein.util.ConfigurableReceiver;
-import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
+import com.gagein.util.ConfigurableReceiver;
+import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
 
 public class BaseFragmentActivity extends FragmentActivity implements OnReceiveListener {
 	

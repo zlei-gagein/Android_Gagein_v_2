@@ -6,8 +6,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.gagein.util.Log;
-
 public class Facet extends DataModel {
 
 	public List<FacetItem> jobLevels = new ArrayList<FacetItem>();

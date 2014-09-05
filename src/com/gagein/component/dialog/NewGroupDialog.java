@@ -11,8 +11,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -22,10 +20,8 @@ import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
-import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 import com.gagein.util.MessageCode;
 
 /**

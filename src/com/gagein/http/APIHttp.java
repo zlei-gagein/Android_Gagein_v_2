@@ -1626,9 +1626,10 @@ public class APIHttp {
 				emails.add(email);
 			}
 		}
+		
 		String value = stringForMultipleValuesToOneKey(emails, key);
 		
-		if (null != value && TextUtils.isEmpty(value)) {
+		if (null != value && !TextUtils.isEmpty(value)) {
 			params.put(key, value);
 		}
 		addBasicParams(params);
