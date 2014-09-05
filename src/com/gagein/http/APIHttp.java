@@ -486,6 +486,8 @@ public class APIHttp {
 		addBasicParams(params);
 		params.put("q", aKeyword);
 		params.put("page", aPage + "");
+		params.put("sort_by", "joblevel");
+		
 //		params.put("no_proxy", true + "");//TODO
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}

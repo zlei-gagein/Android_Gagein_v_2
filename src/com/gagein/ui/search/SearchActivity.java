@@ -366,11 +366,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void searchPartPersons(String character, final Boolean loadMore) {
-		mApiHttp.searchPartPersons(character , PAGE_NUM_PERSON, new Listener<JSONObject>() {
+		mApiHttp.searchAllPersons(character , PAGE_NUM_PERSON, new Listener<JSONObject>() {
 			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
+				Log.v("silen", parser.data().toString());
+				
 				if (parser.isOK()) {
 					if (!loadMore) {
 						searchPersons.clear();
@@ -385,7 +387,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						}
 					}
 					
-					Log.v("silen", "pserson.size == " + searchPersons.size());
+					//Log.v("silen", "pserson.size == " + searchPersons.size());
 					for (int i = 0; i < searchPersons.size(); i ++) {//TODO
 						Log.v("silen", "socialProfiles.size = " + searchPersons.get(i).socialProfiles.size());
 					}
