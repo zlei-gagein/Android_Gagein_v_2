@@ -149,7 +149,6 @@ public class SignUpActivity extends BaseActivity {
 							if (TextUtils.isEmpty(data.openId)) return;
 							int slashIndex = data.openId.lastIndexOf("/");
 							Log.v("silen", "slashIndex = " + slashIndex);
-//							if (slashIndex < 0 || slashIndex + 1 >= data.openId.length()) return; //TODO
 							
 							// extract account id
 							String accountId = data.openId.substring(slashIndex + 1);
@@ -340,11 +339,11 @@ public class SignUpActivity extends BaseActivity {
 					}
 				});
 			}
-		} else if (v == salesforceBtn) {//TODO
+		} else if (v == salesforceBtn) {
 			authAppWithSnType(APIHttpMetadata.kGGSnTypeSalesforce);
-		} else if (v == facebookBtn) {//TODO
+		} else if (v == facebookBtn) {
 			authAppWithSnType(APIHttpMetadata.kGGSnTypeFacebook);
-		} else if (v == twitterBtn) {//TODO
+		} else if (v == twitterBtn) {
 			authAppWithSnType(APIHttpMetadata.kGGSnTypeTwitter);
 		} 
 	}

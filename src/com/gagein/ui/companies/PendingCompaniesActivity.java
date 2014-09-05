@@ -261,6 +261,7 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 	}
 	
 	private void removePendingCompany(final ArrayList<String> companiesIds) {
+		
 		showLoadingDialog();
 		mApiHttp.removePendingCompany(companiesIds, new Listener<JSONObject>() {
 
@@ -292,6 +293,7 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 	}
 	
 	private void deleteCompanies(ArrayList<String> companiesIds) {
+		
 		for (int i = 0; i < companiesIds.size(); i ++) {
 			String id = companiesIds.get(i);
 			for (int j = 0; j < pendingCompanies.size(); j ++) {

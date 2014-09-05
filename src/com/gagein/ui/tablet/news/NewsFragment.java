@@ -279,7 +279,9 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				
 				refreshNews(false);
+				getPendingCompany();
 			}
 		}, 10);
 	}

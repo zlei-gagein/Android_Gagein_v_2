@@ -58,33 +58,58 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	protected List<String> observeNotifications() {
 		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_SET_NEWS_LIKED
 				,Constant.BROADCAST_SET_NEWS_UNLIKE, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
-				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES);
+				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES, 
+				Constant.BROADCAST_REMOVE_COMPANIES);
 	}
 	
 	@Override
 	public void handleNotifications(Context aContext, Intent intent) {
 		super.handleNotifications(aContext, intent);
+		
 		String actionName = intent.getAction();
 		if (actionName.equals(Constant.BROADCAST_REFRESH_NEWS)) {
+			
 			refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_REFRESH_COMPANIES)) {
+			
 			refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_LIKED)) {
+			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			setLikeFromBroadcast(newsId, true);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			setLikeFromBroadcast(newsId, false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			
 			refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
+			
 			getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
+			
 			getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
 			refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			
 			getPendingCompany();
+			
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES)) {
+			
+			getPendingCompany();
+			refreshNews(false);
+			
 		}
 	}
 	

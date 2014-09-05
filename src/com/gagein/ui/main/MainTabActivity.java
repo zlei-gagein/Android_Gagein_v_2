@@ -108,10 +108,38 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 				CommonUtil.hideSoftKeyBoard(mContext, MainTabActivity.this);
 			}
 		});
+		
+		//TODO
+		billingGetInfo();
 	}
 
 	private void setupTab(String name, String tag, Intent intent) {
 		tabHost.addTab(tabHost.newTabSpec(tag).setIndicator(getView(name)).setContent(intent));
+	}
+	
+	//TODO
+	private void billingGetInfo() {
+		
+		mApiHttp.billingGetInfo(new Listener<JSONObject>() {
+			
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					
+				} else {
+//					alertMessageForParser(parser);
+				}
+//				dismissLoadingDialog();
+			}
+		}, new Response.ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+//				showConnectionError();
+			}
+		});
 	}
 
 	/**

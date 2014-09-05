@@ -59,7 +59,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		String actionName = intent.getAction();
 		if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES) || 
 				
-				actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY) || 
+				actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY) || 
 				actionName.equals(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES) || actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)
 				) {
 			getAllCompanyGroups(false);
@@ -87,6 +87,12 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			startActivity(intentTo);
 			
 			getAllCompanyGroups(false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES)) {
+			
+			getAllCompanyGroups(false);
+			getPendingCompany();
+			
 		}
 	}
 	

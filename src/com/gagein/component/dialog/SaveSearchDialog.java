@@ -108,18 +108,19 @@ public class SaveSearchDialog implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == cancel) {
+			
 			dismissDialog();
-//			CommonUtil.hideSoftKeyBoard(mContext, mActivity);
+
 		} else if (v == save) {
+			
 			String website = websiteEdt.getText().toString().trim();
-			if (TextUtils.isEmpty(website)) {
-				CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_name));
-				return;
-			}
+			if (TextUtils.isEmpty(website)) return;
 			
 			dismissDialog();
 			CommonUtil.showLoadingDialog(mContext);
+			
 			if (type.equalsIgnoreCase("buz")) {
+				
 				new APIHttp(mContext).saveSearchCompanies(website, queryInfo,  new Listener<JSONObject>() {
 					
 					@Override
@@ -144,7 +145,9 @@ public class SaveSearchDialog implements OnClickListener {
 						CommonUtil.showLongToast(mContext.getResources().getString(R.string.connection_error));
 					}
 				});
+				
 			} else if (type.equalsIgnoreCase("con")) {
+				
 				new APIHttp(mContext).saveSearchPersons(website, queryInfo, new Listener<JSONObject>() {
 					
 					@Override

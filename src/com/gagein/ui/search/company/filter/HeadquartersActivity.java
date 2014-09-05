@@ -14,12 +14,16 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -102,6 +106,24 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 			}
 		});
+		
+		addEdt.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					CommonUtil.hideSoftKeyBoard(mContext, HeadquartersActivity.this);
+					cancelSearchTask();
+					if (TextUtils.isEmpty(textView.getText().toString())) return false;
+					
+					scheduleSearchTask(textView.getText().toString(), 0);
+					return true;
+				}
+				return false;
+			}
+		});
+
 	}
 	
 	private void setSearchLocation() {

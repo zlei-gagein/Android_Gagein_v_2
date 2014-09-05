@@ -265,22 +265,28 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
+			
 			finish();
+			
 		} else if (v == rightBtn) {
+			
 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false), queryInfo.getQueryInfoResult());
-			Window dialogWindow = dialog.getDialog().getWindow();
- 	        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
- 	        lp.width = CommonUtil.getDeviceWidth(SearchPersonActivity.this) - 100;
 			dialog.showDialog();
+			
 		} else if (v == showDetailsTx) {
+			
 			showDetails = !showDetails;
 			sortByDetailLayout.setVisibility(showDetails ? View.VISIBLE : View.GONE);
 			showDetailsTx.setText(showDetails ? R.string.hide_details : R.string.show_details);
+			
 		} else if (v == sortByText) {
+			
 			Intent intent = new Intent();
 			intent.setClass(mContext, SortBySearchPersonActivity.class);
 			startActivityForResult(intent, requestCode);
+			
 		} else if (v == rankText) {
+			
 			String value = rankText.getText().toString();
 			if (!value.isEmpty()) {
 				Constant.REVERSE = !Constant.REVERSE;

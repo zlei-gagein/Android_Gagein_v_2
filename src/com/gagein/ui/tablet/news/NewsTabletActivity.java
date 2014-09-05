@@ -38,9 +38,12 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 	
 	@Override
 	protected List<String> observeNotifications() {
+		
 		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_SET_NEWS_LIKED
 				,Constant.BROADCAST_SET_NEWS_UNLIKE, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
-				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES);
+				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES,
+				Constant.BROADCAST_REMOVE_COMPANIES);
+		
 	}
 	
 	@Override
@@ -51,31 +54,55 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		
 		String actionName = intent.getAction();
 		if (actionName.equals(Constant.BROADCAST_REFRESH_NEWS)) {
+			
 			newsFragment.refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_REFRESH_COMPANIES)) {
+			
 			newsFragment.refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_LIKED)) {
+			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			newsFragment.setLikeFromBroadcast(newsId, true);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			newsFragment.setLikeFromBroadcast(newsId, false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+			
 			newsFragment.refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
+			
 			newsFragment.getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
+			
 			newsFragment.getPendingCompany();
+			
 		} else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY) || actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
 			newsFragment.refreshNews(false);
+			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_PENDING_COMPANIES)) {
+			
 			newsFragment.getPendingCompany();
+			
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_COMPANIES)) {
+			
+			newsFragment.getPendingCompany();
+			newsFragment.refreshNews(false);
+			
 		}
 	}
 
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		
 		setContentView(R.layout.activity_tablet_main);
 		leftLayout = (LinearLayout) findViewById(R.id.leftLayout);
 		

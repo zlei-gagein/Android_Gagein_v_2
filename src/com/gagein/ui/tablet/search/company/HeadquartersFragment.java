@@ -15,14 +15,18 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -36,6 +40,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.filter.Filters;
 import com.gagein.model.filter.Location;
 import com.gagein.ui.BaseFragment;
+import com.gagein.ui.search.SearchActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -135,6 +140,24 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 			}
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			}
+		});
+		
+		addEdt.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					cancelSearchTask();
+					if (TextUtils.isEmpty(textView.getText().toString())) {
+						return false;
+					}
+					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					scheduleSearchTask(textView.getText().toString(), 0);
+					return true;
+				}
+				return false;
 			}
 		});
 	}

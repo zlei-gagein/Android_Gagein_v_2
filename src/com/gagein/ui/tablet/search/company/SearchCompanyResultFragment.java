@@ -271,6 +271,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 						String type = queryInfoItem.getType();
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
+						Log.v("silen", "type = " + type);
 						if (type.equalsIgnoreCase("mer_for_id")) {
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);

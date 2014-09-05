@@ -361,29 +361,34 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
+			
 			finish();
+			
 		} else if (v == rightBtn) {
+			
 			if (null == queryInfo) return;
  			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true), queryInfo.getQueryInfoResult());
- 			Window dialogWindow = dialog.getDialog().getWindow();
- 	        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
- 	        lp.width = CommonUtil.getDeviceWidth(SearchCompanyActivity.this) - 100;
 			dialog.showDialog();
+			
 		} else if (v == showDetailsTx) {
+			
 			showDetails = !showDetails;
 			sortByDetailLayout.setVisibility(showDetails ? View.VISIBLE : View.GONE);
 			showDetailsTx.setText(showDetails ? R.string.hide_details : R.string.show_details);
+			
 		} else if (v == sortByText) {
+			
 			Intent intent = new Intent();
 			intent.setClass(mContext, SortBySearchCompanyActivity.class);
 			startActivityForResult(intent, requestCode);
+			
 		} else if (v == rankText) {
+			
 			String value = rankText.getText().toString();
 			if (!value.isEmpty()) {
-				Log.v("silen", "Constant.REVERSE = " + Constant.REVERSE);
 				Constant.REVERSE = !Constant.REVERSE;
-				Log.v("silen", "Constant.REVERSE = " + Constant.REVERSE);
 				setRank(sortByText.getText().toString());
 			} else {
 				return;
