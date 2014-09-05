@@ -18,6 +18,39 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/share_gagein"
+                    android:textColor="@color/text_dark"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/refer_gagein_to_friends"
+                    android:textColor="@color/text_weak"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/silver" />
 
             <HorizontalScrollView
                 android:layout_width="fill_parent"
@@ -163,123 +196,103 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/jump_the_queue"
-                    android:textColor="@color/text_dark"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/share_gagein_get_provisioned"
-                    android:textColor="@color/text_weak"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="25dp"
-                android:background="@color/silver" />
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal" 
+                android:weightSum="3">
 
                 <LinearLayout
                     android:id="@+id/signUpLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+	                android:paddingLeft="5dp"
+	               	android:paddingRight="5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/signUpNum"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="1 Signup"
+                        android:text="10"
+                        android:gravity="center"
                         android:textColor="@color/text_dark"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/resultFrom"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_marginTop="2dp"
-                        android:text="resulting from share"
+                        android:text="Free Month Left"
                         android:textColor="@color/text_weak"
                         android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/creditLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+	               	android:paddingRight="5dp"
                     android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/creditNum"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="2 Credits"
+                        android:gravity="center"
+                        android:text="22"
                         android:textColor="@color/text_dark"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/each"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="each"
+                        android:gravity="center"
+                        android:text="Free Month Total"
+                        android:textColor="@color/text_weak"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/credidtLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+	               	android:paddingRight="5dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:gravity="center"
+                        android:text="230"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text="Coworker on Gagein"
                         android:textColor="@color/text_weak"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="="
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/silver" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/share_pt"
-                android:textColor="@color/text_weak"
-                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 
