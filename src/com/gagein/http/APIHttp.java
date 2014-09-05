@@ -1517,6 +1517,8 @@ public class APIHttp {
 		params.put("importance", importance);
 		params.put("message", message);
 		params.put("summary", summary);
+		params.put("os", "Android");
+		
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
