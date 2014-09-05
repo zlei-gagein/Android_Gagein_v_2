@@ -110,6 +110,7 @@ public class NewsAdapter extends BaseAdapter {
 			viewHolder.content.setText(update.content);
 		}
 		viewHolder.fromsource.setText(CommonUtil.dateFormat(update.date) + " via " + update.fromSource);//TODO write to commonUtil method
+		viewHolder.fromsource.setTextColor(mContext.getResources().getColor(R.color.gray));
 		if (updates.get(position).hasBeenRead) {
 			viewHolder.headline.setTextColor(mContext.getResources().getColor(R.color.text_weak));
 		} else {
