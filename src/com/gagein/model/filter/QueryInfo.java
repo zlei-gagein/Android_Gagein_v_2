@@ -1,5 +1,6 @@
 package com.gagein.model.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueryInfo {
@@ -26,7 +27,7 @@ public class QueryInfo {
 	
 	private List<QueryInfoItem> RevenueSize;
 	
-	private QueryInfoItem EventSearchKeywords;
+	private QueryInfoItem EventSearchKeywords;	/// 用户自定义trigger
 	
 	private String queryInfoResult = "";
 	
@@ -38,13 +39,60 @@ public class QueryInfo {
 	
 	private List<QueryInfoItem> Locations;
 	
-	private String location;
+	private String location; /// dop_address
 	
 	private List<QueryInfoItem> FunctionalRoles;
 	
 	private List<QueryInfoItem> CompaniesForCompany;
 	
 	private List<QueryInfoItem> CompaniesForPeople;
+	
+	
+	public List<QueryInfoItem> allConditions(boolean isCompanySearch) {
+		List<QueryInfoItem> conditions = new ArrayList<QueryInfoItem>();
+		///
+		if (EventSearchKeywords != null) {
+			conditions.add(EventSearchKeywords);
+		} else {
+			conditions.addAll(NewsTriggers);
+		}
+		///
+		if (companySearchKeywords != null && !companySearchKeywords.isEmpty()) {
+			QueryInfoItem queryInfoItem = new QueryInfoItem();
+			queryInfoItem.setName(companySearchKeywords);
+			queryInfoItem.setType("company_search_keywords");
+			conditions.add(queryInfoItem);
+		}
+		///
+		if (JobTitle != null && !JobTitle.isEmpty()) {
+			QueryInfoItem queryInfoItem = new QueryInfoItem();
+			queryInfoItem.setName(JobTitle);
+			queryInfoItem.setType("dop_title");
+			conditions.add(queryInfoItem);
+		}
+		///
+		conditions.addAll(Ranks);
+		conditions.addAll(FiscalMonth);
+		conditions.addAll(MileStoneOccurrenceType);
+		conditions.addAll(Industries);
+		conditions.addAll(LocationCode);
+		conditions.addAll(EmployeeSize);
+		conditions.addAll(DateRange);
+		conditions.addAll(MileStoneType);
+		conditions.addAll(Ownership);
+		conditions.addAll(RevenueSize);
+		conditions.addAll(Locations);
+		///
+		if (isCompanySearch) {
+			conditions.addAll(JobLevels);
+			conditions.addAll(FunctionalRoles);
+			conditions.addAll(CompaniesForPeople);
+		} else {
+			conditions.addAll(CompaniesForCompany);
+		}
+		
+		return conditions;
+	}
 	
 	public String getLocation() {
 		return location;

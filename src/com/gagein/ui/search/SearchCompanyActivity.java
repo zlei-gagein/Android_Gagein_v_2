@@ -235,6 +235,20 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 					@Override
 					public void onClick(View arg0) {
 						//判断是否有选中条件 TODO
+						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
+						if (conditions.size() <= 1) {
+							showDialog("You have to enter in search criteria! Try again.");
+							return;
+						} else if (conditions.size() == 2) {
+							QueryInfoItem condition1 = conditions.get(0);
+							QueryInfoItem condition2 = conditions.get(1);
+							if (condition1.getType().equalsIgnoreCase("search_date_range")
+									|| condition2.getType().equalsIgnoreCase("search_date_range")) {
+								showDialog("You have to enter in search criteria! Try again.");
+								return;
+							}
+						}
+						
 						companyInfoLayout.removeView(view);
 						//TODO 数据删除
 						String type = queryInfoItem.getType();
