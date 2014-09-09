@@ -950,6 +950,7 @@ public class APIParser {
 			
 			//根据返回的queryInfo 设置LocationCode
 			List<Location> headquarters = mFilters.getHeadquarters();
+			headquarters.clear();
 			for (int i = 0; i < locationArray.length(); i ++) {
 				Location location = new Location();
 				location.setChecked(true);

@@ -47,14 +47,18 @@ public class QueryInfo {
 	
 	private List<QueryInfoItem> CompaniesForPeople;
 	
-	
+	private void addItems(List<QueryInfoItem> fromList, List<QueryInfoItem> toList) {
+		if (fromList != null && toList != null) {
+			toList.addAll(fromList);
+		}
+	}
 	public List<QueryInfoItem> allConditions(boolean isCompanySearch) {
 		List<QueryInfoItem> conditions = new ArrayList<QueryInfoItem>();
 		///
 		if (EventSearchKeywords != null) {
 			conditions.add(EventSearchKeywords);
 		} else {
-			conditions.addAll(NewsTriggers);
+			addItems(NewsTriggers, conditions);
 		}
 		///
 		if (companySearchKeywords != null && !companySearchKeywords.isEmpty()) {
@@ -71,24 +75,25 @@ public class QueryInfo {
 			conditions.add(queryInfoItem);
 		}
 		///
-		conditions.addAll(Ranks);
-		conditions.addAll(FiscalMonth);
-		conditions.addAll(MileStoneOccurrenceType);
-		conditions.addAll(Industries);
-		conditions.addAll(LocationCode);
-		conditions.addAll(EmployeeSize);
-		conditions.addAll(DateRange);
-		conditions.addAll(MileStoneType);
-		conditions.addAll(Ownership);
-		conditions.addAll(RevenueSize);
-		conditions.addAll(Locations);
+		addItems(Ranks, conditions);
+		addItems(FiscalMonth, conditions);
+		addItems(MileStoneOccurrenceType, conditions);
+		addItems(Industries, conditions);
+		addItems(LocationCode, conditions);
+		addItems(EmployeeSize, conditions);
+		addItems(DateRange, conditions);
+		addItems(MileStoneType, conditions);
+		addItems(Ownership, conditions);		
+		addItems(RevenueSize, conditions);
+		addItems(Locations, conditions);
+
 		///
 		if (isCompanySearch) {
-			conditions.addAll(JobLevels);
-			conditions.addAll(FunctionalRoles);
-			conditions.addAll(CompaniesForPeople);
+			addItems(JobLevels, conditions);
+			addItems(FunctionalRoles, conditions);
+			addItems(CompaniesForPeople, conditions);
 		} else {
-			conditions.addAll(CompaniesForCompany);
+			addItems(CompaniesForCompany, conditions);
 		}
 		
 		return conditions;

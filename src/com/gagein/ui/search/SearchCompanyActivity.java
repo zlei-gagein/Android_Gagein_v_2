@@ -274,8 +274,13 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
 						} else if (type.equalsIgnoreCase("location_code")) {
+							
 							List<Location> locationList = mFilters.getLocations();
 							deleteLocationFilters(id, locationList);
+							
+							locationList = mFilters.getHeadquarters();
+							deleteLocationFilters(id, locationList);
+							
 						} else if (type.equalsIgnoreCase("org_employee_size")) {
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
@@ -332,9 +337,10 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		for (int i = 0; i < locations.size(); i ++) {
 			if (id.equalsIgnoreCase(locations.get(i).getCode())) {
 				locations.get(i).setChecked(false);
-				searchAdvancedCompanies(false);
 			}
 		}
+		
+		searchAdvancedCompanies(false);
 	}
 	
 	private void setEventSearchKeywordsButton(String value, final String type) {
