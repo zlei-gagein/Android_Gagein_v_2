@@ -138,13 +138,18 @@ public class FeedbackActivity extends BaseActivity {
 			intent.putExtra(Constant.CategoryType, categoryType);
 			startActivityForResult(intent, requestCode);
 		} else if (v == rightBtn) {
+			
+			boolean canShowExtra = (APIHttpMetadata.kGGFeedbackCategoryBug == categoryType 
+					|| APIHttpMetadata.kGGFeedbackCategoryFeatureRequest == categoryType 
+					|| APIHttpMetadata.kGGFeedbackCategoryImprovement == categoryType);
+			
 			String message = msgEdt.getText().toString().trim();
 			String subject = subjectEdt.getText().toString().trim();
 			if (categoryType == 0) {
 				CommonUtil.showPromotDialog(mContext, R.string.requiry_category);
 				return;
 			} else {
-				if (TextUtils.isEmpty(subject)) {
+				if (canShowExtra && TextUtils.isEmpty(subject)) {
 					CommonUtil.showPromotDialog(mContext, R.string.requiry_subject);
 					return;
 				} else if (TextUtils.isEmpty(message)) {
