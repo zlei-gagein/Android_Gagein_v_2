@@ -1363,9 +1363,6 @@ public class CommonUtil {
 					}
 				}
 			}
-			if (mMilestonesArray.length() > 0) {
-				jsonObject.put("milestone_type", mMilestonesArray);
-			}
 			
 			if (haveSelectMilestone) {
 				for (int i = 0; i < milestoneDateRanks.size(); i ++) {
@@ -1375,8 +1372,12 @@ public class CommonUtil {
 					}
 				}
 			}
+			
 			if (milestoneDateRanksArray.length() > 0) {
 				jsonObject.put("milestone_occurrence_type", milestoneDateRanksArray);
+				if (mMilestonesArray.length() > 0) {
+					jsonObject.put("milestone_type", mMilestonesArray);
+				}
 			}
 			
 			//Rank

@@ -1,5 +1,6 @@
 package com.gagein.ui.tablet.search.company;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,12 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.gagein.R;
+import com.gagein.ui.main.BaseFragmentActivity;
 import com.gagein.ui.tablet.search.CompanyEmptyViewFragment;
 import com.gagein.ui.tablet.search.CompanyEmptyViewFragment.OnCompanyEmptyViewFinish;
 import com.gagein.ui.tablet.search.company.CompaniesFragment.OnCanleTask;
@@ -54,7 +55,7 @@ import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
 
-public class CompanySearchTabletActivity extends FragmentActivity implements OnFinishActivity, OnStartNewsTriggers, OnNewsTriggersFinish
+public class CompanySearchTabletActivity extends BaseFragmentActivity implements OnFinishActivity, OnStartNewsTriggers, OnNewsTriggersFinish
  	, OnStartHeadquarters , OnHeadquartersFinish, OnIndustryFinish, OnStartIndustry, OnStartEmployeeSize , OnEmployeeSizeFinish,
  	OnRevenueSizeFinish, OnStartRevenueSize, OnStartOwnership, OnOwnershipFinish, OnStartMilestone, OnMileStoneFinish, OnStartRank
  	, OnRankFinish, OnStartFiscalYear, OnFiscalYearFinish, OnCompanyEmptyViewFinish, OnSearchFromRank, OnSearchFromNewsTriggers, 
@@ -82,6 +83,27 @@ public class CompanySearchTabletActivity extends FragmentActivity implements OnF
 	private String savedId = "";
 	private IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_REFRESH_FILTER);
 	private RefreshFilterBroadcastReceiver receiver = new RefreshFilterBroadcastReceiver();
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			searchCompanyResultFragment.setFollowOrUnFollow(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			searchCompanyResultFragment.setFollowOrUnFollow(intent, false);
+			
+		}
+	}
 	
 	@Override
 	protected void onCreate(Bundle arg0) {

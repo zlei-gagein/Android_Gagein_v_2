@@ -289,17 +289,22 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	}
 
 	private void unfollowCompany() {
+		
 		showLoadingDialog();
 		mApiHttp.unfollowCompany(mCompanyId, new Listener<JSONObject>() {
 			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					mCompany.followed = false;
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.COMPANYID, mCompanyId);
 					intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
+					
 					mContext.sendBroadcast(intent);
 					setFollowButton();
 					setFollowImage();
@@ -318,19 +323,23 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	}
 	
 	private void followCompany() {
+		
 		showLoadingDialog();
 		mApiHttp.followCompany(mCompanyId, new Listener<JSONObject>() {
 			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
 					mCompany.followed = true;
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.COMPANYID, mCompanyId);
 					intent.setAction(Constant.BROADCAST_FOLLOW_COMPANY);
 					mContext.sendBroadcast(intent);
+					
 					setFollowButton();
 					setFollowImage();
 					

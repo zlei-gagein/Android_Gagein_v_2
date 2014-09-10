@@ -13,7 +13,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/logo_company_default" />
+        android:src="@drawable/logo_company_default" />
 
     <ImageView
         android:id="@+id/search"

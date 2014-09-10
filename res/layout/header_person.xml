@@ -9,7 +9,7 @@
         android:id="@+id/personLog"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/logo_person_default" />
+        android:src="@drawable/logo_person_default" />
 
     <LinearLayout
         android:layout_width="fill_parent"

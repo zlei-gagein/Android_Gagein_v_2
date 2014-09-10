@@ -204,8 +204,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		setSearchCompanies();
 		setSearchPersons();
 		
-		CommonUtil.showSoftKeyBoard(300);
-		
 	}
 	
 	@Override

@@ -66,7 +66,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 					jobTitle.setChecked(true);
 					mJobTitles.add(jobTitle);
 					adapter.notifyDataSetChanged();
-					showShortToast("00000000000");
+					
 					CommonUtil.setListViewHeight(listView);
 					addEdt.setText("");
 					addEdt.requestFocus();

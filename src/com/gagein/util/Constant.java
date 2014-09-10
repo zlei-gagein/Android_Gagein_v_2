@@ -179,6 +179,10 @@ public abstract class Constant {
 	
 	public static String BROADCAST_REFRESH_FILTER = "broadcast refresh filter";
 	
+	public static String BROADCAST_REMOVE_BOOKMARKS = "broadcast delete bookmarks";
+	
+	public static String BROADCAST_ADD_BOOKMARKS = "broadcast add bookmarks";
+	
 	public static String LINKEDIN = "linkedin";
 	public static String FACEBOOK = "facebook";
 	public static String TWITTER = "twitter";

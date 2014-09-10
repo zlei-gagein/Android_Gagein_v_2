@@ -92,6 +92,7 @@ public class PersonActivity extends BaseActivity {
 	
 	private void setHeadData() {
 		listView.addHeaderView(headView);
+		personLog.setImageResource(R.drawable.logo_person_default);
 		loadImage(person.photoPath, personLog);
 		Log.v("silen", "person.photoPath = " + person.photoPath);
 		personName.setText(person.name);

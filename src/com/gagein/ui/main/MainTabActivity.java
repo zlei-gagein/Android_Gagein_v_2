@@ -114,6 +114,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 					
 				} else if (tabId.equalsIgnoreCase(TAB_ID_SEARCH)) {
 					
+					CommonUtil.showSoftKeyBoard(100);
 					return;
 					
 				}

@@ -319,6 +319,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	}
 
 	private void unfollowCompany() {
+		
 		showLoadingDialog(mContext);
 		mApiHttp.unfollowCompany(mCompanyId, new Listener<JSONObject>() {
 			
@@ -326,13 +327,17 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					mCompany.followed = false;
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.COMPANYID, mCompanyId);
 					intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
 					mContext.sendBroadcast(intent);
+					
 					setFollowButton();
 					setFollowImage();
+					
 				} else {
 					alertMessageForParser(parser);
 				}
@@ -348,6 +353,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	}
 	
 	private void followCompany() {
+		
 		showLoadingDialog(mContext);
 		mApiHttp.followCompany(mCompanyId, new Listener<JSONObject>() {
 			
@@ -355,11 +361,14 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					mCompany.followed = true;
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.COMPANYID, mCompanyId);
 					intent.setAction(Constant.BROADCAST_FOLLOW_COMPANY);
 					mContext.sendBroadcast(intent);
+					
 					setFollowButton();
 					setFollowImage();
 				} else {

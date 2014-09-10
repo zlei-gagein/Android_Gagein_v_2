@@ -59,7 +59,7 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	protected void initData() {
 		super.initData();
 		
-		getSaved(true, false);
+		getBookmarks(true, false);
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 		adapter.notifyDataSetInvalidated();
 	}
 	
-	private void getSaved(final Boolean isShowDialog, final Boolean loadMore) {
+	private void getBookmarks(final Boolean isShowDialog, final Boolean loadMore) {
 
 		if (isShowDialog) showLoadingDialog();
 		mApiHttp.getSavedUpdates(page, false,new Listener<JSONObject>() {
@@ -166,6 +166,10 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 			}
 		});
 	}
+	
+	public void setNoBookMarks() {
+		noBookmarks.setVisibility(View.VISIBLE);
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -175,11 +179,11 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	@Override
 	public void onRefresh() {
 		page = 1;
-		getSaved(false, false);
+		getBookmarks(false, false);
 	}
 
 	@Override
 	public void onLoadMore() {
-		getSaved(false, true);
+		getBookmarks(false, true);
 	}
 }

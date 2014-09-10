@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -61,6 +62,39 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	private List<FilterItem> sortByList;
 	private String type = "buz";
 	private int requestCode = 1;
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			setFollowOrUnFollow(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			setFollowOrUnFollow(intent, false);
+			
+		}
+	}
+	
+	private void setFollowOrUnFollow(Intent intent, Boolean isFollow) {
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < seachedCompanies.size() ; i++) {
+			Company company = seachedCompanies.get(i);
+			if (company.orgID == companyId) {
+				company.followed = isFollow;
+			}
+		}
+		adapter.notifyDataSetChanged();
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +161,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	
 	private void setTitle(long num) {
 		if (num == 0) {
-			setTitle("No company found");
+			setTitle("No companies found");
 		} else if (num == 1) {
 			setTitle("1 company found");
 		} else {
@@ -191,9 +225,11 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		setQueryInfoLayout();
 		
 		DataPage dataPage = parser.parseGetSimilarCompanies();
+		
 		if (dataPage == null) {
 			Log.v("silen", "dataPage == null");
 		}
+		
 		if (dataPage.items != null) {
 			for (Object obj : dataPage.items) {
 				if (obj instanceof Company) {
@@ -201,6 +237,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 				}
 			}
 		}
+		
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setCompany();
@@ -224,16 +261,19 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		adapter.notifyDataSetInvalidated();
 	}
 	
-	private void setQueryInfoDetailButton(List<QueryInfoItem> queryInfoItemList) {
+	private void setQueryInfoDetailButton(List<QueryInfoItem> queryInfoItemList, List<QueryInfoItem> queryInfoItemList2) {
 		if (null != queryInfoItemList) {
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
 				Button button = (Button) view.findViewById(R.id.button);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
+				final String queryType = queryInfoItem.getType();
+				
 				button.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
+						
 						//判断是否有选中条件 TODO
 						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
 						if (conditions.size() <= 1) {
@@ -251,29 +291,28 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 						
 						companyInfoLayout.removeView(view);
 						//TODO 数据删除
-						String type = queryInfoItem.getType();
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
 						Log.v("silen", "type = " + type);
-						if (type.equalsIgnoreCase("mer_for_id")) {
+						if (queryType.equalsIgnoreCase("mer_for_id")) {
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
-						} else if (type.equalsIgnoreCase("search_company_for_type")) {
+						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
 							deleteFilters(id, companiesList);
-						} else if (type.equalsIgnoreCase("rank")) {
+						} else if (queryType.equalsIgnoreCase("rank")) {
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
-						} else if (type.equalsIgnoreCase("org_fiscal_month")) {
+						} else if (queryType.equalsIgnoreCase("org_fiscal_month")) {
 							List<FilterItem> fiscalMonthList = mFilters.getFiscalYearEndMonths();
 							deleteFilters(id, fiscalMonthList);
-						} else if (type.equalsIgnoreCase("milestone_occurrence_type")) {
+						} else if (queryType.equalsIgnoreCase("milestone_occurrence_type")) {
 							List<FilterItem> mileStoneDateRangeList = mFilters.getMileStoneDateRange();
 							deleteFilters(id, mileStoneDateRangeList);
-						} else if (type.equalsIgnoreCase("org_industries")) {
+						} else if (queryType.equalsIgnoreCase("org_industries")) {
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
-						} else if (type.equalsIgnoreCase("location_code")) {
+						} else if (queryType.equalsIgnoreCase("location_code")) {
 							
 							List<Location> locationList = mFilters.getLocations();
 							deleteLocationFilters(id, locationList);
@@ -281,19 +320,19 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 							locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
 							
-						} else if (type.equalsIgnoreCase("org_employee_size")) {
+						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
-						} else if (type.equalsIgnoreCase("search_date_range")) {
+						} else if (queryType.equalsIgnoreCase("search_date_range")) {
 							List<FilterItem> ranks = mFilters.getDateRanges();
 							deleteFilters(id, ranks);
-						} else if (type.equalsIgnoreCase("milestone_type")) {
+						} else if (queryType.equalsIgnoreCase("milestone_type")) {
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
 							deleteFilters(id, mileStoneList);
-						} else if (type.equalsIgnoreCase("org_ownership")) {
+						} else if (queryType.equalsIgnoreCase("org_ownership")) {
 							List<FilterItem> ownershipList = mFilters.getOwnerships();
 							deleteFilters(id, ownershipList);
-						} else if (type.equalsIgnoreCase("org_revenue_size")) {
+						} else if (queryType.equalsIgnoreCase("org_revenue_size")) {
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
 						}
@@ -304,7 +343,13 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 					}
 
 				});
-				button.setText(queryInfoItem.getName());
+				
+				if (null != queryInfoItemList2) {
+					queryInfoItem.setDisplayName(queryInfoItemList2);
+				}
+				
+				button.setText(queryInfoItem.getDisplayName());
+				
 				companyInfoLayout.addView(view);
 			}
 		}
@@ -439,7 +484,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	private void setQueryInfoLayout() {
 		//NewsTriggers
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
-		setQueryInfoDetailButton(newsTriggersList);
+		setQueryInfoDetailButton(newsTriggersList, null);
 		
 		//Companies
 		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
@@ -460,48 +505,52 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		}
 		
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForCompany();
-		setQueryInfoDetailButton(companiesList);
+		setQueryInfoDetailButton(companiesList, null);
 		
 		
 		//Ranks
 		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setQueryInfoDetailButton(ranksList);
+		setQueryInfoDetailButton(ranksList, null);
 		
 		//FiscalMonth
 		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setQueryInfoDetailButton(fiscalMonthList);
+		setQueryInfoDetailButton(fiscalMonthList, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
-		setQueryInfoDetailButton(mileStoneOccurrenceTypeList);
+		
+		//MileStoneType
+		int mileStoneOccurrenceTypeListSize = mileStoneOccurrenceTypeList == null ? 0 : mileStoneOccurrenceTypeList.size();
+		
+		if (mileStoneOccurrenceTypeListSize > 0) {
+			
+			List<QueryInfoItem> mileStoneTypeList = queryInfo.getMileStoneType();
+			setQueryInfoDetailButton(mileStoneTypeList, mileStoneOccurrenceTypeList);
+		}
 		
 		//Industries
 		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setQueryInfoDetailButton(industriesList);
+		setQueryInfoDetailButton(industriesList, null);
 		
 		//LocationCode
 		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setQueryInfoDetailButton(locationList);
+		setQueryInfoDetailButton(locationList, null);
 		
 		//EmployeeSize
 		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setQueryInfoDetailButton(employeeSizeList);
+		setQueryInfoDetailButton(employeeSizeList, null);
 		
 		//DateRange
 		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setQueryInfoDetailButton(dateRangeList);
-		
-		//MileStoneType
-		List<QueryInfoItem> mileStoneTypeList = queryInfo.getMileStoneType();
-		setQueryInfoDetailButton(mileStoneTypeList);
+		setQueryInfoDetailButton(dateRangeList, null);
 		
 		//Ownership
 		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setQueryInfoDetailButton(ownershipList);
+		setQueryInfoDetailButton(ownershipList, null);
 		
 		//RevenueSize
 		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setQueryInfoDetailButton(revenueSizeList);
+		setQueryInfoDetailButton(revenueSizeList, null);
 		
 		//EventSearchKeywords
 		if (null != queryInfo.getEventSearchKeywords()) {

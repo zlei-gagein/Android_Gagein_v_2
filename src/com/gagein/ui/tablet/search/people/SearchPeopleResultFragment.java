@@ -301,12 +301,17 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		}
 	}
 	
-	private void setInfoDetailButton(List<QueryInfoItem> queryInfoItemList, final String type) {
+	private void setInfoDetailButton(List<QueryInfoItem> queryInfoItemList, final String type, List<QueryInfoItem> queryInfoItemList2) {
+		
 		if (null != queryInfoItemList) {
+			
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
+				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
 				Button button = (Button) view.findViewById(R.id.button);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
+				final String queryType = queryInfoItem.getType();
+				
 				button.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -317,58 +322,57 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 							pesonalInfoLayout.removeView(view);
 						}
 						//TODO 数据删除
-						String type = queryInfoItem.getType();
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
-						if (type.equalsIgnoreCase("mer_for_id")) {
+						if (queryType.equalsIgnoreCase("mer_for_id")) {
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
-						} else if (type.equalsIgnoreCase("search_company_for_type")) {
+						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							if (id.trim().equalsIgnoreCase("4")) return;
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
 							deleteFilters(id, companiesList);
-						} else if (type.equalsIgnoreCase("rank")) {
+						} else if (queryType.equalsIgnoreCase("rank")) {
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
-						} else if (type.equalsIgnoreCase("org_fiscal_month")) {
+						} else if (queryType.equalsIgnoreCase("org_fiscal_month")) {
 							List<FilterItem> fiscalMonthList = mFilters.getFiscalYearEndMonths();
 							deleteFilters(id, fiscalMonthList);
-						} else if (type.equalsIgnoreCase("milestone_occurrence_type")) {
+						} else if (queryType.equalsIgnoreCase("milestone_occurrence_type")) {
 							List<FilterItem> mileStoneDateRangeList = mFilters.getMileStoneDateRange();
 							deleteFilters(id, mileStoneDateRangeList);
-						} else if (type.equalsIgnoreCase("org_industries")) {
+						} else if (queryType.equalsIgnoreCase("org_industries")) {
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
-						} else if (type.equalsIgnoreCase("location_code")) {//TODO
+						} else if (queryType.equalsIgnoreCase("location_code")) {//TODO
 							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
-						} else if (type.equalsIgnoreCase("org_employee_size")) {
+						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
-						} else if (type.equalsIgnoreCase("search_date_range")) {
+						} else if (queryType.equalsIgnoreCase("search_date_range")) {
 							List<FilterItem> ranks = mFilters.getDateRanges();
 							deleteFilters(id, ranks);
-						} else if (type.equalsIgnoreCase("milestone_type")) {
+						} else if (queryType.equalsIgnoreCase("milestone_type")) {
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
 							deleteFilters(id, mileStoneList);
-						} else if (type.equalsIgnoreCase("org_ownership")) {
+						} else if (queryType.equalsIgnoreCase("org_ownership")) {
 							List<FilterItem> ownershipList = mFilters.getOwnerships();
 							deleteFilters(id, ownershipList);
-						} else if (type.equalsIgnoreCase("org_revenue_size")) {
+						} else if (queryType.equalsIgnoreCase("org_revenue_size")) {
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
 						}
 						//TODO
-						else if (type.equalsIgnoreCase("dop_title")) {
+						else if (queryType.equalsIgnoreCase("dop_title")) {
 							List<JobTitle> titleList = mFilters.getJobTitles();
 							deleteJobTitleFilters(id, titleList);
-						} else if (type.equalsIgnoreCase("dop_job_level")) {
+						} else if (queryType.equalsIgnoreCase("dop_level")) {
 							List<FilterItem> levelList = mFilters.getJobLevel();
 							deleteFilters(id, levelList);
-						} else if (type.equalsIgnoreCase("dop_address")) {
+						} else if (queryType.equalsIgnoreCase("dop_address")) {
 							List<Location> locationList = mFilters.getLocations();
 							deleteLocationFilters(id, locationList);
-						} else if (type.equalsIgnoreCase("dop_functional_role")) {
+						} else if (queryType.equalsIgnoreCase("dop_functional_role")) {
 							List<FilterItem> functionalRoleList = mFilters.getFunctionalRoles();
 							deleteFilters(id, functionalRoleList);
 						}
@@ -379,7 +383,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					}
 
 				});
-				button.setText(queryInfoItem.getName());
+
+				if (null != queryInfoItemList2) {
+					queryInfoItem.setDisplayName(queryInfoItemList2);
+				}
+				
+				button.setText(queryInfoItem.getDisplayName());
+				
 				if (type.equalsIgnoreCase(employer)) {
 					employerInfoLayout.addView(view);
 				} else if (type.equalsIgnoreCase(personal)) {
@@ -410,7 +420,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		
 		//Job Level
 		List<QueryInfoItem> jobLevelList = queryInfo.getJobLevels();
-		setInfoDetailButton(jobLevelList, personal);
+		setInfoDetailButton(jobLevelList, personal, null);
 		
 		//Location
 		String locationStr = queryInfo.getLocation();
@@ -432,59 +442,63 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		
 		//Functional Role
 		List<QueryInfoItem> functionalRoleList = queryInfo.getFunctionalRoles();
-		setInfoDetailButton(functionalRoleList, personal);
+		setInfoDetailButton(functionalRoleList, personal, null);
 	}
 	
 	
 	private void setEmployerInfoLayout() {
 		//NewsTriggers
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
-		setInfoDetailButton(newsTriggersList, employer);
+		setInfoDetailButton(newsTriggersList, employer, null);
 		
 		//Companies
 		//TODO
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
-		setInfoDetailButton(companiesList, employer);
+		setInfoDetailButton(companiesList, employer, null);
 		
 		//Ranks
 		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setInfoDetailButton(ranksList, employer);
+		setInfoDetailButton(ranksList, employer, null);
 		
 		//FiscalMonth
 		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setInfoDetailButton(fiscalMonthList, employer);
+		setInfoDetailButton(fiscalMonthList, employer, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
-		setInfoDetailButton(mileStoneOccurrenceTypeList, employer);
+		
+		//MileStoneType
+		int mileStoneOccurrenceTypeListSize = mileStoneOccurrenceTypeList == null ? 0 : mileStoneOccurrenceTypeList.size();
+		
+		if (mileStoneOccurrenceTypeListSize > 0) {
+			
+			List<QueryInfoItem> mileStoneTypeList = queryInfo.getMileStoneType();
+			setInfoDetailButton(mileStoneTypeList, employer, mileStoneOccurrenceTypeList);
+		}
 		
 		//Industries
 		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setInfoDetailButton(industriesList, employer);
+		setInfoDetailButton(industriesList, employer, null);
 		
 		//LocationCode
 		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setInfoDetailButton(locationList, employer);
+		setInfoDetailButton(locationList, employer, null);
 		
 		//EmployeeSize
 		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setInfoDetailButton(employeeSizeList, employer);
+		setInfoDetailButton(employeeSizeList, employer, null);
 		
 		//DateRange
 		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setInfoDetailButton(dateRangeList, employer);
-		
-		//MileStoneType
-		List<QueryInfoItem> mileStoneTypeList = queryInfo.getMileStoneType();
-		setInfoDetailButton(mileStoneTypeList, employer);
+		setInfoDetailButton(dateRangeList, employer, null);
 		
 		//Ownership
 		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setInfoDetailButton(ownershipList, employer);
+		setInfoDetailButton(ownershipList, employer, null);
 		
 		//RevenueSize
 		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setInfoDetailButton(revenueSizeList, employer);
+		setInfoDetailButton(revenueSizeList, employer, null);
 		
 		//EventSearchKeywords
 		if (null != queryInfo.getEventSearchKeywords()) {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Update;
+import com.gagein.ui.bookmark.BookMarksActivity;
 import com.gagein.ui.company.CompanyActivity;
 import com.gagein.ui.news.StoryActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
@@ -71,7 +73,9 @@ public class BookMarksAdapter extends BaseAdapter {
 		ViewHolder viewHolder = null;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.item_bookmarks, null);
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.item_news, null);
+			viewHolder.shareBtn = (TextView) convertView.findViewById(R.id.shareBtn);
+			viewHolder.scrollview = (HorizontalScrollView) convertView.findViewById(R.id.scrollview);
 			viewHolder.delete = (TextView) convertView.findViewById(R.id.delete);
 			viewHolder.imageview = (ImageView) convertView.findViewById(R.id.imageview);
 			viewHolder.fromsource = (TextView) convertView.findViewById(R.id.fromsource);
@@ -83,6 +87,9 @@ public class BookMarksAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		
+		final HorizontalScrollView scrollview = viewHolder.scrollview;
+		scrollview.scrollTo(0, 0); 
 		
 		if (edit) {
 			viewHolder.delete.setVisibility(View.VISIBLE);
@@ -132,9 +139,17 @@ public class BookMarksAdapter extends BaseAdapter {
 
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
 							CommonUtil.showShortToast("Deleted");
 							updates.remove(position);
 							BookMarksAdapter.this.notifyDataSetChanged();
+							
+							if (updates.size() == 0) ((BookMarksActivity)mContext).setNoBookMarks();
+							
+							Intent intent = new Intent();
+							intent.setAction(Constant.BROADCAST_REMOVE_BOOKMARKS);
+							mContext.sendBroadcast(intent);
+							
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
 							if (msg != null && msg.length() > 0) {
@@ -167,17 +182,31 @@ public class BookMarksAdapter extends BaseAdapter {
 			}
 		});
 		
+		viewHolder.shareBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				scrollview.scrollTo(0, 0);
+				
+				((BookMarksActivity)mContext).showShareLayout(update);
+				((BookMarksActivity)mContext).showShareItem = position;
+			}
+		});
+		
 		return convertView;
 	}
 	
 	public final class ViewHolder {
 		
+		public TextView shareBtn;
 		public TextView delete;
 		public ImageView imageview;
 		public TextView headline;
 		public TextView content;
 		public TextView fromsource;
 		public LinearLayout leftLayout;
+		public HorizontalScrollView scrollview;
 	}
 
 }

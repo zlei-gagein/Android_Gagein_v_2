@@ -494,6 +494,10 @@ public class ShareDialog implements OnClickListener{
 				if (parser.isOK()) {
 					mUpdate.saved = true;
 					setSaveBackground();
+					
+					Intent intent = new Intent();
+					intent.setAction(Constant.BROADCAST_REMOVE_BOOKMARKS);
+					mContext.sendBroadcast(intent);
 //					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.add_bookmark), mContext);
 				} else {
 					CommonUtil.alertMessageForParser(parser);
@@ -522,6 +526,10 @@ public class ShareDialog implements OnClickListener{
 				if (parser.isOK()) {
 					mUpdate.saved = false;
 					setSaveBackground();
+					
+					Intent intent = new Intent();
+					intent.setAction(Constant.BROADCAST_ADD_BOOKMARKS);
+					mContext.sendBroadcast(intent);
 //					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.remove_bookmark), mContext);
 				} else {
 					CommonUtil.alertMessageForParser(parser);
