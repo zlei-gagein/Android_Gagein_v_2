@@ -82,8 +82,12 @@ public class JointVenturesAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View arg0) {
+				
 				CommonUtil.showLoadingDialog(mContext);
+				final long companyId = mCompany.orgID;
+				
 				if (mCompany.followed) {
+					
 					mApiHttp.unfollowCompany(mCompany.orgID, new Listener<JSONObject>() {
 						
 						@Override
@@ -91,10 +95,14 @@ public class JointVenturesAdapter extends BaseAdapter {
 							
 							APIParser parser = new APIParser(jsonObject);
 							if (parser.isOK()) {
+								
 								mCompany.followed = false;
+								
 								Intent intent = new Intent();
-								intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
+								intent.putExtra(Constant.COMPANYID, companyId);
+								intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
 								mContext.sendBroadcast(intent);
+								
 								button.setImageResource(R.drawable.add);
 							} else {
 								CommonUtil.alertMessageForParser(parser);
@@ -109,7 +117,9 @@ public class JointVenturesAdapter extends BaseAdapter {
 							CommonUtil.showLongToast(mContext.getResources().getString(R.string.connection_error));
 						}
 					});
+					
 				} else {
+					
 					mApiHttp.followCompany(mCompany.orgID, new Listener<JSONObject>() {
 						
 						@Override
@@ -117,10 +127,14 @@ public class JointVenturesAdapter extends BaseAdapter {
 							
 							APIParser parser = new APIParser(jsonObject);
 							if (parser.isOK()) {
+								
 								mCompany.followed = true;
+								
 								Intent intent = new Intent();
-								intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
+								intent.putExtra(Constant.COMPANYID, companyId);
+								intent.setAction(Constant.BROADCAST_FOLLOW_COMPANY);
 								mContext.sendBroadcast(intent);
+								
 								button.setImageResource(R.drawable.follow);
 							} else {
 								CommonUtil.alertMessageForParser(parser);

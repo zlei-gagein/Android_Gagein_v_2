@@ -76,6 +76,7 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftBtn) {
 			if (null == updates || updates.size() == 0) return;
 			if (null == adapter) return;
@@ -169,6 +170,10 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	
 	public void setNoBookMarks() {
 		noBookmarks.setVisibility(View.VISIBLE);
+		edit = false;
+		setLeftButton(R.string.u_edit);
+		setLeftImageButtonVisible(View.GONE);
+		setRightButton(R.string.done);
 	}
 
 	@Override

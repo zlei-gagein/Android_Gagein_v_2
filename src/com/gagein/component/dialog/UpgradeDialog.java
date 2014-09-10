@@ -73,6 +73,7 @@ public class UpgradeDialog implements OnClickListener {
             }
         });
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

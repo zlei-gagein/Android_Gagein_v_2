@@ -44,6 +44,7 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 		
 		setTitle(R.string.news_triggers);
 		setRightButton(R.string.done);
+		setLeftImageButton(R.drawable.back_arrow);
 		
 		listView = (ListView) findViewById(R.id.listView);
 	}
@@ -84,6 +85,8 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 			} else {
 				finish();
 			}
+		} else if (v == leftImageBtn) {
+			finish();
 		}
 	}
 	

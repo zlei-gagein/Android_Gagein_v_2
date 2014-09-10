@@ -60,7 +60,7 @@ public class TestActivity extends BaseActivity implements OnItemClickListener{
 		super.initData();
 		
 		mCompanyId = getIntent().getLongExtra(Constant.COMPANYID, 0);
-		getCompetitors();
+//		getCompetitors();
 	}
 	
 	@Override
@@ -82,45 +82,45 @@ public class TestActivity extends BaseActivity implements OnItemClickListener{
 		adapter.notifyDataSetInvalidated();
 	}
 	
-	public void getCompetitors() {
-		showLoadingDialog();
-		mApiHttp.getSimilarCompanies(mCompanyId,"", requestPageNumber, competitorOrder,  new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-						
-				competitors = new ArrayList<Company>();
-						
-						APIParser parser = new APIParser(jsonObject);
-						if (parser.isOK()) {
-							dpCompetitors = parser.parseGetSimilarCompanies();
-							
-							List<Object> items = dpCompetitors.items;
-							if (items != null) {
-								for (Object obj : items) {
-									competitors.add((Company)obj);
-								}
-							}
-							
-//							if (!loadMore) {
-							setData();
+//	public void getCompetitors() {
+//		showLoadingDialog();
+//		mApiHttp.getSimilarCompanies(mCompanyId,"", requestPageNumber, competitorOrder,  new Listener<JSONObject>() {
+//
+//			@Override
+//			public void onResponse(JSONObject jsonObject) {
+//						
+//				competitors = new ArrayList<Company>();
+//						
+//						APIParser parser = new APIParser(jsonObject);
+//						if (parser.isOK()) {
+//							dpCompetitors = parser.parseGetSimilarCompanies();
+//							
+//							List<Object> items = dpCompetitors.items;
+//							if (items != null) {
+//								for (Object obj : items) {
+//									competitors.add((Company)obj);
+//								}
 //							}
-							
-						} else {
-							alertMessageForParser(parser);
-						}
-						
-						dismissLoadingDialog();
-					}
-
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
-	}
+//							
+////							if (!loadMore) {
+//							setData();
+////							}
+//							
+//						} else {
+//							alertMessageForParser(parser);
+//						}
+//						
+//						dismissLoadingDialog();
+//					}
+//
+//		}, new Response.ErrorListener() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				showConnectionError();
+//			}
+//		});
+//	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {

@@ -104,7 +104,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private int typeCompetitors = 3;
 	private List<FacetItemIndustry> competitorIndustries = new ArrayList<FacetItemIndustry>();
 	private Facet competitorFacet;
-	public String industryid = "";
+	public List<String> industryid = new ArrayList<String>();
 	public String competitorSortBy = "";
 	private OnNewsFilterClickListener onNewsFilterClickListener;
 	private LeftBtnClick leftBtnClick;
@@ -259,6 +259,46 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		setHeadView();
 	}
 	
+	public void refreshCompany(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < mCompany.subsidiaries.size(); i ++) {
+			Company subsidiary = mCompany.subsidiaries.get(i);
+			if (subsidiary.orgID == companyId) {
+				subsidiary.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.parents.size(); i ++) {
+			Company parent = mCompany.parents.get(i);
+			if (parent.orgID == companyId) {
+				parent.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.joinVentures.size(); i ++) {
+			Company joinVenture = mCompany.joinVentures.get(i);
+			if (joinVenture.orgID == companyId) {
+				joinVenture.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.divisions.size(); i ++) {
+			Company division = mCompany.divisions.get(i);
+			if (division.orgID == companyId) {
+				division.followed = follow;
+			}
+		}
+		
+		if (companyId == mCompany.orgID) {
+			mCompany.followed = follow;
+			setFollowImage();
+			setFollowButton();
+		}
+		
+	}
+	
 	private void setFollowImage() {
 		followImage.setVisibility(mCompany.followed ? View.VISIBLE : View.GONE);
 		
@@ -406,7 +446,10 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 							if (competitorFacet != null) {
 								competitorIndustries = competitorFacet.industries;
 							}
-							Constant.currentCompetitorIndustries = competitorIndustries;
+							
+							if (Constant.currentCompetitorIndustries.size() <= 0) {
+								Constant.currentCompetitorIndustries = competitorIndustries;
+							}
 							
 							List<Object> items = dpCompetitors.items;
 							if (items != null) {
@@ -421,7 +464,11 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 								competitorList.setPullLoadEnable(false);
 								dismissLoadingDialog();
 								return;
+							} else {
+								isNoCompetitor = false;
+								noCompetitors.setVisibility(View.GONE);
 							}
+							
 							competitorList.setPullLoadEnable(dpCompetitors.hasMore);
 							
 							if (!loadMore) setCompetitors();

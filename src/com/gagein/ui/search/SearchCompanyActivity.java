@@ -314,6 +314,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 							deleteIndustryFilters(id, industryList);
 						} else if (queryType.equalsIgnoreCase("location_code")) {
 							
+							//TODO
 							List<Location> locationList = mFilters.getLocations();
 							deleteLocationFilters(id, locationList);
 							

@@ -30,6 +30,7 @@ public class UnfollowCompanyDialog {
 		unfollow.setOnClickListener(listener_unfollow);
 		cancel.setOnClickListener(listener_cancel);
 		CommonUtil.showDialogFromBottom(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

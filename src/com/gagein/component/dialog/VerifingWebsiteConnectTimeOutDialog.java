@@ -44,6 +44,7 @@ public class VerifingWebsiteConnectTimeOutDialog {
 		okay.setOnClickListener(clickListener);
 		verifyingWebsite.setText(String.format(mContext.getResources().getString(R.string.verifying_website), website));
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 		
 	}

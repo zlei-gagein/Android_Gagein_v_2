@@ -40,6 +40,7 @@ public class ConfirmSubscriptionDialog implements OnClickListener {
 
 	public void showDialog() {
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

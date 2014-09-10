@@ -42,6 +42,7 @@ public class RemoveFromGroupDialog implements OnClickListener{
 	public void showDialog(View.OnClickListener removeListener) {
 		remove.setOnClickListener(removeListener);
 	    CommonUtil.showDialogFromBottom(dialog);
+	    dialog.setCancelable(false);
 		dialog.show();
 	}
 

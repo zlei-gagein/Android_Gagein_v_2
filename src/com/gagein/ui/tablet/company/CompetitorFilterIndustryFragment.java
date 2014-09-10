@@ -23,7 +23,6 @@ public class CompetitorFilterIndustryFragment extends BaseFragment implements On
 	
 	private CompetitorIndustryAdapter adapter;
 	private ListView listView;
-	private List<Boolean> checkedList;
 	private List<FacetItemIndustry> industries;
 	private OnShowCompetitorsFilterFromIndustryListener onShowCompetitorsFilterFromIndustryListener; 
 	private OnRefreshCompetitors onRefreshCompetitors; 
@@ -76,16 +75,6 @@ public class CompetitorFilterIndustryFragment extends BaseFragment implements On
 		super.initData();
 		
 		industries = Constant.currentCompetitorIndustries;
-		checkedList = new ArrayList<Boolean>();
-		for (int i = 0; i < industries.size(); i ++) {
-			checkedList.add(false);
-		}
-		
-		for (int i = 0; i < industries.size(); i ++) {
-			if (Constant.COMPETITOR_FILTER_PARAM_VALUE.equalsIgnoreCase(industries.get(i).filter_param_value)) {
-				checkedList.set(i, true);
-			}
-		}
 		
 		setData();
 	}
@@ -110,29 +99,67 @@ public class CompetitorFilterIndustryFragment extends BaseFragment implements On
 	@Override
 	protected void setData() {
 		super.setData();
-		adapter = new CompetitorIndustryAdapter(mContext, checkedList);
+		
+		adapter = new CompetitorIndustryAdapter(mContext, industries);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == arg2) {
-				checkedList.set(i, true);
+		Boolean checked = industries.get(position).getSelected();
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < industries.size(); i ++) {
+				if (i == 0) continue;
+				if (industries.get(i).getSelected()) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				industries.get(position).setSelected(true);
+				
+				for (int i = 0; i < industries.size(); i ++) {
+					if (i != 0) industries.get(i).setSelected(false);
+				}
+			}
+		} else {
+			
+			//circle 
+			industries.get(position).setSelected(!checked);
+			Boolean haveChecked = false;
+			for (int i = 0; i < industries.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (industries.get(i).getSelected()) {
+						haveChecked = true;
+						industries.get(0).setSelected(false);
+					}
+				}
+			}
+			if (!haveChecked) {
+				industries.get(0).setSelected(true);
 			}
 		}
-		adapter.notifyDataSetChanged();
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (checkedList.get(i) == true) {
-				Constant.COMPETITOR_FILTER_PARAM_VALUE = industries.get(i).filter_param_value;
+		adapter.notifyDataSetChanged();//refresh listview state
+		
+		int j = 0;
+		List<String> industryIds = new ArrayList<String>();
+		for (int i= 0; i < industries.size(); i ++) {
+			if (industries.get(i).getSelected() == true) {
+				industryIds.add(j, industries.get(i).filter_param_value);
+				j ++;
 			}
 		}
+		Constant.COMPETITOR_FILTER_PARAM_VALUE = industryIds;
+		
 		onRefreshCompetitors.onRefreshCompetitors();
 	}
 

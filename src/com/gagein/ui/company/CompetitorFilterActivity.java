@@ -45,21 +45,21 @@ public class CompetitorFilterActivity extends BaseActivity {
 		initData();
 	}
 	
-	@Override
-	protected void initData() {
-		super.initData();
-		
-		setIndustry();
-	}
+//	@Override
+//	protected void initData() {
+//		super.initData();
+//		
+//		setIndustry();
+//	}
 	
-	private void setIndustry() {
-		List<FacetItemIndustry> industries = Constant.currentCompetitorIndustries;
-		for (int i = 0; i < industries.size(); i ++) {
-			if (Constant.COMPETITOR_FILTER_PARAM_VALUE.equalsIgnoreCase(industries.get(i).filter_param_value)) {
-				industryBtn.setText(industries.get(i).item_name);
-			}
-		}
-	}
+//	private void setIndustry() {
+//		List<FacetItemIndustry> industries = Constant.currentCompetitorIndustries;
+//		for (int i = 0; i < industries.size(); i ++) {
+//			if (Constant.COMPETITOR_FILTER_PARAM_VALUE.equalsIgnoreCase(industries.get(i).filter_param_value)) {
+//				industryBtn.setText(industries.get(i).item_name);
+//			}
+//		}
+//	}
 	
 	@Override
 	protected void setOnClickListener() {

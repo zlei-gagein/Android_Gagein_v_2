@@ -83,6 +83,7 @@ public class EnterWebsiteDialog implements OnClickListener {
 		cancel.setOnClickListener(this);
 		save.setOnClickListener(this);
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

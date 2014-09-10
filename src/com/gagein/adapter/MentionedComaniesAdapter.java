@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Company;
 import com.gagein.util.CommonUtil;
+import com.gagein.util.Constant;
 
 public class MentionedComaniesAdapter extends BaseAdapter {
 	
@@ -78,7 +80,11 @@ public class MentionedComaniesAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
+				
 				CommonUtil.showLoadingDialog(mContext);
+				
+				final long companyId = company.orgID;
+				
 				if (company.followed) {
 					mApiHttp.unfollowCompany(company.orgID, new Listener<JSONObject>() {
 
@@ -87,9 +93,16 @@ public class MentionedComaniesAdapter extends BaseAdapter {
 							
 							APIParser parser = new APIParser(jsonObject);
 							if (parser.isOK()) {
+								
 								company.followed = false;
-//								Broadcaster.post(Broadcaster.Name.COMPANY_UNFOLLOWED, Broadcaster.Key.COMPANY_DATA, company.getData());//TODO
+								
+								Intent intent = new Intent();
+								intent.putExtra(Constant.COMPANYID, companyId);
+								intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
+								mContext.sendBroadcast(intent);
+								
 								button.setImageResource(R.drawable.add);
+								
 							} else {
 								CommonUtil.alertMessageForParser(parser);
 							}
@@ -112,9 +125,16 @@ public class MentionedComaniesAdapter extends BaseAdapter {
 							
 							APIParser parser = new APIParser(jsonObject);
 							if (parser.isOK()) {
+								
 								company.followed = true;
-//								Broadcaster.post(Broadcaster.Name.COMPANY_FOLLOWED, Broadcaster.Key.COMPANY_DATA, company.getData());//TODO
+								
+								Intent intent = new Intent();
+								intent.putExtra(Constant.COMPANYID, companyId);
+								intent.setAction(Constant.BROADCAST_FOLLOW_COMPANY);
+								mContext.sendBroadcast(intent);
+								
 								button.setImageResource(R.drawable.follow);
+								
 							} else {
 								CommonUtil.alertMessageForParser(parser);
 							}

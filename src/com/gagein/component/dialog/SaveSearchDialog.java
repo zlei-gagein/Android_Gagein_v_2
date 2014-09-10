@@ -102,6 +102,7 @@ public class SaveSearchDialog implements OnClickListener {
 		CommonUtil.setDialogWith(dialog);
 		cancel.setOnClickListener(this);
 		save.setOnClickListener(this);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 	

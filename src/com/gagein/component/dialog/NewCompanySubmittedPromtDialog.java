@@ -39,6 +39,7 @@ public class NewCompanySubmittedPromtDialog implements OnClickListener {
 	public void showDialog(String name, String website) {
 		promt.setText(String.format(promt.getText().toString(), name, website));
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

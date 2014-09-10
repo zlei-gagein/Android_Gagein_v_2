@@ -259,7 +259,7 @@ public abstract class Constant {
 	
 	public static List<FacetItemIndustry> currentCompetitorIndustries = new ArrayList<FacetItemIndustry>();
 	
-	public static String COMPETITOR_FILTER_PARAM_VALUE = "";
+	public static List<String> COMPETITOR_FILTER_PARAM_VALUE = new ArrayList<String>();
 	
 	public static Filters MFILTERS;
 	

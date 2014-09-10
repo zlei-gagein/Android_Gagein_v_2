@@ -45,6 +45,7 @@ public class VerifyingWebsiteDialog implements OnClickListener {
 		verifyingWebsite.setText(String.format(mContext.getResources().getString(R.string.verifying_website), website));
 		yes.setOnClickListener(yesClickListener);
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

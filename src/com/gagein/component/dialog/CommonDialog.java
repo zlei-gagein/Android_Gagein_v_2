@@ -31,6 +31,7 @@ public class CommonDialog {
 		confirm.setOnClickListener(listener_confirm);
 		cancel.setOnClickListener(listener_cancel);
 		CommonUtil.showDialogFromBottom(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

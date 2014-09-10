@@ -310,14 +310,20 @@ public class APIHttp {
 	 * @param aPageNumber
 	 * @param callback
 	 */
-	public void getSimilarCompanies(long aCompanyID, String industryid, int aPageNumber, String aOrder,
+	public void getSimilarCompanies(long aCompanyID, List<String> industryIds, int aPageNumber, String aOrder,
 			Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "company/" + aCompanyID + "/competitors";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		params.put("page", aPageNumber + "");
 		params.put("order", aOrder);
-		params.put("industryid", industryid + "");
+		if (null == industryIds || industryIds.size() <= 0) {
+			params.put("industryid", "-1");
+		} else {
+			String key = "industryid";
+			String value = stringForMultipleValuesToOneKey(industryIds, key);
+			params.put(key, value);
+		}
 		connectURL(Method.GET,listener, errorListener, url, params);
 	}
 	
@@ -1665,11 +1671,11 @@ public class APIHttp {
 	}
 	
 	public void setNewsToIrrelevant(long newsid, Boolean flag, Listener<JSONObject> listener, ErrorListener errorListener) {
-		String url = apiRootPath + "me/updates/" + newsid + "/irrelevant";
+		String url = apiRootPath + "member/me/updates/" + newsid + "/irrelevant";
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("flag", flag ? "1" : "0");
+		params.put("flag", flag + "");
 		addBasicParams(params);
-		connectURL(Method.GET, listener, errorListener, url, params);
+		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
 	public void billingGetInfo( Listener<JSONObject> listener, ErrorListener errorListener) {

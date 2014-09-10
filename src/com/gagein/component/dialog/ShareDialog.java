@@ -105,6 +105,7 @@ public class ShareDialog implements OnClickListener{
 		setSaveBackground();
 		setLikeBackground();
 		setIrrelevantBackground();
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 	
@@ -311,6 +312,7 @@ public class ShareDialog implements OnClickListener{
 				setLike();
 			}
 		} else if (v == irrelevant) {
+			dismissDialog();
 			setIrrelevant(!mUpdate.irrelevant);
 		}
 	}

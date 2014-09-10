@@ -41,6 +41,7 @@ public class PromotDialog implements OnClickListener {
 	public void showDialog(String promot) {
 		promotTxt.setText(promot);
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

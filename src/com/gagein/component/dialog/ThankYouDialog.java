@@ -37,6 +37,7 @@ public class ThankYouDialog implements OnClickListener {
 
 	public void showDialog() {
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

@@ -37,7 +37,7 @@ public class Company extends DataModel implements Serializable, Comparable<Compa
 
 	/** -------- member methods ------- */
 	public boolean enabled = false;
-	public boolean followed;
+	public boolean followed = false;
 	public long orgID = 0;
 	public long relevancePersonID = 0; // for sales graph display
 

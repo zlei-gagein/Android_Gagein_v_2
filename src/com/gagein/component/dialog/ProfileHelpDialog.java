@@ -51,6 +51,7 @@ public class ProfileHelpDialog implements OnClickListener{
 	public void showDialog() {
 		cancel.setOnClickListener(this);
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 	

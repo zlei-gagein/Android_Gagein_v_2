@@ -38,6 +38,7 @@ public class DeleteGroupDialog implements OnClickListener{
 		groupPt.setText(String.format(groupPt.getText().toString(), groupName));
 		delete.setOnClickListener(deleteListener);
 	    CommonUtil.showDialogFromBottom(dialog);
+	    dialog.setCancelable(false);
 		dialog.show();
 	}
 

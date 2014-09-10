@@ -40,6 +40,7 @@ public class ImportDialog {
 		notAllowBtn.setOnClickListener(notAllowClickListener);
 		okBtn.setOnClickListener(okClickListener);
 		CommonUtil.setDialogWith(dialog);
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 

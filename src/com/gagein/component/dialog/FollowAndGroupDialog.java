@@ -36,6 +36,7 @@ public class FollowAndGroupDialog implements OnClickListener{
 		follow.setOnClickListener(followListener);
 		followGroup.setOnClickListener(followGroupListener);
 	    CommonUtil.showDialogFromBottom(dialog);
+	    dialog.setCancelable(false);
 		dialog.show();
 	}
 

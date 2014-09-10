@@ -61,7 +61,7 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 		} else {
 			for (int i = 0; i < functionalRoles.size(); i ++) {
 				if (Constant.FUNCTIONAL_ROLE_ID == functionalRoles.get(i).id) {
-					checkedList.set(i + 1, true);
+					checkedList.set(i, true);
 				}
 			}
 		}

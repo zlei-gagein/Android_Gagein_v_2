@@ -92,9 +92,13 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 			
 			companyFragment.refreshParentsAndSubsidiariesStatus(intent, true);
 			
+			companyFragment.refreshCompany(intent, true);
+			
 		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
 			
 			companyFragment.refreshParentsAndSubsidiariesStatus(intent, false);
+			
+			companyFragment.refreshCompany(intent, false);
 			
 		}
 	}
@@ -127,7 +131,7 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		Constant.LINKED_PROFILE_NAME = "";
 		
 		Constant.COMPETITOR_SORT_BY = "noe";
-		Constant.COMPETITOR_FILTER_PARAM_VALUE = "";
+		Constant.COMPETITOR_FILTER_PARAM_VALUE.clear();
 		Constant.currentCompetitorIndustries.clear();
 	}
 	

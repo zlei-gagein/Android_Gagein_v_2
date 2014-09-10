@@ -79,7 +79,7 @@
     <string name="share_gagein_get_provisioned">Share Gagein and get your companies provisioned quicker!</string>
     <string name="refer_gagein_to_friends">Refer Gagein to friends and get 1 month free for each if they buy Professional. No limit!</string>
     <string name="select_triggers">Select the sales triggers you want to receive updates about.</string>
-    <string name="select_triggers_linking">Select the sales triggers you want to receive updates about. Linking news stories allows you to see a chart of your most relevant sales triggers.</string>
+    <string name="select_triggers_linking">Select the sales triggers you want to receive updates about. Liking news stories allows you to see a chart of your most relevant sales triggers.</string>
     <string name="u_rate">Rate</string>
     <string name="u_confirm">Confirm</string>
     <string name="u_account">Account</string>
@@ -357,7 +357,7 @@
     <string name="triggerchart_activated">Triggerchart Activated</string>
     <string name="triggerchart_activated_pt">You can now see a chart of your most relevant sales triggers.</string>
     <string name="triggerchart_almost_activated">Triggerchart Almost Activated</string>
-    <string name="linking_news_stories">Linking news stories allows you to see a chart of your most relevant sales triggers.</string>
+    <string name="linking_news_stories">Liking news stories allows you to see a chart of your most relevant sales triggers.</string>
     <string name="news_filters">News Filters</string>
     <string name="news_filter">News Filter</string>
     <string name="news_relevance">News Relevance</string>

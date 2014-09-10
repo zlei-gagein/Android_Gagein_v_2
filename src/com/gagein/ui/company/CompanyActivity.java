@@ -94,7 +94,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private int typeCompetitors = 3;
 	private List<FacetItemIndustry> competitorIndustries = new ArrayList<FacetItemIndustry>();
 	private Facet competitorFacet;
-	private String industryid = "";
+	private List<String> industryid = new ArrayList<String>();
 	private String competitorSortBy = "";
 	private Boolean isNoNews = false;
 	private Boolean isNoPeople = false;
@@ -153,11 +153,12 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		}else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
 			
 			refreshParentsAndSubsidiariesStatus(intent, true);
+			refreshCompany(intent, true);
 			
 		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
 			
 			refreshParentsAndSubsidiariesStatus(intent, false);
-			
+			refreshCompany(intent, false);
 		}
 	}
 	
@@ -249,6 +250,46 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		}
 		
 		setFollowImage();
+		
+	}
+	
+	private void refreshCompany(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < mCompany.subsidiaries.size(); i ++) {
+			Company subsidiary = mCompany.subsidiaries.get(i);
+			if (subsidiary.orgID == companyId) {
+				subsidiary.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.parents.size(); i ++) {
+			Company parent = mCompany.parents.get(i);
+			if (parent.orgID == companyId) {
+				parent.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.joinVentures.size(); i ++) {
+			Company joinVenture = mCompany.joinVentures.get(i);
+			if (joinVenture.orgID == companyId) {
+				joinVenture.followed = follow;
+			}
+		}
+		
+		for (int i = 0; i < mCompany.divisions.size(); i ++) {
+			Company division = mCompany.divisions.get(i);
+			if (division.orgID == companyId) {
+				division.followed = follow;
+			}
+		}
+		
+		if (companyId == mCompany.orgID) {	
+			mCompany.followed = follow;
+			setFollowImage();
+			setFollowButton();
+		}
 		
 	}
 
@@ -379,7 +420,10 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 							if (competitorFacet != null) {
 								competitorIndustries = competitorFacet.industries;
 							}
-							Constant.currentCompetitorIndustries = competitorIndustries;
+							
+							if (Constant.currentCompetitorIndustries.size() <= 0) {
+								Constant.currentCompetitorIndustries = competitorIndustries;
+							}
 							
 							List<Object> items = dpCompetitors.items;
 							if (items != null) {
@@ -393,7 +437,11 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 								noCompetitors.setVisibility(View.VISIBLE);
 								dismissLoadingDialog();
 								return;
+							} else {
+								isNoCompetitor = false;
+								noCompetitors.setVisibility(View.GONE);
 							}
+							
 							competitorList.setPullLoadEnable(dpCompetitors.hasMore);
 							
 							if (!loadMore) setCompetitors();
@@ -1017,25 +1065,37 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
+		
 		if (resultCode == RESULT_OK) {
+			
 			if (requestCode == 0) {//news filter
+				
 				getNews(false, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true);
+				
 			} else if (requestCode == 1) {//people filter
+				
 				employeesPageNumber = Constant.PAGE_NUMBER_START;
 				getPersons(false, Constant.PEOPLE_SORT_BY, Constant.JOB_LEVEL_ID, Constant.FUNCTIONAL_ROLE_ID, Constant.LINKED_PROFILE_ID);
+				
 			} else if (requestCode == 2) {//competitor filter
+				
 				requestPageNumber = Constant.PAGE_NUMBER_START;
 				getCompetitors(false);
+				
 			} else if (requestCode == 3) {//people sortBy
+				
 				setSortByButton();
 				employeesPageNumber = Constant.PAGE_NUMBER_START;
 				getPersons(false, Constant.PEOPLE_SORT_BY, Constant.JOB_LEVEL_ID, Constant.FUNCTIONAL_ROLE_ID, Constant.LINKED_PROFILE_ID);
+				
 			} else if (requestCode == 4) {//competitor sortBy
+				
 				setSortByButton();
 				competitorSortBy = Constant.COMPETITOR_SORT_BY;
 				industryid = Constant.COMPETITOR_FILTER_PARAM_VALUE;
 				requestPageNumber = Constant.PAGE_NUMBER_START;
 				getCompetitors(false);
+				
 			}
 		}
 	}
@@ -1109,7 +1169,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		Constant.LINKED_PROFILE_NAME = "";
 		
 		Constant.COMPETITOR_SORT_BY = "noe";
-		Constant.COMPETITOR_FILTER_PARAM_VALUE = "";
+		Constant.COMPETITOR_FILTER_PARAM_VALUE.clear();
 		Constant.currentCompetitorIndustries.clear();
 	}
 
