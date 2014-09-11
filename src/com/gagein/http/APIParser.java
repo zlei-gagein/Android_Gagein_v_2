@@ -941,21 +941,21 @@ public class APIParser {
 		}
 		
 		//LocationCode
-		JSONArray locationArray = friendlyInfo.optJSONArray("location_code");
-		if (null != locationArray) {
-			queryInfo.setLocationCode(setQueryInfo(locationArray, "location_code"));
+		JSONArray locationCodeArray = friendlyInfo.optJSONArray("location_code");
+		if (null != locationCodeArray) {
+			queryInfo.setLocationCode(setQueryInfo(locationCodeArray, "location_code"));
 			
 			List<Location> locationList = mFilters.getLocations();
-			setLocationFilterOptionsCheck(locationArray, locationList);
+			setLocationFilterOptionsCheck(locationCodeArray, locationList);
 			
 			//根据返回的queryInfo 设置LocationCode
 			List<Location> headquarters = mFilters.getHeadquarters();
 			headquarters.clear();
-			for (int i = 0; i < locationArray.length(); i ++) {
+			for (int i = 0; i < locationCodeArray.length(); i ++) {
 				Location location = new Location();
 				location.setChecked(true);
-				location.setCode(locationArray.optJSONObject(i).optString("id"));
-				location.setLocation(locationArray.optJSONObject(i).optString("name"));
+				location.setCode(locationCodeArray.optJSONObject(i).optString("id"));
+				location.setLocation(locationCodeArray.optJSONObject(i).optString("name"));
 				
 				headquarters.add(location);
 			}
@@ -1115,15 +1115,27 @@ public class APIParser {
 			}
 		}
 		
-		//Location
-		String locationStr = friendlyInfo.optString("dop_address");
-		if (!locationStr.isEmpty()) {
-			if (locationStr.isEmpty()) {
-				companyQueryInfoStr = locationStr;
-			} else {
-				companyQueryInfoStr = companyQueryInfoStr + "," + locationStr;
+		//people_location_code
+		JSONArray peopleLocationCodeArray = friendlyInfo.optJSONArray("people_location_code");
+		
+		if (null != peopleLocationCodeArray) {
+			
+			queryInfo.setLocations(setQueryInfoForPeopleLocationCode(peopleLocationCodeArray));
+			
+			List<Location> peopleLocationCodes = mFilters.getLocations();
+			setFilterOptionsCheckForPeopleLocationCode(peopleLocationCodeArray, peopleLocationCodes);
+			
+			//根据返回的queryInfo 设置people location code
+			for (int i = 0; i < peopleLocationCodeArray.length(); i ++) {
+				
+				String id = peopleLocationCodeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < peopleLocationCodes.size(); j ++) {
+					String mId = peopleLocationCodes.get(j).getCode();
+					if (id.equalsIgnoreCase(mId)) {
+						peopleLocationCodes.get(j).setChecked(true);
+					}
+				}
 			}
-			queryInfo.setLocation(locationStr);
 		}
 		
 		//Functional Role 
@@ -1170,6 +1182,24 @@ public class APIParser {
 		}
 	}
 	
+	private void setFilterOptionsCheckForPeopleLocationCode(JSONArray jsonArray, List<Location> peopleLocationCodes) {
+		for (int i = 0; i < peopleLocationCodes.size(); i ++) {
+			String mId = peopleLocationCodes.get(i).getCode();
+			for (int j = 0; j < jsonArray.length(); j ++) {
+				JSONObject jObject = jsonArray.optJSONObject(j);
+				String id = jObject.optString("id");
+				if (id.equalsIgnoreCase(mId)) {
+					peopleLocationCodes.get(i).setChecked(true);
+					if (TextUtils.isEmpty(companyQueryInfoStr)) {
+						companyQueryInfoStr = peopleLocationCodes.get(i).getLocation();
+					} else {
+						companyQueryInfoStr = companyQueryInfoStr + "," + peopleLocationCodes.get(i).getLocation();
+					}
+				}
+			}
+		}
+	}
+	
 	private void setIndustryFilterOptionsCheck(JSONArray jsonArray, List<Industry> industries) {
 		for (int i = 0; i < industries.size(); i ++) {
 			String industryId = industries.get(i).getId();
@@ -1209,6 +1239,7 @@ public class APIParser {
 	}
 	
 	private List<QueryInfoItem> setQueryInfo(JSONArray jsonArray, String type) {
+		
 		List<QueryInfoItem> queryInfoItems = new ArrayList<QueryInfoItem>();
 		for (int i = 0; i < jsonArray.length(); i ++) {
 			JSONObject jObject = jsonArray.optJSONObject(i);
@@ -1223,6 +1254,26 @@ public class APIParser {
 			//同步本地的filter options
 		}
 		return queryInfoItems;
+		
+	}
+	
+	private List<Location> setQueryInfoForPeopleLocationCode(JSONArray jsonArray) {
+		
+		List<Location> locationCodes = new ArrayList<Location>();
+		for (int i = 0; i < jsonArray.length(); i ++) {
+			JSONObject jObject = jsonArray.optJSONObject(i);
+			if (jObject != null) {
+				Location locationCode = new Location();
+				
+				locationCode.setCode(jObject.optString("id"));
+				locationCode.setLocation(jObject.optString("name"));
+				locationCodes.add(locationCode);
+			}
+			
+			//同步本地的filter options
+		}
+		return locationCodes;
+		
 	}
 	
 }

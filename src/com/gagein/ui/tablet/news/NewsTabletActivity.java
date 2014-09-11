@@ -39,8 +39,8 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 	@Override
 	protected List<String> observeNotifications() {
 		
-		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_SET_NEWS_LIKED
-				,Constant.BROADCAST_SET_NEWS_UNLIKE, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
+		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_LIKED_NEWS
+				,Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
 				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES,
 				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS);
 		
@@ -61,17 +61,17 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 			
 			newsFragment.refreshNews(false);
 			
-		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_LIKED)) {
+		} else if (actionName.equals(Constant.BROADCAST_LIKED_NEWS)) {
 			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			newsFragment.setLikeFromBroadcast(newsId, true);
 			
-		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {
 			
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			newsFragment.setLikeFromBroadcast(newsId, false);
 			
-		} else if (actionName.equals(Constant.BROADCAST_SET_NEWS_UNLIKE)) {
+		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {
 			
 			newsFragment.refreshNews(false);
 			

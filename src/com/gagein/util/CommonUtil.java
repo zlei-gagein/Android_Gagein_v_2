@@ -1434,13 +1434,16 @@ public class CommonUtil {
 				jsonObject.put("dop_job_level", jobLevelArray);
 			}
 			
-			//Location
+			//People Location Code 
 			List<Location> locationList = mFilters.getLocations();
+			JSONArray locationArray = new JSONArray();
 			for (int i = 0; i < locationList.size(); i ++) {
 				if (locationList.get(i).getChecked()) {
-					String name = locationList.get(i).getLocation();
-					jsonObject.put("dop_address", name);
+					locationArray.put(locationList.get(i).getCode());
 				}
+			}
+			if (locationArray.length() > 0) {
+				jsonObject.put("people_location_code", locationArray);
 			}
 			
 			//Functional Role

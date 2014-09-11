@@ -37,15 +37,13 @@ public class QueryInfo {
 	
 	private List<QueryInfoItem> JobLevels;
 	
-	private List<QueryInfoItem> Locations;
-	
-	private String location; /// dop_address
-	
 	private List<QueryInfoItem> FunctionalRoles;
 	
 	private List<QueryInfoItem> CompaniesForCompany;
 	
 	private List<QueryInfoItem> CompaniesForPeople;
+	
+	private List<Location> Locations;
 	
 	private void addItems(List<QueryInfoItem> fromList, List<QueryInfoItem> toList) {
 		if (fromList != null && toList != null) {
@@ -85,7 +83,7 @@ public class QueryInfo {
 		addItems(MileStoneType, conditions);
 		addItems(Ownership, conditions);		
 		addItems(RevenueSize, conditions);
-		addItems(Locations, conditions);
+//		addItems(Locations, conditions);
 
 		///
 		if (isCompanySearch) {
@@ -99,14 +97,12 @@ public class QueryInfo {
 		return conditions;
 	}
 	
-	public String getLocation() {
-		return location;
+	public List<Location> getLocations() {
+		return Locations;
 	}
-
-	public void setLocation(String location) {
-		this.location = location;
+	public void setLocations(List<Location> locations) {
+		Locations = locations;
 	}
-
 	public String getCompanySearchKeywords() {
 		return companySearchKeywords;
 	}
@@ -145,14 +141,6 @@ public class QueryInfo {
 
 	public void setJobLevels(List<QueryInfoItem> jobLevels) {
 		JobLevels = jobLevels;
-	}
-
-	public List<QueryInfoItem> getLocations() {
-		return Locations;
-	}
-
-	public void setLocations(List<QueryInfoItem> locations) {
-		Locations = locations;
 	}
 
 	public List<QueryInfoItem> getFunctionalRoles() {

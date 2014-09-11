@@ -1,5 +1,8 @@
 package com.gagein.ui.news;
 
+import java.util.List;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +24,44 @@ public class MentionedCompaniesActivity extends BaseActivity implements OnItemCl
 	private ListView listView;
 	private MentionedComaniesAdapter adapter;
 	private Update mUpdate;
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, false);
+		}
+	}
+	
+	private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		if (null != mUpdate && null != mUpdate.mentionedCompanies) {
+			
+			for (int i = 0; i < mUpdate.mentionedCompanies.size(); i ++) {
+				long mCompanyId = mUpdate.mentionedCompanies.get(i).orgID;
+				if (companyId == mCompanyId) {
+					mUpdate.mentionedCompanies.get(i).followed = follow;
+					if (null != adapter) adapter.notifyDataSetChanged();
+				}
+			}
+		}
+		
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

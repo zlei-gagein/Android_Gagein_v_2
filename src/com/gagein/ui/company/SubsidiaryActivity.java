@@ -3,6 +3,7 @@ package com.gagein.ui.company;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,41 @@ public class SubsidiaryActivity extends BaseActivity implements OnItemClickListe
 	private Company mCompany;
 	private List<Company> subsidiaries;
 	private CompanyItemAdapter adapter;
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, false);
+		}
+	}
+	
+	private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < subsidiaries.size(); i ++) {
+			long mCompanyId = subsidiaries.get(i).orgID;
+			if (companyId == mCompanyId) {
+				subsidiaries.get(i).followed = follow;
+				adapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

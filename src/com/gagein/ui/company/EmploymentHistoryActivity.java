@@ -3,6 +3,7 @@ package com.gagein.ui.company;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,41 @@ public class EmploymentHistoryActivity extends BaseActivity implements OnItemCli
 	private ListView listView;
 	private CompanyItemAdapter adapter;
 	private List<Company> companies;
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, false);
+		}
+	}
+	
+	private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < companies.size(); i ++) {
+			long mCompanyId = companies.get(i).orgID;
+			if (companyId == mCompanyId) {
+				companies.get(i).followed = follow;
+				adapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -102,7 +102,48 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
 	private SearchSavedAdapter savedAdapter;
     private Boolean havePurchased = true;
-
+    
+    @Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_REFRESH_SEARCH)) {
+			
+			PAGE_NUM_SAVESEARCH = 1;
+			getSavedSearches(false, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, false);
+	
+		}
+	}
+    
+    private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < searchCompanies.size(); i ++) {
+			long mCompanyId = searchCompanies.get(i).orgID;
+			if (companyId == mCompanyId) {
+				searchCompanies.get(i).followed = follow;
+				companyAdapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_REFRESH_SEARCH, Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -204,21 +245,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		setSearchCompanies();
 		setSearchPersons();
 		
-	}
-	
-	@Override
-	public void handleNotifications(Context aContext, Intent intent) {
-		super.handleNotifications(aContext, intent);
-		String actionName = intent.getAction();
-		if (actionName.equals(Constant.BROADCAST_REFRESH_SEARCH)) {
-			PAGE_NUM_SAVESEARCH = 1;
-			getSavedSearches(false, false);
-		}
-	}
-	
-	@Override
-	protected List<String> observeNotifications() {
-		return stringList(Constant.BROADCAST_REFRESH_SEARCH);
 	}
 	
 	/**schedule search*/

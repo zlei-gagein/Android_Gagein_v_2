@@ -291,6 +291,14 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			}
 		}
 		
+		for (int i = 0; i < competitors.size(); i ++) {
+			Company competitor = competitors.get(i);
+			if (competitor.orgID == companyId) {
+				competitor.followed = follow;
+				if (null != competitorAdapter) competitorAdapter.notifyDataSetChanged();
+			}
+		}
+		
 		if (companyId == mCompany.orgID) {
 			mCompany.followed = follow;
 			setFollowImage();

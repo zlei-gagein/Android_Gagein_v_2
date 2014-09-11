@@ -201,9 +201,13 @@ public abstract class Constant {
 	public static int PERSONS_TYPE = 3;
 	public static int COMPETITORS_TYPE = 4;
 	
-	public static String BROADCAST_SET_NEWS_LIKED = "broadcast set news liked";
+	public static String BROADCAST_IRRELEVANT_TRUE = "broadcast irrelevant true";
 	
-	public static String BROADCAST_SET_NEWS_UNLIKE = "broadcast set news UNlike";
+	public static String BROADCAST_IRRELEVANT_FALSE = "broadcast irrelevant false";
+	
+	public static String BROADCAST_LIKED_NEWS = "broadcast set news liked";
+	
+	public static String BROADCAST_UNLIKE_NEWS = "broadcast set news UNlike";
 	
 	public static String UPDATEID = "updateid";
 	

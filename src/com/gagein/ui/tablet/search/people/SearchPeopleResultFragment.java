@@ -399,9 +399,11 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		}
 	}
 	
-	private void setPersonalInfoLayout() {//TODO
+	private void setPersonalInfoLayout() {
+		
 		//Job Title
-		String jobTitleStr = queryInfo.getJobTitle();
+		final String jobTitleStr = queryInfo.getJobTitle();
+		
 		if (null != jobTitleStr && !jobTitleStr.isEmpty()) {
 			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
 			Button button = (Button) view.findViewById(R.id.button);
@@ -409,8 +411,18 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
 					
+					for (int i = 0; i < mFilters.getJobTitles().size(); i ++) {
+						
+						if (mFilters.getJobTitles().get(i).getChecked()) {
+							
+							if (mFilters.getJobTitles().get(i).getName().equalsIgnoreCase(jobTitleStr)) {
+								mFilters.getJobTitles().get(i).setChecked(false);
+								PAGENUM = 1;
+								searchAdvancedPersons(false);
+							}
+						}
+					}
 				}
 				
 			});
@@ -422,22 +434,37 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		List<QueryInfoItem> jobLevelList = queryInfo.getJobLevels();
 		setInfoDetailButton(jobLevelList, personal, null);
 		
-		//Location
-		String locationStr = queryInfo.getLocation();
-		if (null != locationStr && !locationStr.isEmpty()) {
-			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-			Button button = (Button) view.findViewById(R.id.button);
-			button.setOnClickListener(new OnClickListener() {
+		//People Location
+		final List<Location> peopleLocationCodes = queryInfo.getLocations();
+		
+		if (null != peopleLocationCodes) {
+			
+			for (int i = 0; i < peopleLocationCodes.size(); i ++) {
 				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
+				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
+				Button button = (Button) view.findViewById(R.id.button);
+				
+				final Location peopleLocationCode = peopleLocationCodes.get(i);
+				button.setOnClickListener(new OnClickListener() {
 					
-				}
+					@Override
+					public void onClick(View arg0) {
+						
+						for (int i = 0; i < peopleLocationCodes.size(); i ++) {
+							
+							String id = peopleLocationCode.getCode();
+							if (id.equalsIgnoreCase(peopleLocationCodes.get(i).getCode())) {
+								mFilters.getLocations().get(i).setChecked(false);
+								PAGENUM = 1;
+								searchAdvancedPersons(false);
+							}
+						}
+					}
+				});
 				
-			});
-			button.setText(locationStr);
-			pesonalInfoLayout.addView(view);
+				button.setText(peopleLocationCode.getLocation());
+				pesonalInfoLayout.addView(view);
+			}
 		}
 		
 		//Functional Role

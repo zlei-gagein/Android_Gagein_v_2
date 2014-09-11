@@ -49,7 +49,7 @@ public class Filters implements Serializable{
 	private List<Location> locations = new ArrayList<Location>();
 	
 	private List<JobTitle> jobTitles = new ArrayList<JobTitle>();
-
+	
 	public List<FilterItem> getOwnerships() {
 		return Ownerships;
 	}

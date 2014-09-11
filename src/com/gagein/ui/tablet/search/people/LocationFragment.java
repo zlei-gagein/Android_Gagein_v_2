@@ -256,31 +256,33 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+		
 		if (parent == searchListView) {
-			for (int i = 0; i < mLocations.size(); i ++) {
-				mLocations.get(i).setChecked(false);
-			}
 			
 			Location location = searchLocations.get(position);
+			
+			for (int i = 0; i < mLocations.size(); i ++) {
+				if (location.getCode().equalsIgnoreCase(mLocations.get(i).getCode())) {
+					showShortToast("Already added");
+					return;
+				}
+			}
+			
 			location.setChecked(true);
 			mLocations.add(location);
 			addEdt.setText("");//attention there ,once the edittext set null , the list will clear
 			add.requestFocus();//make addedt lost focus
 			CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 			CommonUtil.setListViewHeight(listView);
+			
 		} else if (parent == listView){
+			
 			Boolean checked = mLocations.get(position).getChecked();
-			if (checked) {
-				mLocations.get(position).setChecked(!checked);
-			} else {
-				for (int i = 0; i < mLocations.size(); i ++) {
-					mLocations.get(i).setChecked(false);
-				}
-				mLocations.get(position).setChecked(true);//set checked item
-			}
+			mLocations.get(position).setChecked(!checked);
 			headerquartersAdapter.notifyDataSetChanged();
+			
 		}
-		//TODO
+		
 		onSearchFromLocation.onSearchFromLocation();
 	}
 }

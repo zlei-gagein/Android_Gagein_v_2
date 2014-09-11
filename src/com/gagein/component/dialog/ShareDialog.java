@@ -326,9 +326,10 @@ public class ShareDialog implements OnClickListener{
 	
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.UPDATEID, mUpdate.newsId);
-					intent.setAction(Constant.BROADCAST_SET_NEWS_UNLIKE);
+					intent.setAction(Constant.BROADCAST_UNLIKE_NEWS);
 					mContext.sendBroadcast(intent);
 					
 					mUpdate.liked = false;
@@ -361,11 +362,13 @@ public class ShareDialog implements OnClickListener{
 	
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					Intent intent = new Intent();
 					intent.putExtra(Constant.UPDATEID, mUpdate.newsId);
-					intent.setAction(Constant.BROADCAST_SET_NEWS_LIKED);
+					intent.setAction(Constant.BROADCAST_LIKED_NEWS);
 					mContext.sendBroadcast(intent);
 					
 					mUpdate.liked = true;
@@ -456,7 +459,7 @@ public class ShareDialog implements OnClickListener{
 		bookmarkStr.setText(mContext.getResources().getString(mUpdate.saved ? R.string.removeBookmark : R.string.addBookmark));
 	}
 	
-	private void setIrrelevant(Boolean flag) {
+	private void setIrrelevant(final Boolean flag) {
 		CommonUtil.showLoadingDialog(mContext);
 		mApiHttp.setNewsToIrrelevant(mUpdate.newsId, flag, new Listener<JSONObject>() {
 			
@@ -465,6 +468,11 @@ public class ShareDialog implements OnClickListener{
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
+					Intent intent = new Intent();
+					intent.putExtra(Constant.UPDATEID, mUpdate.newsId);
+					intent.setAction(flag ? Constant.BROADCAST_IRRELEVANT_TRUE : Constant.BROADCAST_IRRELEVANT_FALSE);
+					mContext.sendBroadcast(intent);
 					
 					mUpdate.irrelevant = !mUpdate.irrelevant;
 					setIrrelevantBackground();
@@ -494,12 +502,15 @@ public class ShareDialog implements OnClickListener{
 
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					mUpdate.saved = true;
 					setSaveBackground();
 					
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_REMOVE_BOOKMARKS);
+					intent.putExtra(Constant.UPDATEID, mUpdate.newsId);
 					mContext.sendBroadcast(intent);
+					
 //					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.add_bookmark), mContext);
 				} else {
 					CommonUtil.alertMessageForParser(parser);
@@ -531,7 +542,9 @@ public class ShareDialog implements OnClickListener{
 					
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_ADD_BOOKMARKS);
+					intent.putExtra(Constant.UPDATEID, mUpdate.newsId);
 					mContext.sendBroadcast(intent);
+					
 //					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.remove_bookmark), mContext);
 				} else {
 					CommonUtil.alertMessageForParser(parser);

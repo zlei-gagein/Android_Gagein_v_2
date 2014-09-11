@@ -128,7 +128,10 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	protected List<String> observeNotifications() {
 		return stringList(Constant.BROADCAST_REFRESH_COMPANY_NEWS, Constant.BROADCAST_REFRESH_COMPANY_PEOPLE,
 				Constant.BROADCAST_FILTER_REFRESH_COMPETITORS, Constant.BROADCAST_FOLLOW_COMPANY, 
-				Constant.BROADCAST_UNFOLLOW_COMPANY);
+				Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_LIKED_NEWS,
+				Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_REMOVE_BOOKMARKS,
+				Constant.BROADCAST_ADD_BOOKMARKS, Constant.BROADCAST_IRRELEVANT_TRUE, 
+				Constant.BROADCAST_IRRELEVANT_FALSE);
 	}
 	
 	@Override
@@ -159,7 +162,68 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			refreshParentsAndSubsidiariesStatus(intent, false);
 			refreshCompany(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_LIKED_NEWS)) {
+			
+			setUpdateLikeStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {	
+			
+			setUpdateLikeStatus(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_BOOKMARKS)) {
+			
+			setUpdateBookmarkStatus(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_ADD_BOOKMARKS)) {	
+			
+			setUpdateBookmarkStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_TRUE)) {
+			
+			setUpdateIrrelevantStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_FALSE)) {
+			
+			setUpdateIrrelevantStatus(intent, false);
+			
 		}
+	}
+
+	private void setUpdateLikeStatus(Intent intent, Boolean like) {
+		
+		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
+		for (int i = 0 ; i < updates.size(); i ++) {
+			if (updatesId == updates.get(i).orgID) {
+				updates.get(i).liked = like;
+			}
+		}
+		if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
+		
+	}
+	
+	private void setUpdateBookmarkStatus(Intent intent, Boolean save) {
+		
+		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
+		for (int i = 0 ; i < updates.size(); i ++) {
+			if (updatesId == updates.get(i).orgID) {
+				updates.get(i).saved = save;
+			}
+		}
+		if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
+		
+	}
+	
+	private void setUpdateIrrelevantStatus(Intent intent, Boolean irrelevant) {
+		
+		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
+		for (int i = 0 ; i < updates.size(); i ++) {
+			if (updatesId == updates.get(i).orgID) {
+				updates.get(i).irrelevant = irrelevant;
+			}
+		}
+		if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
+		
 	}
 	
 	@Override
@@ -285,6 +349,14 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			}
 		}
 		
+		for (int i = 0; i < competitors.size(); i ++) {
+			Company competitor = competitors.get(i);
+			if (competitor.orgID == companyId) {
+				competitor.followed = follow;
+				if (null != competitorAdapter) competitorAdapter.notifyDataSetChanged();
+			}
+		}
+		
 		if (companyId == mCompany.orgID) {	
 			mCompany.followed = follow;
 			setFollowImage();
@@ -345,8 +417,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 					Intent intent = new Intent();
 					intent.putExtra(Constant.COMPANYID, mCompanyId);
 					intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
-					
 					mContext.sendBroadcast(intent);
+					
 					setFollowButton();
 					setFollowImage();
 				} else {

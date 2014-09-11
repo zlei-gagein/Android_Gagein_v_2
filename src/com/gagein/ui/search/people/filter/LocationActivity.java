@@ -52,7 +52,7 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 	private TimerTask timerTask;
 	private Timer timer;
 	private ImageView add;
-	private List<Location> mLocations;
+	private List<Location> mLocations = new ArrayList<Location>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -232,11 +232,15 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 		
 		if (parent == searchListView) {
 			
+			Location location = searchLocations.get(position);
+			
 			for (int i = 0; i < mLocations.size(); i ++) {
-				mLocations.get(i).setChecked(false);
+				if (location.getCode().equalsIgnoreCase(mLocations.get(i).getCode())) {
+					showShortToast("Already added");
+					return;
+				}
 			}
 			
-			Location location = searchLocations.get(position);
 			location.setChecked(true);
 			mLocations.add(location);
 			addEdt.setText("");//attention there ,once the edittext set null , the list will clear
@@ -247,14 +251,7 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 		} else if (parent == listView){
 			
 			Boolean checked = mLocations.get(position).getChecked();
-			if (checked) {
-				mLocations.get(position).setChecked(!checked);
-			} else {
-				for (int i = 0; i < mLocations.size(); i ++) {
-					mLocations.get(i).setChecked(false);
-				}
-				mLocations.get(position).setChecked(true);//set checked item
-			}
+			mLocations.get(position).setChecked(!checked);
 			headerquartersAdapter.notifyDataSetChanged();
 			
 		}
