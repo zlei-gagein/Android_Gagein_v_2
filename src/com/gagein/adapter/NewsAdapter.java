@@ -121,10 +121,12 @@ public class NewsAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
+				
 				Intent intent = new Intent();
 				intent.putExtra("position", position);
 				intent.setClass(mContext, StoryActivity.class);
 				mContext.startActivity(intent);
+				
 				Constant.setUpdates(updates);
 			}
 		});
@@ -137,14 +139,14 @@ public class NewsAdapter extends BaseAdapter {
 				scrollview.scrollTo(0, 0);
 				if (CommonUtil.isTablet(mContext)) {
 					if (null == mFragment) {//BookMarksActivity 中没有传值
-						((BookMarksActivity)mContext).showShareLayout(update);
+						((BookMarksActivity)mContext).showShareLayout(update, true);
 						((BookMarksActivity)mContext).showShareItem = position;
 					} else {
 						((NewsFragment)mFragment).showShareLayout(update, mContext);
 						((NewsFragment)mFragment).showShareItem = position;
 					}
 				} else {
-					((NewsActivity)mContext).showShareLayout(update);
+					((NewsActivity)mContext).showShareLayout(update, true);
 					((NewsActivity)mContext).showShareItem = position;
 				}
 			}

@@ -27,6 +27,7 @@ import com.gagein.component.xlistview.XListView;
 import com.gagein.component.xlistview.XListView.IXListViewListener;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
+import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.model.Update;
@@ -59,7 +60,8 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_LIKED_NEWS
 				,Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
 				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES, 
-				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS);
+				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS, 
+				Constant.BROADCAST_IRRELEVANT_TRUE, Constant.BROADCAST_IRRELEVANT_FALSE);
 	}
 	
 	@Override
@@ -85,9 +87,9 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 			long newsId = intent.getLongExtra(Constant.UPDATEID, 0);
 			setLikeFromBroadcast(newsId, false);
 			
-		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {
-			
-			refreshNews(false);
+//		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {
+//			
+//			refreshNews(false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
 			
@@ -111,6 +113,10 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 			refreshNews(false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_BOOKMARKS) || actionName.equals(Constant.BROADCAST_ADD_BOOKMARKS)) {
+			
+			refreshNews(false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_TRUE) || actionName.equals(Constant.BROADCAST_IRRELEVANT_FALSE)) {
 			
 			refreshNews(false);
 			
@@ -143,6 +149,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	@Override
 	protected void initData() {
 		super.initData();
+		
 		if (Constant.SIGNUP) {
 			firstSignUp.setVisibility(View.VISIBLE);
 		} else {
@@ -205,19 +212,29 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftBtn) {
+			
 			Intent intent = new Intent();
 			intent.setClass(mContext, FilterActivity.class);
 			intent.putExtra(Constant.ACTIVITYNAME, "NewsActivity");
 			startActivityForResult(intent, 0);
+			
 		} else if (v == rightImageBtn) {
+			
 			startActivitySimple(BookMarksActivity.class);
+			
 		} else if (v == noNews) {
+			
 			CommonUtil.setSimilarIdToNullFromUpadates(updates);
 			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false);
+			getPendingCompany();
+			
 		} else if (v == pending) {
+			
 			startActivitySimple(PendingCompaniesActivity.class);
 		}
+		
 	}
 	
 	private void getPendingCompany() {
@@ -255,9 +272,27 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 		});
 	}
 	
+	private ArrayList<String> getAgentsId() {
+		
+		ArrayList<String> agentsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.locationAgents.size() ; i++) {
+			Agent agent = Constant.locationAgents.get(i);
+			if (agent.checked && !agent.agentID.equalsIgnoreCase("0")) {
+				agentsId.add(agent.agentID);
+			}
+		}
+		
+		return agentsId;
+	}
+	
+	private ArrayList<String> getGroupsId() {
+		
+		return null;
+	}
+	
 	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
 		if (showDialog) showLoadingDialog();
-		mApiHttp.getCompanyUpdates(companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
+		mApiHttp.getCompanyUpdates(getAgentsId(), getGroupsId(), companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject jsonObject) {
 				
@@ -369,6 +404,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 				Update lastUpdate = updates.get(updates.size() - 1);
 				long aNewsID = lastUpdate.newsId;
 				long aPageTime = lastUpdate.date;
+				
 				getNews(aNewsID, APIHttpMetadata.kGGPageFlagMoveDown, aPageTime, false, true);
 			}
 		}, 10);

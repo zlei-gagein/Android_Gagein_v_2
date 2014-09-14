@@ -61,6 +61,7 @@ public class FilterRelevanceActivity extends BaseActivity implements OnItemClick
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
 			finish();
 		} else if (v == rightBtn) {

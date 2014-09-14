@@ -111,7 +111,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 			firstSignUp.setVisibility(View.VISIBLE);
 		} else {
 			getPendingCompany();
-			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false, false);
+			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false);
 		}
 	}
 	
@@ -136,26 +136,48 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	
 	@Override
 	public void onClick(View v) {
+		
 		if (v == leftBtn) {
+			
 			filterListener.onFilterClickListener();
+			
 		} else if (v == rightImageBtn) {
+			
 			Intent intent = new Intent();
 			intent.setClass(mContext, BookMarksActivity.class);
 			startActivity(intent);
+			
 		} else if (v == noNews) {
+			
 			CommonUtil.setSimilarIdToNullFromUpadates(updates);
-			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false, false);
+			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false);
+			getPendingCompany();
+			
 		} else if (v == pending) {
+			
 			Intent intent = new Intent();
 			intent.setClass(mContext, PendingCompaniesActivity.class);
 			startActivity(intent);
+			
 		}
 	}
 	
-	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore, Boolean fromBroadcast) {
-//		if (showDialog && fromBroadcast) showLoadingDialog(mContext);
+	private ArrayList<String> getAgentsId() {
+		
+		return null;
+	}
+	
+	private ArrayList<String> getGroupsId() {
+		
+		return null;
+	}
+	
+	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
+		
 		if (showDialog) showLoadingDialog(mContext);
-		mApiHttp.getCompanyUpdates(companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
+		
+		mApiHttp.getCompanyUpdates(getAgentsId(), getGroupsId(), companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
+			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
 				
@@ -286,9 +308,9 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		}, 10);
 	}
 	
-	public void refreshNews(Boolean fromBroadcast) {
+	public void refreshNews(Boolean showDialog) {
 		CommonUtil.setSimilarIdToNullFromUpadates(updates);
-		getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false, fromBroadcast);
+		getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, false, false);
 	}
 	
 	private void stopRefreshOrLoad() {
@@ -304,7 +326,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 				Update lastUpdate = updates.get(updates.size() - 1);
 				long aNewsID = lastUpdate.newsId;
 				long aPageTime = lastUpdate.date;
-				getNews(aNewsID, APIHttpMetadata.kGGPageFlagMoveDown, aPageTime, false, true, false);
+				getNews(aNewsID, APIHttpMetadata.kGGPageFlagMoveDown, aPageTime, false, true);
 			}
 		}, 10);
 	}

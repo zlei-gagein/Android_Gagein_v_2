@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -165,6 +163,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	}
 	
 	public void setSortBy() {
+		
 		sortByList = mFilters.getSortByFromContact();
 		for (int i = 0; i < sortByList.size(); i ++) {
 			if (sortByList.get(i).getChecked()) {
@@ -249,8 +248,10 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		
 		if (seachedPersons.size() == 0) {
 			emptyLayout.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
 		} else {
 			emptyLayout.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -274,22 +275,29 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftBtn) {
+			
 			onHideLeftLayout.onHideLeftLayout();
+			
 		} else if (v == rightBtn) {
+			
 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false), queryInfo.getQueryInfoResult());
-			Window dialogWindow = dialog.getDialog().getWindow();
- 	        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
- 	        lp.width = CommonUtil.getDeviceWidth(getActivity()) - 100;
-			dialog.showDialog();
+			dialog.showDialog(Constant.SEARCH_PEOPLE);
+			
 		} else if (v == showDetailsTx) {
+			
 			showDetails = !showDetails;
 			sortByDetailLayout.setVisibility(showDetails ? View.VISIBLE : View.GONE);
 			showDetailsTx.setText(showDetails ? R.string.hide_details : R.string.show_details);
+			
 		} else if (v == sortByText) {
+			
 			SortBySearchDialog dialog = new SortBySearchDialog(mContext, this, false);
 			dialog.showDialog();
+			
 		} else if (v == rankText) {
+			
 			String value = rankText.getText().toString();
 			if (!value.isEmpty()) {
 				Constant.REVERSE = !Constant.REVERSE;
@@ -298,6 +306,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				return;
 			}
 			initSearch();
+			
 		}
 	}
 	
@@ -324,43 +333,68 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 						//TODO 数据删除
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
+						
 						if (queryType.equalsIgnoreCase("mer_for_id")) {
+							
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
+							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
+							
 							if (id.trim().equalsIgnoreCase("4")) return;
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
 							deleteFilters(id, companiesList);
+							
 						} else if (queryType.equalsIgnoreCase("rank")) {
+							
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
+							
 						} else if (queryType.equalsIgnoreCase("org_fiscal_month")) {
+							
 							List<FilterItem> fiscalMonthList = mFilters.getFiscalYearEndMonths();
 							deleteFilters(id, fiscalMonthList);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_occurrence_type")) {
+							
 							List<FilterItem> mileStoneDateRangeList = mFilters.getMileStoneDateRange();
 							deleteFilters(id, mileStoneDateRangeList);
+							
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
+							
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
-						} else if (queryType.equalsIgnoreCase("location_code")) {//TODO
+							
+						} else if (queryType.equalsIgnoreCase("location_code")) {
+							
 							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
+							
 						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
+							
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
+							
 						} else if (queryType.equalsIgnoreCase("search_date_range")) {
+							
 							List<FilterItem> ranks = mFilters.getDateRanges();
 							deleteFilters(id, ranks);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_type")) {
+							
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
 							deleteFilters(id, mileStoneList);
+							
 						} else if (queryType.equalsIgnoreCase("org_ownership")) {
+							
 							List<FilterItem> ownershipList = mFilters.getOwnerships();
 							deleteFilters(id, ownershipList);
+							
 						} else if (queryType.equalsIgnoreCase("org_revenue_size")) {
+							
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
+							
 						}
 						//TODO
 						else if (queryType.equalsIgnoreCase("dop_title")) {

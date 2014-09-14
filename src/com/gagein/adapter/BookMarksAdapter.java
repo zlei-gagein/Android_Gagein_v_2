@@ -174,7 +174,7 @@ public class BookMarksAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				//
+				
 				Intent intent = new Intent();
 				intent.putExtra(Constant.COMPANYID, update.orgID);
 				intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompanyTabletActivity.class : CompanyActivity.class);
@@ -189,7 +189,7 @@ public class BookMarksAdapter extends BaseAdapter {
 				
 				scrollview.scrollTo(0, 0);
 				
-				((BookMarksActivity)mContext).showShareLayout(update);
+				((BookMarksActivity)mContext).showShareLayout(update, false);
 				((BookMarksActivity)mContext).showShareItem = position;
 			}
 		});

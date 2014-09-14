@@ -130,7 +130,7 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
 				} else {
-					scheduleSearchTask(character, 2000);
+					scheduleSearchTask(character, 800);
 				};
 			}
 

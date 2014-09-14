@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -151,27 +150,31 @@ public class StoryActivity extends BaseActivity {
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
+			
 			finish();
+			
 		} else if (v == rightImageBtn) {//share
-			showShareLayout(update);
-//		} else if (v == rightImageBtn2) {//like
-//			if (update.liked) {
-//				setUnLike(update);
-//			} else {
-//				setLike(update);
-//			}
+			
+			showShareLayout(update, true);
+			
 		} else if (v == mentionedCompaniesBtn) {
+			
 			if (null == mentionedCompanies || mentionedCompanies.size() == 0) return;//TODO like the ios if show the button
 			Intent intent = new Intent();
 			intent.putExtra(Constant.UPDATE, update);
 			intent.setClass(mContext, MentionedCompaniesActivity.class);
 			startActivity(intent);
+			
 		} else if (v == twitters) {
+			
 			startWebActivity(update.twitterTweets);
+			
 		} else if (v == webPage) {
-			Log.v("silen", "update.url == " + update.url);
+			
 			startWebActivity(update.url);
+			
 		}
 	}
 	
@@ -187,11 +190,13 @@ public class StoryActivity extends BaseActivity {
 						if (parser.isOK()) {
 							update = parser.parseGetCompanyUpdateDetail();
 							updates.get(position).hasBeenRead = true;
-
+							
 							//TODO
 							update.fromSource = updates.get(position).fromSource;
 							update.date = updates.get(position).date;
 							update.dateStr = updates.get(position).dateStr;
+							update.liked = updates.get(position).liked;
+							update.irrelevant = updates.get(position).irrelevant;
 							setData();
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
@@ -211,75 +216,4 @@ public class StoryActivity extends BaseActivity {
 				});
 	}
 	
-//	private void setUnLike(final Update update) {
-//		showLoadingDialog();
-//		mApiHttp.unlikeUpdate(update.newsId, new Listener<JSONObject>() {
-//
-//			@Override
-//			public void onResponse(JSONObject jsonObject) {
-//
-//				APIParser parser = new APIParser(jsonObject);
-//				if (parser.isOK()) {
-//					update.liked = false;
-////					setLikeBackground();
-//				} else {
-//					String msg = MessageCode.messageForCode(parser.messageCode());
-//					if (msg != null && msg.length() > 0) {
-//						CommonUtil.showDialog(msg);
-//					}
-//				}
-//				dismissLoadingDialog();
-//			}
-//
-//		}, new Response.ErrorListener() {
-//
-//			@Override
-//			public void onErrorResponse(VolleyError error) {
-//				showConnectionError();
-//			}
-//		});
-//	}
-	
-//	private void setLike(final Update update) {
-//		showLoadingDialog();
-//		mApiHttp.likeUpdate(update.newsId, new Listener<JSONObject>() {
-//
-//			@Override
-//			public void onResponse(JSONObject jsonObject) {
-//				APIParser parser = new APIParser(jsonObject);
-//				if (parser.isOK()) {
-//					update.liked = true;
-////					setLikeBackground();
-//					if (null != parser.data()) {
-//						String msgStatus = parser.data().optString("message_status");
-//						if (msgStatus.equals(APIHttpMetadata.LIKED_CLOSER)) {
-//							LikedTriggerchartDialog closerDialog = new LikedTriggerchartDialog(mContext, false);
-//							closerDialog.showDialog();
-//						} else if (msgStatus.equals(APIHttpMetadata.LIKED_ENABLE)){
-//							LikedTriggerchartDialog closerDialog = new LikedTriggerchartDialog(mContext, true);
-//							closerDialog.showDialog();
-//						}
-//						dismissLoadingDialog();
-//						return;
-//					}
-////					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.liked), mContext);
-//					showImageShortToast(R.string.liked);
-//				} else {
-//					String msg = MessageCode.messageForCode(parser.messageCode());
-//					if (msg != null && msg.length() > 0) {
-//						CommonUtil.showDialog(msg);
-//					}
-//				}
-//				dismissLoadingDialog();
-//			}
-//
-//		}, new Response.ErrorListener() {
-//
-//			@Override
-//			public void onErrorResponse(VolleyError error) {
-//				showConnectionError();
-//			}
-//		});
-//	}
-
 }

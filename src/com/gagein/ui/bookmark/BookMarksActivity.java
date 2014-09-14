@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +24,8 @@ import com.gagein.http.APIParser;
 import com.gagein.model.DataPage;
 import com.gagein.model.Update;
 import com.gagein.ui.main.BaseActivity;
+import com.gagein.util.Constant;
+import com.gagein.util.Log;
 import com.gagein.util.MessageCode;
 
 public class BookMarksActivity extends BaseActivity implements IXListViewListener, OnItemClickListener{
@@ -33,6 +37,86 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	private DataPage dataPage;
 	public int showShareItem;
 	private Boolean edit = false;
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_LIKED_NEWS, Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_IRRELEVANT_FALSE, 
+				Constant.BROADCAST_IRRELEVANT_TRUE, Constant.BROADCAST_REMOVE_BOOKMARKS);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_LIKED_NEWS)) {
+			
+			refreshUpdatesLikeStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNLIKE_NEWS)) {
+			
+			refreshUpdatesLikeStatus(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_FALSE)) {
+			
+			refreshUpdatesIrrelevantStatus(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_TRUE)) {
+			
+			refreshUpdatesIrrelevantStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_REMOVE_BOOKMARKS)) {
+			
+			removeBookmark(intent);
+			
+		}
+		
+	}
+	
+	private void refreshUpdatesLikeStatus(Intent intent, Boolean like) {
+		
+		long mUpdateId = intent.getLongExtra(Constant.UPDATEID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			long updateId = updates.get(i).newsId;
+			if (updateId == mUpdateId) {
+				updates.get(i).liked = like;
+				adapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
+	
+	private void refreshUpdatesIrrelevantStatus(Intent intent, Boolean irrelevant) {
+		
+		long mUpdateId = intent.getLongExtra(Constant.UPDATEID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			long updateId = updates.get(i).newsId;
+			if (updateId == mUpdateId) {
+				Log.v("silen", "irrelevant = " + irrelevant);
+				updates.get(i).irrelevant = irrelevant;
+				adapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
+	
+	private void removeBookmark(Intent intent) {
+		
+		long mUpdateId = intent.getLongExtra(Constant.UPDATEID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			long updateId = updates.get(i).newsId;
+			if (updateId == mUpdateId) {
+				updates.remove(i);
+				adapter.notifyDataSetChanged();
+			}
+		}
+		
+	}
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,14 +203,17 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	private void getBookmarks(final Boolean isShowDialog, final Boolean loadMore) {
 
 		if (isShowDialog) showLoadingDialog();
-		mApiHttp.getSavedUpdates(page, false,new Listener<JSONObject>() {
+		mApiHttp.getSavedUpdates(page, false, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
+				Log.v("silen", "jsonObject = " + jsonObject.toString());
 
 				dismissLoadingDialog();
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					Boolean hasMore = parser.dataHasMore();
 					if (hasMore) page++;
 					listview.setPullLoadEnable(hasMore);
@@ -139,12 +226,14 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 					if (items != null) {
 						for (Object obj : items) {
 							updates.add((Update) obj);
+							Log.v("silen", "irrelevant = " + ((Update) obj).irrelevant);
 						}
 					}
 					
 					noBookmarks.setVisibility((updates.size() == 0) ? View.VISIBLE : View.GONE);
 					listview.setVisibility(View.VISIBLE);
 					if (!loadMore) setData();
+					
 				} else {
 					
 					noBookmarks.setVisibility(View.VISIBLE);
@@ -169,16 +258,17 @@ public class BookMarksActivity extends BaseActivity implements IXListViewListene
 	}
 	
 	public void setNoBookMarks() {
+		
 		noBookmarks.setVisibility(View.VISIBLE);
 		edit = false;
 		setLeftButton(R.string.u_edit);
 		setLeftImageButtonVisible(View.GONE);
 		setRightButton(R.string.done);
+		
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

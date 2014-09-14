@@ -3,8 +3,6 @@ package com.gagein.ui.main;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -12,13 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.gagein.R;
-import com.gagein.http.APIParser;
 import com.gagein.util.CommonUtil;
-import com.gagein.util.Constant;
 
 /**
  * 启动页，该页面用于数据初始化和展示作用

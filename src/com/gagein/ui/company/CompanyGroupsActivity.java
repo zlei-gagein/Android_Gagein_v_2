@@ -1,19 +1,36 @@
 package com.gagein.ui.company;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.gagein.R;
+import com.gagein.adapter.FilterGroupsAdapter;
+import com.gagein.http.APIParser;
+import com.gagein.model.DataPage;
+import com.gagein.model.Group;
 import com.gagein.ui.main.BaseActivity;
+import com.gagein.util.CommonUtil;
+import com.gagein.util.Log;
 
-public class CompanyGroupsActivity extends BaseActivity {
+public class CompanyGroupsActivity extends BaseActivity implements OnItemClickListener{
 	
-	private LinearLayout unsupportPt;
+	private ListView listView;
+	private List<Group> groups = new ArrayList<Group>();
+	private FilterGroupsAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_companygroups);
 		
@@ -22,43 +39,102 @@ public class CompanyGroupsActivity extends BaseActivity {
 	
 	@Override
 	protected void initView() {
-		// TODO Auto-generated method stub
 		super.initView();
 		
 		setTitle(R.string.company_groups);
-		setLeftButton(R.string.cancel);
+		setLeftImageButton(R.drawable.back_arrow);
 		setRightButton(R.string.done);
 		
-		unsupportPt = (LinearLayout) findViewById(R.id.unsupportPt);
+		listView = (ListView) findViewById(R.id.listView);
 		
 	}
 	
 	@Override
 	protected void initData() {
-		// TODO Auto-generated method stub
 		super.initData();
 		
-		//TODO
-		unsupportPt.setVisibility(View.VISIBLE);
+		getAllCompanyGroups(true);
 	}
 	
 	@Override
+	protected void setData() {
+		super.setData();
+		
+		adapter = new FilterGroupsAdapter(mContext, groups);
+		listView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+		
+	}
+	
+	public void getAllCompanyGroups(Boolean showDialog) {
+		
+		if (showDialog) showLoadingDialog();
+		
+		mApiHttp.getAllCompanyGroups(new Listener<JSONObject>() {
+			
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				dismissLoadingDialog();
+				
+				APIParser parser = new APIParser(jsonObject);
+				
+				if (parser.isOK()) {
+					groups.clear();
+					DataPage dataPage = parser.parseGetAllCompanyGroups();
+					List<Object> items = dataPage.items;
+					if (items != null) {
+						for (Object obj : items) {
+							
+							Group group = (Group) obj;
+							int groupCount = group.getCount();
+							if (groupCount > 0) {
+								groups.add(group);
+							}
+						}
+						
+						setData();
+					}
+				} else {
+				}
+			}
+			
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				showConnectionError();
+			}
+		});
+
+	};
+	
+	@Override
 	protected void setOnClickListener() {
-		// TODO Auto-generated method stub
 		super.setOnClickListener();
+		
 		leftBtn.setOnClickListener(this);
 		rightBtn.setOnClickListener(this);
-		
+		listView.setOnItemClickListener(this);
 	}
 	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		super.onClick(v);
-		if (v == leftBtn) {
+		
+		if (v == leftImageBtn) {
+			
 			finish();
+			
 		} else if (v == rightBtn) {
 			
+			
+			
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		
 	}
 }

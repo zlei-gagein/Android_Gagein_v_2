@@ -852,7 +852,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 										if (parentsSize > 0 || subsidiariesSize > 0) {
 											noNewsShowLayout.setVisibility(View.VISIBLE);
 											
-											String noNewsPromot = "There are no news stories in the last 180 days. Follow this Company's %s to receive more news.";
+											String noNewsPromot = "There are no news stories in the last 180 days. Follow this company's %s to receive more news.";
 											
 											if (parentsSize > 0 && subsidiariesSize == 0) {
 												

@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -172,6 +170,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	}
 	
 	public void setSortBy() {
+		
 		sortByList = mFilters.getSortByFromBuz();
 		for (int i = 0; i < sortByList.size(); i ++) {
 			if (sortByList.get(i).getChecked()) {
@@ -180,6 +179,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				setRank(value);
 			}
 		}
+		
 	}
 
 	private void setRank(String value) {
@@ -254,9 +254,12 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		
 		if (seachedCompanies.size() == 0) {
 			emptyLayout.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
 		} else {
 			emptyLayout.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
 		}
+		
 	}
 	
 	private void setCompany() {
@@ -284,44 +287,70 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 						//TODO 数据删除
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
-						Log.v("silen", "type = " + queryType);
+						
+						Log.v("silen", "delete-queryType = " + queryType);
+						
 						if (queryType.equalsIgnoreCase("mer_for_id")) {
+							
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
+							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
+							
 							if (id.trim().equalsIgnoreCase("4")) return;
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
 							deleteFilters(id, companiesList);
+							
 						} else if (queryType.equalsIgnoreCase("rank")) {
+							
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
+							
 						} else if (queryType.equalsIgnoreCase("org_fiscal_month")) {
+							
 							List<FilterItem> fiscalMonthList = mFilters.getFiscalYearEndMonths();
 							deleteFilters(id, fiscalMonthList);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_occurrence_type")) {
+							
 							List<FilterItem> mileStoneDateRangeList = mFilters.getMileStoneDateRange();
 							deleteFilters(id, mileStoneDateRangeList);
+							
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
+							
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
+							
 						} else if (queryType.equalsIgnoreCase("location_code")) {
-							List<Location> locationList = mFilters.getLocations();
+							
+							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
+							
 						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
+							
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
+							
 						} else if (queryType.equalsIgnoreCase("search_date_range")) {
+							
 							List<FilterItem> ranks = mFilters.getDateRanges();
 							deleteFilters(id, ranks);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_type")) {
+							
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
 							deleteFilters(id, mileStoneList);
+							
 						} else if (queryType.equalsIgnoreCase("org_ownership")) {
+							
 							List<FilterItem> ownershipList = mFilters.getOwnerships();
 							deleteFilters(id, ownershipList);
+							
 						} else if (queryType.equalsIgnoreCase("org_revenue_size")) {
+							
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
+							
 						}
 					}
 
@@ -348,6 +377,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		for (int i = 0; i < filterItems.size(); i ++) {
 			if (id.equalsIgnoreCase(filterItems.get(i).getKey())) {
 				filterItems.get(i).setChecked(false);
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		}
@@ -359,6 +389,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		for (int i = 0; i < industries.size(); i ++) {
 			if (id.equalsIgnoreCase(industries.get(i).getId())) {
 				industries.get(i).setChecked(false);
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		}
@@ -370,6 +401,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		for (int i = 0; i < locations.size(); i ++) {
 			if (id.equalsIgnoreCase(locations.get(i).getCode())) {
 				locations.get(i).setChecked(false);
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		}
@@ -393,6 +425,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				Constant.ANYWORDS = "";
 				Constant.NONEWORDS = "";
 				
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		});
@@ -418,23 +451,29 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		super.onClick(v);
 		
 		if (v == leftBtn) {
+			
 			onHideLeftLayout.onHideLeftLayout();
+			
 		} else if (v == rightBtn) {
+			
 			if (null == queryInfo) return;
+			
  			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true), queryInfo.getQueryInfoResult());
- 			Window dialogWindow = dialog.getDialog().getWindow();
- 	        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
- 	        lp.width = CommonUtil.getDeviceWidth(getActivity()) - 100;
- 	        dialogWindow.setAttributes(lp);
-			dialog.showDialog();
+			dialog.showDialog(Constant.SEARCH_COMPANY);
+			
 		} else if (v == showDetailsTx) {
+			
 			showDetails = !showDetails;
 			sortByDetailLayout.setVisibility(showDetails ? View.VISIBLE : View.GONE);
 			showDetailsTx.setText(showDetails ? R.string.hide_details : R.string.show_details);
+			
 		} else if (v == sortByText) {
+			
 			SortBySearchDialog dialog = new SortBySearchDialog(mContext, this, true);
 			dialog.showDialog();
+			
 		} else if (v == rankText) {
+			
 			String value = rankText.getText().toString();
 			if (!value.isEmpty()) {
 				Constant.REVERSE = !Constant.REVERSE;
@@ -443,6 +482,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				return;
 			}
 			initSearch();
+			
 		}
 		
 	}

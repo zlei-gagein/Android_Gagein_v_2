@@ -821,7 +821,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 										if (parentsSize > 0 || subsidiariesSize > 0) {
 											noNewsShowLayout.setVisibility(View.VISIBLE);
 											
-											String noNewsPromot = "There are no news stories in the last 180 days. Follow this Company's %s to receive more news.";
+											String noNewsPromot = "There are no news stories in the last 180 days. Follow this company's %s to receive more news.";
 											
 											if (parentsSize > 0 && subsidiariesSize == 0) {
 												
@@ -944,37 +944,43 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		if (v == leftImageBtn) {
 			leftBtnClick.onLeftBtnClick();
 		} else if (v == rightBtn) {
-//			if (mCompany.followed) {
-//				unfollowCompany();
-//			} else {
-//				followCompany();
-//			}
-			String text = mCompany.followed ? mContext.getResources().getString(R.string.unfollow) : mContext.getResources().getString(R.string.follow);
-			final CommonDialog dialog = new CommonDialog(mContext);
-			dialog.setCancelable(false);
-			Window window = dialog.getWindow();
-			window.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-			window.setGravity(Gravity.BOTTOM);
-			window.setWindowAnimations(R.style.dialog_animation);
-			dialog.showDialog(text, new OnClickListener() {
+			
+			if (!mCompany.followed) {
 				
-				@Override
-				public void onClick(View v) {
-					dialog.dismissDialog();
-					if (mCompany.followed) {
+				followCompany();
+				
+			} else {
+				
+				String text = mCompany.followed ? mContext.getResources().getString(R.string.unfollow) : mContext.getResources().getString(R.string.follow);
+				final CommonDialog dialog = new CommonDialog(mContext);
+				dialog.setCancelable(false);
+				Window window = dialog.getWindow();
+				window.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				window.setGravity(Gravity.BOTTOM);
+				window.setWindowAnimations(R.style.dialog_animation);
+				dialog.showDialog(text, new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						
 						unfollowCompany();
-					} else {
-						followCompany();
+						dialog.dismissDialog(); 
+						
 					}
-				}
-			}, new OnClickListener() {
+				}, new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						
+						dialog.dismissDialog();
+						
+					}
+				});
 				
-				@Override
-				public void onClick(View v) {
-					dialog.dismissDialog();
-				}
-			});
+			}
+			
 		} else if (v == sortBy) {
+			
 			if (typeChecked == typePeople) {
 				CompanySortByDialog dialog = new CompanySortByDialog(mContext, this, true);
 				dialog.showDialog();
@@ -982,7 +988,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 				CompanySortByDialog dialog = new CompanySortByDialog(mContext, this, false);
 				dialog.showDialog();
 			}
+			
 		} else if (v == filterBtn) {
+			
 			if (typeChecked == typeNews) {
 				onNewsFilterClickListener.onNewsFilterClickListener();
 			} else if (typeChecked == typePeople) {
@@ -990,7 +998,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			} else if (typeChecked == typeCompetitors) {
 				onCompetitorFilterClickListener.onCompetitorFilterClickListener();
 			}
+			
 		} else if (v == newsBtn) {
+			
 			setAllListViewGone();
 			setListViewVisible(newsList);
 			setFilterVisible(View.VISIBLE);
@@ -1001,7 +1011,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			setSelectedButton(newsBtn);
 			setNoDatasGone();
 			if (isNoNews) noNewsLayout.setVisibility(View.VISIBLE);
+			
 		} else if (v == aboutBtn) {
+			
 			setAllListViewGone();
 			setListViewVisible(aboutList);
 			setFilterVisible(View.GONE);
@@ -1011,7 +1023,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			setCategoryButtonDefault();
 			setSelectedButton(aboutBtn);
 			setNoDatasGone();
+			
 		} else if (v == peopleBtn) {
+			
 			setAllListViewGone();
 			setListViewVisible(personList);
 			setFilterVisible(View.VISIBLE);
@@ -1024,7 +1038,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			if (persons.size() == 0 && !isNoPeople) getPersons(false, orderBy, 0,0,0);
 			setNoDatasGone();
 			if (isNoPeople) noPeople.setVisibility(View.VISIBLE);
+			
 		} else if (v == competitorsBtn) {
+			
 			setAllListViewGone();
 			setListViewVisible(competitorList);
 			setFilterVisible(View.VISIBLE);

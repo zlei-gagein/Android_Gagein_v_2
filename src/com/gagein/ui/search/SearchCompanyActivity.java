@@ -137,6 +137,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					parserIsOk(false, parser);
@@ -197,7 +198,11 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
+				Log.v("silen", "jsonObject = " + jsonObject.toString());
+				
 				APIParser parser = new APIParser(jsonObject);
+				
 				if (parser.isOK()) {
 					parserIsOk(loadMore, parser);
 				} else {
@@ -215,6 +220,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	}
 	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
+		
 		if (!loadMore) seachedCompanies.clear();
 		
 		//将API返回数据同步到本地的filter options
@@ -249,9 +255,12 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		
 		if (seachedCompanies.size() == 0) {
 			emptyLayout.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
 		} else {
 			emptyLayout.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
 		}
+		
 	}
 	
 	private void setCompany() {
@@ -293,49 +302,67 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 						//TODO 数据删除
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
-						Log.v("silen", "type = " + type);
-						if (queryType.equalsIgnoreCase("mer_for_id")) {
-							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
-							deleteFilters(id, newsTriggerList);
+						Log.v("silen", "delete = queryType = " + queryType);
+						
+						if (queryType.equalsIgnoreCase("mer|_for_id")) {
+							
+							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers(); 
+							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
-							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
+							
+							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany(); 
 							deleteFilters(id, companiesList);
+							
 						} else if (queryType.equalsIgnoreCase("rank")) {
+							
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
+							
 						} else if (queryType.equalsIgnoreCase("org_fiscal_month")) {
+							
 							List<FilterItem> fiscalMonthList = mFilters.getFiscalYearEndMonths();
 							deleteFilters(id, fiscalMonthList);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_occurrence_type")) {
+							
 							List<FilterItem> mileStoneDateRangeList = mFilters.getMileStoneDateRange();
 							deleteFilters(id, mileStoneDateRangeList);
+							
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
+							
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
+							
 						} else if (queryType.equalsIgnoreCase("location_code")) {
 							
-							//TODO
-							List<Location> locationList = mFilters.getLocations();
-							deleteLocationFilters(id, locationList);
-							
-							locationList = mFilters.getHeadquarters();
+							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
 							
 						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
+							
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
+							
 						} else if (queryType.equalsIgnoreCase("search_date_range")) {
+							
 							List<FilterItem> ranks = mFilters.getDateRanges();
 							deleteFilters(id, ranks);
+							
 						} else if (queryType.equalsIgnoreCase("milestone_type")) {
+							
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
 							deleteFilters(id, mileStoneList);
+							
 						} else if (queryType.equalsIgnoreCase("org_ownership")) {
+							
 							List<FilterItem> ownershipList = mFilters.getOwnerships();
 							deleteFilters(id, ownershipList);
+							
 						} else if (queryType.equalsIgnoreCase("org_revenue_size")) {
+							
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
+							
 						}
 						
 						Intent intent = new Intent();
@@ -365,6 +392,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		for (int i = 0; i < filterItems.size(); i ++) {
 			if (id.equalsIgnoreCase(filterItems.get(i).getKey())) {
 				filterItems.get(i).setChecked(false);
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		}
@@ -374,6 +402,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		for (int i = 0; i < industries.size(); i ++) {
 			if (id.equalsIgnoreCase(industries.get(i).getId())) {
 				industries.get(i).setChecked(false);
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		}
@@ -386,6 +415,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			}
 		}
 		
+		PAGENUM = 1;
 		searchAdvancedCompanies(false);
 	}
 	
@@ -405,6 +435,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 				Constant.ANYWORDS = "";
 				Constant.NONEWORDS = "";
 				
+				PAGENUM = 1;
 				searchAdvancedCompanies(false);
 			}
 		});
@@ -434,7 +465,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			
 			if (null == queryInfo) return;
  			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true), queryInfo.getQueryInfoResult());
-			dialog.showDialog();
+			dialog.showDialog(Constant.SEARCH_COMPANY);
 			
 		} else if (v == showDetailsTx) {
 			
@@ -483,6 +514,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	}
 	
 	private void setQueryInfoLayout() {
+		
 		//NewsTriggers
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setQueryInfoDetailButton(newsTriggersList, null);

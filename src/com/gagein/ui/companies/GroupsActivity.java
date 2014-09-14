@@ -101,7 +101,6 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		}
 	}
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -194,7 +193,11 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 							}
 						}
 						
-						if (!tabChanged) setData();
+						if (!tabChanged) {
+							setData();
+						} else {
+							adapter.notifyDataSetChanged();
+						}
 					}
 				} else {
 				}
@@ -283,6 +286,8 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			
 			NewGroupDialog dialog = new NewGroupDialog(mContext);
 			dialog.showDialog();
+			
+			CommonUtil.showSoftKeyBoard(100);
 			
 		} else if (v == rightBtn) {
 			

@@ -31,7 +31,7 @@
     <string name="add_to_group">Add To Group</string>
     <string name="enter_a_company_it_the_us_or_canada">Enter a company in the US or Canada.</string>
     <string name="remove_from_group">Remove from Group</string>
-    <string name="remove_from_group_pt">This %1$s will be removed from this group, but will remain in \"Followed Companies\".</string>
+    <string name="remove_from_group_pt">%1$s will be removed from this group, but will remain in \"Followed Companies\".</string>
     <string name="rename_group">Rename Group</string>
     <string name="rename_success">Rename Success</string>
     <string name="u_delete">Delete</string>

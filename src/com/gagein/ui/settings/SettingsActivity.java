@@ -93,17 +93,28 @@ public class SettingsActivity extends BaseActivity {
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == myAccountBtn) {
+			
 			startActivitySimple(MyAccountActivity.class);
+			
 		} else if (v == newsFilterBtn) {
+			
 			startActivitySimple(SettingsNewsFilterActivity.class);
+			
 		} else if (v == privacyPolicyBtn) {
+			
 			startWebActivity(APIHttp.serverURL + "/html/privacy_v2.0.html");
+			
 		} else if (v == termsBtn) {
+			
 			startWebActivity(APIHttp.serverURL + "/html/tos_v2.0.html");
-		} else if (v == tutorialBtn) {//TODO
+			
+		} else if (v == tutorialBtn) {
+			
 			tutorial = !tutorial;
 			tutorialBtn.setBackgroundResource(tutorial ? R.drawable.tutorial_on : R.drawable.tutorial_off);
+			
 		} else if (v == loginOutBtn) {
+			
 			final CommonDialog dialog = new CommonDialog(mContext);
 			dialog.setCancelable(false);
 			Window window = dialog.getWindow();

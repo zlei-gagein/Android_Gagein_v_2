@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -21,6 +22,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -66,7 +69,7 @@ import com.gagein.util.Log;
 import com.gagein.util.MessageCode;
 import com.gagein.util.Utils;
 
-public class SearchActivity extends BaseActivity implements OnItemClickListener, IXListViewListener{
+public class SearchActivity extends BaseActivity implements OnItemClickListener, IXListViewListener, OnScrollListener{
 	
 	private EditText searchEdt;
 	private TextView addNewCompany;
@@ -82,7 +85,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private LinearLayout mainLayout;
 	private RelativeLayout noSavedSearches;
 	private LinearLayout searchLayout;
-	private LinearLayout noResultsLayout;
+	private LinearLayout noCompanyResultsLayout;
+	private LinearLayout noPeopleResultsLayout;
 	private LinearLayout companyFoundLayout;
 	private TextView companiesFoundNum;
 	private TextView companiesFound;
@@ -102,6 +106,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
 	private SearchSavedAdapter savedAdapter;
     private Boolean havePurchased = true;
+    private Boolean getSavedSearchsOK = false;
     
     @Override
 	public void handleNotifications(Context aContext, Intent intent) {
@@ -122,8 +127,19 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			refreshCompanyFollowStatus(intent, false);
 	
+		} else if (actionName.equals(Constant.BROADCAST_GET_SAVED_SEARCH)) {
+			
+			PAGE_NUM_SAVESEARCH = 1;
+			getSavedSearches(false, false);
+			
 		}
 	}
+    
+    @Override
+    protected List<String> observeNotifications() {
+    	return stringList(Constant.BROADCAST_REFRESH_SEARCH, Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, 
+    			Constant.BROADCAST_GET_SAVED_SEARCH);
+    }
     
     private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
 		
@@ -139,11 +155,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		
 	}
 	
-	@Override
-	protected List<String> observeNotifications() {
-		return stringList(Constant.BROADCAST_REFRESH_SEARCH, Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
-	}
-    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,7 +180,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 		noSavedSearches = (RelativeLayout) findViewById(R.id.noSavedSearches);
 		searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
-		noResultsLayout = (LinearLayout) findViewById(R.id.noResultsLayout);
+		noCompanyResultsLayout = (LinearLayout) findViewById(R.id.noCompanyResultsLayout);
+		noPeopleResultsLayout = (LinearLayout) findViewById(R.id.noPeopleResultsLayout);
 		companyFoundLayout = (LinearLayout) findViewById(R.id.companyFoundLayout);
 		buildCompany = (Button) findViewById(R.id.buildCompany);
 		buildPeople = (Button) findViewById(R.id.buildPeople);
@@ -200,8 +212,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					companyFoundLayout.setVisibility(View.GONE);
 				} else {
 					scheduleSearchTask(character, 2000);
-					mainLayout.setVisibility(View.GONE);
 					searchLayout.setVisibility(View.VISIBLE);
+					mainLayout.setVisibility(View.GONE);
 					companyFoundLayout.setVisibility(View.GONE);
 				};
 			}
@@ -231,6 +243,10 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				return false;
 			}
 		});
+		
+		companyList.setOnScrollListener(this);
+		personList.setOnScrollListener(this);
+		savedList.setOnScrollListener(this);
 	}
 	
 	@Override
@@ -309,6 +325,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
+					getSavedSearchsOK = true;
+					
 					if (!loadMore) mSavedSearchs.clear();
 					DataPage dataPage = parser.parseGetSavedSearch();
 					List<Object> items = dataPage.items;
@@ -323,11 +341,12 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					savedList.setPullLoadEnable(dataPage.hasMore);
 					
 					if (mSavedSearchs.size() > 0) {
-						noSavedSearches.setVisibility(View.VISIBLE);
-					} else {
+						savedList.setVisibility(View.VISIBLE);
 						noSavedSearches.setVisibility(View.GONE);
+					} else {
+						savedList.setVisibility(View.GONE);
+						noSavedSearches.setVisibility(View.VISIBLE);
 					}
-					Log.v("silen", "mSavedSearchs.size = " + mSavedSearchs.size());
 					
 					PAGE_NUM_SAVESEARCH ++;
 				} else {
@@ -346,10 +365,14 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void setSavedSearch() {
+		
+		Constant.locationSavedSearchs = mSavedSearchs;
+		
 		savedAdapter = new SearchSavedAdapter(mContext, mSavedSearchs);
 		savedList.setAdapter(savedAdapter);
 		savedAdapter.notifyDataSetChanged();
 		savedAdapter.notifyDataSetInvalidated();
+		
 	}
 	
 	private void searchCompanies(final String character, final Boolean loadMore) {
@@ -362,6 +385,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					if (!loadMore) searchCompanies.clear();
 					DataPage dataPage = parser.parseSearchCompany();
 					Boolean haveMoreCompanies = dataPage.hasMore;
@@ -379,9 +403,15 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					
 					Log.v("silen", "companies.size == " + searchCompanies.size());
 					if (searchCompanies.size() == 0) {
-						noResultsLayout.setVisibility(View.VISIBLE);
+						
+						companyList.setVisibility(View.GONE);
+						noCompanyResultsLayout.setVisibility(isCompany ? View.VISIBLE : View.GONE);
+						
 					} else {
-						noResultsLayout.setVisibility(View.GONE);
+						
+						companyList.setVisibility(isCompany ? View.VISIBLE : View.GONE);
+						noCompanyResultsLayout.setVisibility(View.GONE);
+						
 					}
 					
 					PAGE_NUM_COMPANY ++;
@@ -422,21 +452,26 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						}
 					}
 					
-					//Log.v("silen", "pserson.size == " + searchPersons.size());
-					for (int i = 0; i < searchPersons.size(); i ++) {//TODO
-						Log.v("silen", "socialProfiles.size = " + searchPersons.get(i).socialProfiles.size());
-					}
+//					//Log.v("silen", "pserson.size == " + searchPersons.size());
+//					for (int i = 0; i < searchPersons.size(); i ++) {//TODO
+//						Log.v("silen", "socialProfiles.size = " + searchPersons.get(i).socialProfiles.size());
+//					}
 					if (!loadMore) {
 						personAdapter.notifyDataSetChanged();
 						personAdapter.notifyDataSetInvalidated();
 					}
-//					if (searchPersons.size() == 0) {
-//						listView.setVisibility(View.GONE);
-//						addCompany.setVisibility(View.VISIBLE);
-//					} else {
-//						listView.setVisibility(View.VISIBLE);
-//						addCompany.setVisibility(View.GONE);
-//					}
+					
+					if (searchPersons.size() == 0) {
+						
+						personList.setVisibility(View.GONE);
+						noPeopleResultsLayout.setVisibility(isPerson ? View.VISIBLE : View.GONE);
+						
+					} else {
+						
+						personList.setVisibility(isPerson ? View.VISIBLE : View.GONE);
+						noPeopleResultsLayout.setVisibility(View.GONE);
+						
+					}
 					
 					PAGE_NUM_PERSON ++;
 				}
@@ -467,10 +502,17 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 							searchPersons.add((Person)obj);
 						}
 					}
+					
 					if (searchPersons.size() == 0) {
-						noResultsLayout.setVisibility(View.VISIBLE);
+						
+						personList.setVisibility(View.GONE);
+						noPeopleResultsLayout.setVisibility(isPerson ? View.VISIBLE : View.GONE);
+						
 					} else {
-						noResultsLayout.setVisibility(View.GONE);
+						
+						personList.setVisibility(isPerson ? View.VISIBLE : View.GONE);
+						noPeopleResultsLayout.setVisibility(View.GONE);
+						
 					}
 				}
 				dismissLoadingDialog();
@@ -508,6 +550,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == addNewCompany) {
 			
 			final AddNewCompanyDialog dialog = new AddNewCompanyDialog(mContext);
@@ -526,45 +569,71 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			isCompany = true;
 			isPerson = !isCompany;
-			companyList.setVisibility(View.VISIBLE);
+			
+			noPeopleResultsLayout.setVisibility(View.GONE);
 			personList.setVisibility(View.GONE);
+			noCompanyResultsLayout.setVisibility((searchCompanies.size() > 0) ? View.GONE : View.VISIBLE);
+			companyList.setVisibility((searchCompanies.size() > 0) ? View.VISIBLE : View.GONE);
 			
 		} else if (v == peopleBtn) {
 			
 			isPerson = true;
 			isCompany = !isPerson;
-			personList.setVisibility(View.VISIBLE);
+			
+			noCompanyResultsLayout.setVisibility(View.GONE);
 			companyList.setVisibility(View.GONE);
+			noCompanyResultsLayout.setVisibility((searchPersons.size() > 0) ? View.GONE : View.VISIBLE);
+			personList.setVisibility((searchPersons.size() > 0) ? View.VISIBLE : View.GONE);
 			
 		} else if (v == buildCompany) {
 
 			if (!havePurchased) {
+				
 				UpgradeDialog dialog = new UpgradeDialog(mContext);
 				dialog.showDialog();
+				
 			} else {
+				
 				// if mFilters is null , pls get it again
 				if (Constant.MFILTERS == null) {
 					getFilter();
 					return;
 				}
+				
+				if (!getSavedSearchsOK) {
+					getSavedSearches(false, false);
+					return;
+				}
+				
 				Intent intent = new Intent();
 				intent.setClass(mContext, (CommonUtil.isTablet(mContext) ? CompanySearchTabletActivity.class : CompanyFilterActivity.class));
 				startActivity(intent);
+				
 			}
 			
 		} else if (v == buildPeople) {
 			
 			if (!havePurchased) {
+				
 				UpgradeDialog dialog = new UpgradeDialog(mContext);
 				dialog.showDialog();
+				
 			} else {
+				
 				if (Constant.MFILTERS == null) {
 					getFilter();
 					return;
 				}
+				
+				if (!getSavedSearchsOK) {
+					getSavedSearches(false, false);
+					return;
+				}
+				
 				Intent intent = new Intent();
 				intent.setClass(mContext, (CommonUtil.isTablet(mContext) ? PeopleSearchTabletActivity.class : PeopleFilterActivity.class));
 				startActivity(intent);
+				
 			}
 			
 		} else if (v == edit) {
@@ -575,6 +644,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			savedAdapter.notifyDataSetChanged();
 			
 		} else if (v == addDifferentCompany) {
+			
 			final AddNewCompanyDialog dialog = new AddNewCompanyDialog(mContext);
 			dialog.showDialog(new OnClickListener() {
 				
@@ -585,6 +655,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					addNewCompany(dialog);
 				}
 			});
+			
 		}
 	}
 	
@@ -630,7 +701,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						
 						dialog.dismissDialog();
 						
-						noResultsLayout.setVisibility(View.GONE);
+						noCompanyResultsLayout.setVisibility(View.GONE);
 						companyFoundLayout.setVisibility(View.VISIBLE);
 						
 						matchedCompanies.clear();
@@ -818,33 +889,49 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		} else {
 			
 			if (position == 0) return;
+			
 			if (parent == companyList) {
+				
 				if (position == searchCompanies.size() + 1) return;
 				Intent intent = new Intent();
 				intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompanyTabletActivity.class : CompanyActivity.class);
 				intent.putExtra(Constant.COMPANYID, searchCompanies.get(position - 1).orgID);
 				startActivity(intent);
+				
 			} else if (parent == personList) {
+				
 				if (position == searchPersons.size() + 1) return;
 				Intent intent = new Intent();
 				intent.setClass(mContext, PersonActivity.class);
 				intent.putExtra(Constant.PERSONID, searchPersons.get(position - 1).id);
 				startActivity(intent);
+				
 			} else if (parent == savedList) {
+				
 				if (position == mSavedSearchs.size() + 1) return;
+				
+				if (Constant.MFILTERS == null) {
+					getFilter();
+					return;
+				}
 				
 				SavedSearch mSavedSearch = mSavedSearchs.get(position - 1);
 				String type = mSavedSearch.getType();
+				
 				if (type.equalsIgnoreCase("buz")) {
+					
 					Intent intent = new Intent();
 					intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompanySearchTabletActivity.class : SearchCompanyActivity.class);
 					intent.putExtra(Constant.SAVEDID, mSavedSearch.getId());
 					startActivity(intent);
+					
 				} else if (type.equalsIgnoreCase("cnt")) {
+					
 					Intent intent = new Intent();
 					intent.setClass(mContext, CommonUtil.isTablet(mContext) ? PeopleSearchTabletActivity.class : SearchPersonActivity.class);
 					intent.putExtra(Constant.SAVEDID, mSavedSearch.getId());
 					startActivity(intent);
+					
 				}
 			}
 		}
@@ -877,6 +964,15 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		} else if (isPerson) {
 			searchPartPersons(searchEdt.getText().toString() , true);
 		}
+	}
+
+	@Override
+	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView arg0, int arg1) {
+		CommonUtil.hideSoftKeyBoard(mContext, SearchActivity.this);
 	}
 	
 //	private void getFilter() {

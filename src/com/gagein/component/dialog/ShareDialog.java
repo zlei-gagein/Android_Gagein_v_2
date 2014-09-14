@@ -69,6 +69,7 @@ public class ShareDialog implements OnClickListener{
 	private OAuthHandler authHandler;
 	private BroadcastReceiver authReceiver;
 	private LinearLayout messageLayout;
+	private LinearLayout bookmarkLayout;
 
 	public ShareDialog(Context context) {
 		dialog = new Dialog(context, R.style.dialog);
@@ -79,6 +80,7 @@ public class ShareDialog implements OnClickListener{
 		cancel = (Button) view.findViewById(R.id.cancel);
 		message = (ImageButton) view.findViewById(R.id.message);
 		messageLayout = (LinearLayout) view.findViewById(R.id.messageLayout);
+		bookmarkLayout = (LinearLayout) view.findViewById(R.id.bookmarkLayout);
 		mail = (ImageButton) view.findViewById(R.id.mail);
 		facebook = (ImageButton) view.findViewById(R.id.facebook);
 		twitter = (ImageButton) view.findViewById(R.id.twitter);
@@ -99,12 +101,16 @@ public class ShareDialog implements OnClickListener{
 		dialog.show();
 	}
 	
-	public void showDialog(Update update) {
+	public void showDialog(Update update, Boolean showBookmarks) {
+		
 		this.mUpdate = update;
 		initData();
 		setSaveBackground();
 		setLikeBackground();
 		setIrrelevantBackground();
+		
+		bookmarkLayout.setVisibility(showBookmarks ? View.VISIBLE : View.GONE);
+		
 		dialog.setCancelable(false);
 		dialog.show();
 	}
@@ -312,8 +318,10 @@ public class ShareDialog implements OnClickListener{
 				setLike();
 			}
 		} else if (v == irrelevant) {
+			
 			dismissDialog();
 			setIrrelevant(!mUpdate.irrelevant);
+			
 		}
 	}
 	
@@ -357,6 +365,7 @@ public class ShareDialog implements OnClickListener{
 	}
 
 	private void setLike() {
+		
 		CommonUtil.showLoadingDialog(mContext);
 		mApiHttp.likeUpdate(mUpdate.newsId, new Listener<JSONObject>() {
 	
@@ -474,9 +483,9 @@ public class ShareDialog implements OnClickListener{
 					intent.setAction(flag ? Constant.BROADCAST_IRRELEVANT_TRUE : Constant.BROADCAST_IRRELEVANT_FALSE);
 					mContext.sendBroadcast(intent);
 					
-					mUpdate.irrelevant = !mUpdate.irrelevant;
+					mUpdate.irrelevant = flag;
 					setIrrelevantBackground();
-//					CommonUtil.showImageShortToast(mContext.getResources().getString(R.string.add_bookmark), mContext);
+					
 				} else {
 					CommonUtil.alertMessageForParser(parser);
 				}

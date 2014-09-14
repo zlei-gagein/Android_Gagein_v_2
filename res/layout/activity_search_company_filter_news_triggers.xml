@@ -53,6 +53,7 @@
                         android:background="@null"
                         android:ellipsize="end"
                         android:hint="@string/all_of_these_words"
+                        android:imeOptions="actionSearch"
                         android:singleLine="true"
                         android:textColor="@color/text_dark"
                         android:textColorHint="@color/text_weak"
@@ -77,83 +78,91 @@
                         android:layout_height="wrap_content"
                         android:divider="@null" />
 
-                    <EditText
-                        android:id="@+id/exactPhraseEdt"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginRight="@dimen/marginright"
-                        android:background="@null"
-                        android:ellipsize="end"
-                        android:hint="@string/this_exact_phrase"
-                        android:singleLine="true"
-                        android:textColor="@color/text_dark"
-                        android:textColorHint="@color/text_weak"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="45dp"
-                        android:background="@color/silver" />
-
-                    <ListView
-                        android:id="@+id/exactPhraseListView"
+                    <LinearLayout
+                        android:id="@+id/difineLayout"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:divider="@null" />
+                        android:orientation="vertical"
+                        android:visibility="gone" >
 
-                    <EditText
-                        android:id="@+id/anyWordsEdt"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginRight="@dimen/marginright"
-                        android:background="@null"
-                        android:ellipsize="end"
-                        android:hint="@string/any_of_these_words"
-                        android:singleLine="true"
-                        android:textColor="@color/text_dark"
-                        android:textColorHint="@color/text_weak"
-                        android:textSize="18sp" />
+                        <EditText
+                            android:id="@+id/exactPhraseEdt"
+                            android:layout_width="fill_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="@dimen/marginright"
+                            android:background="@null"
+                            android:ellipsize="end"
+                            android:hint="@string/this_exact_phrase"
+                            android:singleLine="true"
+                            android:textColor="@color/text_dark"
+                            android:textColorHint="@color/text_weak"
+                            android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="45dp"
-                        android:background="@color/silver" />
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="45dp"
+                            android:background="@color/silver" />
 
-                    <ListView
-                        android:id="@+id/anyWordsListView"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@null" />
+                        <ListView
+                            android:id="@+id/exactPhraseListView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@null" />
 
-                    <EditText
-                        android:id="@+id/noneWordsEdt"
-                        android:layout_width="fill_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginRight="@dimen/marginright"
-                        android:background="@null"
-                        android:ellipsize="end"
-                        android:hint="@string/none_of_these_words"
-                        android:singleLine="true"
-                        android:textColor="@color/text_dark"
-                        android:textColorHint="@color/text_weak"
-                        android:textSize="18sp" />
+                        <EditText
+                            android:id="@+id/anyWordsEdt"
+                            android:layout_width="fill_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="@dimen/marginright"
+                            android:background="@null"
+                            android:ellipsize="end"
+                            android:hint="@string/any_of_these_words"
+                            android:singleLine="true"
+                            android:textColor="@color/text_dark"
+                            android:textColorHint="@color/text_weak"
+                            android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="45dp"
-                        android:background="@color/silver" />
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="45dp"
+                            android:background="@color/silver" />
 
-                    <ListView
-                        android:id="@+id/noneWordsListView"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@null" />
+                        <ListView
+                            android:id="@+id/anyWordsListView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@null" />
+
+                        <EditText
+                            android:id="@+id/noneWordsEdt"
+                            android:layout_width="fill_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="45dp"
+                            android:layout_marginRight="@dimen/marginright"
+                            android:background="@null"
+                            android:ellipsize="end"
+                            android:hint="@string/none_of_these_words"
+                            android:singleLine="true"
+                            android:textColor="@color/text_dark"
+                            android:textColorHint="@color/text_weak"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="45dp"
+                            android:background="@color/silver" />
+
+                        <ListView
+                            android:id="@+id/noneWordsListView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@null" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

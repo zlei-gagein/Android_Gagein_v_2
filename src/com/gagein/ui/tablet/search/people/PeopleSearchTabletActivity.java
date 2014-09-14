@@ -169,14 +169,17 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 	}
 	
 	private void initSearchFilter() {
+		
 		if (null != Constant.MFILTERS) {
 			Constant.MFILTERS.getHeadquarters().clear();
 			Constant.MFILTERS.getJobTitles().clear();
 			Constant.MFILTERS.getLocations().clear();
 		}
+		
 		Constant.REVERSE = false;
 		CommonUtil.resetFilters();
 		CommonUtil.initConSortBy();
+		
 	}
 
 	@Override

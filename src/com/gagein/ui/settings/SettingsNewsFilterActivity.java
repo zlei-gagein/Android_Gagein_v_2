@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -42,6 +43,7 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 	private Boolean moreNews;
 	private Timer timer;
 	private TimerTask timerTask;
+	private int selectionChanged = 0;			// flag if the selection has ever been changed
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,6 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 		
 		setTitle(R.string.news_filter);
 		setLeftImageButton(R.drawable.back_arrow);
-		setRightButton(R.string.done);
 		
 		listView = (ListView) findViewById(R.id.listView);
 		selectTriggers = (TextView) findViewById(R.id.selectTriggers);
@@ -90,9 +91,10 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
 			
-			finish();
+			saveAgents();
 			
 		} else if (v == newsRelevance) {
 			
@@ -104,10 +106,6 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 				intent.putExtra(Constant.MORENEWS, moreNews);
 				startActivityForResult(intent, requestCode);
 			}
-			
-		} else if (v == rightBtn) {
-			
-			finish();
 			
 		}
 	}
@@ -177,6 +175,15 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 		});
 	}
 	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            //do something...
+        	saveAgents();
+         }
+         return super.onKeyDown(keyCode, event);
+	}
+	
 	private void getRelevance(Boolean showDialog) {
 		if (showDialog) showLoadingDialog();
 		mApiHttp.getFilterRelevance(new Listener<JSONObject>() {
@@ -204,7 +211,10 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		
 		if (null != timer) timer.cancel();
+		selectionChanged = 1;
+		
 		Agent agent = (Agent)adapter.getItem(position);
 		if (position == 0) {
 			if (agent.checked) {
@@ -238,27 +248,16 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 			}
 		}
 		adapter.notifyDataSetChanged();
-		saveAgentsTimer();
+		
 	}
 
-	private void saveAgentsTimer() {
-		timer = new Timer();
-		timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						saveAgents();
-					}
-				});
-			}
-		};
-		timer.schedule(timerTask, 1000);
-	}
-	
 	private void saveAgents() {
+		
+		if (selectionChanged == 0) {
+			finish();
+			return;
+		}
+		
 		List<String> selectedAgentIDs = new ArrayList<String>();
 		for (Agent agent : adapter.getAgents()) {
 			if (agent.checked) {
@@ -276,6 +275,23 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					Log.v("silen", "parser.isOK()");
+					
+					showShortToast("Saved");
+					
+					timer = new Timer();
+					timerTask = new TimerTask() {
+						@Override
+						public void run() {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									finish();
+								}
+							});
+						}
+					};
+					timer.schedule(timerTask, 1000);
 				} else {
 					alertMessageForParser(parser);
 				}

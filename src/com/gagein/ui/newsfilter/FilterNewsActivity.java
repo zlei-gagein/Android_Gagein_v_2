@@ -20,7 +20,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.Agent;
 import com.gagein.model.DataPage;
 import com.gagein.ui.main.BaseActivity;
-import com.gagein.util.Log;
+import com.gagein.util.Constant;
 
 public class FilterNewsActivity extends BaseActivity implements OnItemClickListener{
 	
@@ -66,9 +66,13 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == rightBtn) {
+			
 			if (selectionChanged != 0) {
+				
 				if (null != agents) {
+					
 					Boolean haveSelected = false;
 					for (int i = 0; i < agents.size(); i ++) {
 						if (agents.get(i).checked) {
@@ -76,15 +80,20 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 							break;
 						}
 					}
+					
 					if (!haveSelected) {
 						showShortToast(R.string.select_least_one_trigger);
 						return;
 					}
+					
 				}
-				saveFilter();
+				
+				saveAgentToLocation();
+				
 			} else {
 				finish();
 			}
+			
 		} else if (v == leftImageBtn) {
 			finish();
 		}
@@ -93,13 +102,16 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 	@Override
 	protected void setData() {
 		super.setData();
+		
 		adapter = new FilterNewsAdapter(mContext, agents);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	private void getFiltersData() {
+		
 		showLoadingDialog();
 		mApiHttp.getAgentFilters(new Listener<JSONObject>() {
 
@@ -114,14 +126,18 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 					agentsPage = parser.parseGetAgentFiltersList();
 					List<Object> items = agentsPage.items;
 					if (items != null) {
-						Agent agent = new Agent();
-						//TODO
-						agent.agentID = "0";
-						agent.name = "All";
-						agent.checked = false;
-						agents.add(agent);
+						
+						Agent allTriggers = new Agent();
+						
+						allTriggers.agentID = "-10";
+						allTriggers.name = "All Triggers";
+						agents.add(allTriggers);
+						
 						for (Object obj : items) {
-							agents.add((Agent)obj);
+							Agent agent = (Agent)obj;
+							if (agent.checked) {
+								agents.add(agent);
+							}
 						}
 						Boolean isAllChecked = true;
 						for (int i = 0; i < agents.size(); i ++) {
@@ -129,9 +145,45 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 							if (!agents.get(i).checked) isAllChecked = false;
 						}
 						agents.get(0).checked = isAllChecked ? true : false; 
+						
+						Agent allNews = new Agent();
+						
+						allNews.agentID = "0";
+						allNews.name = "All News";
+						agents.add(allNews);
+						
+						for (int j = 0; j < agents.size(); j ++) {
+							agents.get(j).checked = false;
+						}
+						
+						Boolean haveSelected = false;
+						for (int i = 0; i < Constant.locationAgents.size(); i ++) {
+							
+							Agent locationAgent = Constant.locationAgents.get(i);
+							
+							for (int j = 0; j < agents.size(); j ++) {
+								
+								if (locationAgent.agentID.equalsIgnoreCase(agents.get(j).agentID)) {
+									agents.get(j).checked = true;
+								}
+							}
+							
+							if (locationAgent.checked) haveSelected = true;
+								
+						}
+						
+						if (!haveSelected) {
+							for (int i = 0; i < agents.size(); i ++) {
+								if (agents.get(i).agentID.equalsIgnoreCase("-10")) {
+									agents.get(i).checked = true;
+								}
+							}
+						}
+						
 					}
 					
 					if (agents.size() > 0) setData();
+					
 				} else {
 					alertMessageForParser(parser);
 				}
@@ -148,71 +200,26 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 		});
 	}
 	
-	private void saveFilter() {
-		showLoadingDialog();
-		List<String> selectedAgentIDs = new ArrayList<String>();
-		for (Agent agent : agents) {
-			if (agent.checked) {
-				if (!agent.agentID.equalsIgnoreCase("0")) selectedAgentIDs.add(agent.agentID);
+	private void saveAgentToLocation() {
+		
+		Constant.locationAgents.clear();
+		
+		for (int i = 0; i < agents.size(); i ++) {
+			if (agents.get(i).checked) {
+				Constant.locationAgents.add(agents.get(i));
 			}
 		}
-		mApiHttp.saveAgents(selectedAgentIDs, new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-					Log.v("silen", "parser.isOK()");
-				} else {
-					alertMessageForParser(parser);
-				}
-				
-				dismissLoadingDialog();
-				finish();
-			}
-			
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
+		
+		finish();
+		
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		
 		selectionChanged = 1;
 		Agent agent = (Agent)adapter.getItem(position);
-		if (position == 0) {
-			if (agent.checked) {
-				for (int i = 0; i < agents.size(); i ++) {
-					Agent mAgent = (Agent)adapter.getItem(i);
-					mAgent.checked = false;
-				}
-			} else {
-				for (int i = 0; i < agents.size(); i ++) {
-					Agent mAgent = (Agent)adapter.getItem(i);
-					mAgent.checked = true;
-				}
-			}
-		} else {
-			agent.checked = !agent.checked;
-			//TODO
-//			Boolean haveNoSelected = false;
-//			for (int i = 0; i < agents.size(); i ++) {
-//				Agent mAgent = (Agent)adapter.getItem(i);
-//				if (mAgent.checked = false) haveNoSelected = true;
-//			}
-//			if (haveNoSelected) {
-//				Agent mAgent = (Agent)adapter.getItem(0);
-//				mAgent.checked = false;
-//			} else {
-//				Agent mAgent = (Agent)adapter.getItem(0);
-//				mAgent.checked = true;
-//			}
-		}
+		agent.checked = !agent.checked;
 		adapter.notifyDataSetChanged();
 	}
 

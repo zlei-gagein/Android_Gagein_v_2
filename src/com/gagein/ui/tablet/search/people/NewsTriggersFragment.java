@@ -15,16 +15,20 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -48,10 +52,11 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	private ListView systemAgentsListView;
 	private ListView dataRankListView;
 	private FilterAdapter systemAgentAdapter;
-	private FilterAdapter dataRangAdapter;
+	private FilterAdapter dataRangesAdapter;
 	public List<FilterItem> mNewsTriggers;
 	public List<FilterItem> mDateRanks;
 	private LinearLayout thePastLayout;
+	private LinearLayout difineLayout;
 	private EditText allWordsEdt;
 	private EditText exactPhraseEdt;
 	private EditText anyWordsEdt;
@@ -76,7 +81,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	
 	public void refreshAdapter() {
 		if (null != systemAgentAdapter) systemAgentAdapter.notifyDataSetChanged();
-		if (null != dataRangAdapter) dataRangAdapter.notifyDataSetChanged();
+		if (null != dataRangesAdapter) dataRangesAdapter.notifyDataSetChanged();
  	}
 	
 	public interface OnNewsTriggersFinish {
@@ -128,6 +133,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		noneWordsListView = (ListView) view.findViewById(R.id.noneWordsListView);
 		
 		thePastLayout = (LinearLayout) view.findViewById(R.id.thePastLayout);
+		difineLayout = (LinearLayout) view.findViewById(R.id.difineLayout);
 		allWordsEdt = (EditText) view.findViewById(R.id.allWordsEdt);
 		exactPhraseEdt = (EditText) view.findViewById(R.id.exactPhraseEdt);
 		anyWordsEdt = (EditText) view.findViewById(R.id.anyWordsEdt);
@@ -168,21 +174,28 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		
 		setPastDateShow();//cycle for check which item is checked
 		
-		dataRangAdapter = new FilterAdapter(mContext, mDateRanks);
-		dataRankListView.setAdapter(dataRangAdapter);
+		dataRangesAdapter = new FilterAdapter(mContext, mDateRanks);
+		dataRankListView.setAdapter(dataRangesAdapter);
 		CommonUtil.setListViewHeight(dataRankListView);
-		dataRangAdapter.notifyDataSetChanged();
-		dataRangAdapter.notifyDataSetInvalidated();
+		dataRangesAdapter.notifyDataSetChanged();
+		dataRangesAdapter.notifyDataSetInvalidated();
 		
 		allWordsEdt.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable s) {
 				String character = s.toString().trim();
-				if (TextUtils.isEmpty(character) || null == character){ 
+				if (TextUtils.isEmpty(character) || null == character){
+					
+					cancelSearchTask();
 					removeListView(allWordsListView);
+					
+					difineLayout.setVisibility(View.GONE);
+					
 				} else {
-					scheduleSearchTask(character, 2000, allWordsListView);
+					
+					scheduleSearchTask(character, 800, allWordsListView);
+					
 				};
 			}
 
@@ -196,15 +209,35 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			}
 		});
 		
+		allWordsEdt.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					cancelSearchTask();
+					if (TextUtils.isEmpty(textView.getText().toString())) {
+						return false;
+					}
+					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
+					
+					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		exactPhraseEdt.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable s) {
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					cancelSearchTask();
 					removeListView(exactPhraseListView);
 				} else {
-					scheduleSearchTask(character, 2000, exactPhraseListView);
+					scheduleSearchTask(character, 800, exactPhraseListView);
 				};
 			}
 
@@ -224,9 +257,14 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			public void afterTextChanged(Editable s) {
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					removeListView(anyWordsListView);
+					
 				} else {
-					scheduleSearchTask(character, 2000, anyWordsListView);
+					
+					scheduleSearchTask(character, 800, anyWordsListView);
+					
 				};
 			}
 
@@ -246,9 +284,10 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			public void afterTextChanged(Editable s) {
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					cancelSearchTask();
 					removeListView(noneWordsListView);
 				} else {
-					scheduleSearchTask(character, 2000, noneWordsListView);
+					scheduleSearchTask(character, 800, noneWordsListView);
 				};
 			}
 
@@ -399,7 +438,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 							mDateRanks.get(i).setChecked(false);
 						}
 					}
-					dataRangAdapter.notifyDataSetChanged();
+					dataRangesAdapter.notifyDataSetChanged();
 				}
 				
 				mNewsTriggers.get(position).setChecked(!checked);
@@ -436,7 +475,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 					mDateRanks.get(i).setChecked(false);
 				}
 				mDateRanks.get(position).setChecked(true);
-				dataRangAdapter.notifyDataSetChanged();
+				dataRangesAdapter.notifyDataSetChanged();
 				
 				mNewsTriggers.get(checkedSystemAgentPosition).setPastDatePosition(position);
 			}
@@ -471,12 +510,20 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			}
 			systemAgentAdapter.notifyDataSetChanged();
 			
+			Boolean haveChecked = false;
 			for (int i = 0 ; i < mDateRanks.size(); i++) {
-				mDateRanks.get(i).setChecked(false);
+				if (mDateRanks.get(i).getChecked()) {
+					haveChecked = true;
+				}
 			}
-			mDateRanks.get(mDateRanks.size() - 1).setChecked(true);
-			dataRangAdapter.notifyDataSetChanged();
+			
+			if (!haveChecked) {
+				mDateRanks.get(mDateRanks.size() - 2).setChecked(true);
+			}
+			dataRangesAdapter.notifyDataSetChanged();
+			
 			thePastLayout.setVisibility(View.VISIBLE);
+			difineLayout.setVisibility(View.VISIBLE);
 		}
 		//TODO
 		onSearchFromNewsTriggers.onSearchFromNewsTriggers();
@@ -493,6 +540,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	}
 	
 	private void setPastDateShow() {
+		
 		Boolean haveChecked = false;
 		for (int i = 0; i < mNewsTriggers.size(); i ++) {
 			if (mNewsTriggers.get(i).getChecked()) {

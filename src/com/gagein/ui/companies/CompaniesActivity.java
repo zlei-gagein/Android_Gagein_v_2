@@ -44,6 +44,7 @@ import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class CompaniesActivity extends BaseActivity implements OnItemClickListener, IXListViewListener{
 	
@@ -57,7 +58,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	private Button bottomBtn;
 	private Boolean edit = false;
 	private Boolean selected = false;
-	private int selectedNum = 1;
+	private int selectedNum = 0;
 	private List<Long> companyIds;
 	private Facet facet;
 	private List<FacetItemIndustry> industryData = new ArrayList<FacetItemIndustry>();
@@ -564,6 +565,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			public void onClick(View v) {
 				dialog.dismissDialog();
 				showLoadingDialog();
+				
 				for (int i = 0; i < companyIds.size(); i ++) {
 					unfollowCompany(companyIds.get(i));
 				}
@@ -690,20 +692,21 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
-					
-					if (companies.size() == 0) {
-						setFiltersVisible();
-						
-						Intent intent = new Intent();
-						intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
-						sendBroadcast(intent);
-					} else {
-						Intent intent = new Intent();
-						intent.setAction(Constant.BROADCAST_REFRESH_NEWS);
-						sendBroadcast(intent);
-					}
 					selectedNum--;
+					
 					if (selectedNum == 0) {
+						
+						if (companies.size() == 0) {
+							setFiltersVisible();
+							
+							Intent intent = new Intent();
+							intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
+							sendBroadcast(intent);
+						} else {
+							Intent intent = new Intent();
+							intent.setAction(Constant.BROADCAST_REFRESH_NEWS);
+							sendBroadcast(intent);
+						}
 						
 						for (int i = 0; i < companies.size(); i ++) {
 							if (mCompanyId == companies.get(i).orgID) {

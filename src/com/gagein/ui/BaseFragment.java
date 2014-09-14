@@ -193,7 +193,7 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 	
 	public void showShareLayout(Update update, Context mContext) {
 		setShareDialog(mContext);
-		shareDialog.showDialog(update);
+		shareDialog.showDialog(update, true);
 	}
 
 	private void setShareDialog(Context mContext) {

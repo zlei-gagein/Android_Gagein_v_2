@@ -169,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="left|top"
+                android:lines="3"
                 android:hint="@string/u_message"
                 android:paddingBottom="6dp"
                 android:paddingRight="10dp"

@@ -90,12 +90,14 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
+				
 				if (TextUtils.isEmpty(character) || null == character){ 
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
 				} else {
-					scheduleSearchTask(character, 2000);
+					scheduleSearchTask(character, 800);
 				};
 			}
 
@@ -105,6 +107,7 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
 			}
+			
 		});
 		
 		addEdt.setOnEditorActionListener(new OnEditorActionListener() {
@@ -113,6 +116,7 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					
 					CommonUtil.hideSoftKeyBoard(mContext, HeadquartersActivity.this);
 					cancelSearchTask();
 					if (TextUtils.isEmpty(textView.getText().toString())) return false;

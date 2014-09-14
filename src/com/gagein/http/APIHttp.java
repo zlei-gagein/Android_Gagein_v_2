@@ -444,11 +444,29 @@ public class APIHttp {
 	 * @param aSimilarIDs
 	 * @param callback
 	 */
-	public void getCompanyUpdates(long aCompanyID, long aNewsID, byte aPageFlag, long aPageTime, String aSimilarIDs,
+	public void getCompanyUpdates(ArrayList<String> agentIds, ArrayList<String> groupIds, long aCompanyID, long aNewsID, byte aPageFlag, long aPageTime, String aSimilarIDs,
 			Listener<JSONObject> listener, ErrorListener errorListener) {
+		
 		String url = apiRootPath + "member/me/update/tracker";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
+		
+		if (null != agentIds && agentIds.size() > 0) {
+			String agentKey = "agentid";
+			String agentValue = stringForMultipleValuesToOneKey(agentIds, agentKey);
+			params.put(agentKey, agentValue);
+		} else {
+			params.put("agentid", "-10");
+		}
+		
+		if (null != groupIds && groupIds.size() > 0) {
+			String groupKey = "groupid";
+			String groupValue = stringForMultipleValuesToOneKey(groupIds, groupKey);
+			params.put(groupKey, groupValue);
+		} else {
+			params.put("groupid", "-10");
+		}
+		
 		params.put("newsid", aNewsID + "");
 		params.put("pageflag", aPageFlag + "");
 		params.put("pagetime", aPageTime + "");
@@ -456,6 +474,7 @@ public class APIHttp {
 		params.put("similarids", aSimilarIDs);
 		params.put("no_proxy", "true");
 		connectURL(Method.GET,listener, errorListener, url, params);
+		
 	}
 
 	/**

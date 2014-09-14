@@ -38,6 +38,7 @@ import com.gagein.util.CommonUtil;
 import com.gagein.util.ConfigurableReceiver;
 import com.gagein.util.Constant;
 import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
+import com.gagein.util.Log;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -275,9 +276,9 @@ public class BaseActivity extends Activity implements OnReceiveListener, OnClick
 		shareDialog.showDialog();
 	}
 	
-	public void showShareLayout(Update update) {
+	public void showShareLayout(Update update, Boolean showBookmarks) {
 		setShareDialog();
-		shareDialog.showDialog(update);
+		shareDialog.showDialog(update, showBookmarks);
 	}
 
 	private void setShareDialog() {
@@ -300,15 +301,16 @@ public class BaseActivity extends Activity implements OnReceiveListener, OnClick
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	
 	protected void getFilter() {
+		Log.v("silen", "filter = 1");
 		mApiHttp.getFilter(new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					Constant.MFILTERS = parser.parserFilters();

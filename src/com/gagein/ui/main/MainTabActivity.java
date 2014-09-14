@@ -108,12 +108,11 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 				
 				if (tabId.equalsIgnoreCase(TAB_ID_COMPANIES)) {
 					
-					Intent intent = new Intent();
-					intent.setAction(Constant.BROADCAST_REFRESH_GROUPSACTIVITY);
-					sendBroadcast(intent);
+					CommonUtil.sendSimpleBroadcast(mContext, Constant.BROADCAST_REFRESH_GROUPSACTIVITY);
 					
 				} else if (tabId.equalsIgnoreCase(TAB_ID_SEARCH)) {
 					
+					CommonUtil.sendSimpleBroadcast(mContext, Constant.BROADCAST_GET_SAVED_SEARCH);
 					CommonUtil.showSoftKeyBoard(100);
 					return;
 					
@@ -198,6 +197,9 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		super.onDestroy();
 		unregisterReceiver(stratExploreReceiver);
 		mApiHttp.stop();
+		Constant.MFILTERS = null;
+		Constant.locationAgents.clear();
+		Constant.locationSavedSearchs.clear();
 	}
 
 	/** get social http stype */

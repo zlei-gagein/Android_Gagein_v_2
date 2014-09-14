@@ -129,7 +129,7 @@ public class CompanyNewsAdapter extends BaseAdapter {
 //					if (mFragment == null) Log.v("silen", "mFragment == null");
 					((CompanyFragment)mFragment).showShareLayout(update, mContext);
 				} else {
-					((CompanyActivity) mContext).showShareLayout(update);
+					((CompanyActivity) mContext).showShareLayout(update, true);
 				}
 				
 			}

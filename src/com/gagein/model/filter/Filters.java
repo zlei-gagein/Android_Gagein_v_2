@@ -8,41 +8,41 @@ public class Filters implements Serializable{
 	
 	private static final long serialVersionUID = 2772820905130705248L;
 
-	private List<FilterItem> Ownerships;
+	private List<FilterItem> Ownerships = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> PeopleTypesFromPeople;
+	private List<FilterItem> PeopleTypesFromPeople = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> SortByFromBuz;
+	private List<FilterItem> SortByFromBuz = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> SortByFromContact;
+	private List<FilterItem> SortByFromContact = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> CompanyTypesFromPeople;
+	private List<FilterItem> CompanyTypesFromPeople = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> CompanyTypesFromCompany;
+	private List<FilterItem> CompanyTypesFromCompany = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> EmployeeSizeFromBuz;
+	private List<FilterItem> EmployeeSizeFromBuz = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> Occurreds;
+	private List<FilterItem> Occurreds = new ArrayList<FilterItem>();
 
-	private List<FilterItem> JobLevel;
+	private List<FilterItem> JobLevel = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> FunctionalRoles;
+	private List<FilterItem> FunctionalRoles = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> SalesVolumeFromBuz;
+	private List<FilterItem> SalesVolumeFromBuz = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> MileStones;
+	private List<FilterItem> MileStones = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> FiscalYearEndMonths;
+	private List<FilterItem> FiscalYearEndMonths = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> NewsTriggers;
+	private List<FilterItem> NewsTriggers = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> Ranks;
+	private List<FilterItem> Ranks = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> mileStoneDateRange;
+	private List<FilterItem> mileStoneDateRange = new ArrayList<FilterItem>();
 	
-	private List<FilterItem> DateRanges;
+	private List<FilterItem> DateRanges = new ArrayList<FilterItem>();
 	
-	private List<Industry> industries;
+	private List<Industry> industries = new ArrayList<Industry>();
 	
 	private List<Location> headquarters = new ArrayList<Location>();
 	

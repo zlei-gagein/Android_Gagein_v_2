@@ -14,14 +14,18 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -48,6 +52,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 	public List<FilterItem> mNewsTriggers;
 	public List<FilterItem> mDateRanks;
 	private LinearLayout thePastLayout;
+	private LinearLayout difineLayout;
 	private EditText allWordsEdt;
 	private EditText exactPhraseEdt;
 	private EditText anyWordsEdt;
@@ -92,6 +97,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		noneWordsListView = (ListView) findViewById(R.id.noneWordsListView);
 		
 		thePastLayout = (LinearLayout) findViewById(R.id.thePastLayout);
+		difineLayout = (LinearLayout) findViewById(R.id.difineLayout);
 		allWordsEdt = (EditText) findViewById(R.id.allWordsEdt);
 		exactPhraseEdt = (EditText) findViewById(R.id.exactPhraseEdt);
 		anyWordsEdt = (EditText) findViewById(R.id.anyWordsEdt);
@@ -137,11 +143,19 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					removeListView(allWordsListView);
+					
+					difineLayout.setVisibility(View.GONE);
+					
 				} else {
-					scheduleSearchTask(character, 2000, allWordsListView);
+					
+					scheduleSearchTask(character, 800, allWordsListView);
+					
 				};
 			}
 
@@ -155,6 +169,25 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			}
 		});
 		
+		allWordsEdt.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					cancelSearchTask();
+					if (TextUtils.isEmpty(textView.getText().toString())) {
+						return false;
+					}
+					CommonUtil.hideSoftKeyBoard(mContext, NewsTriggersActivity.this);
+					
+					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		exactPhraseEdt.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -163,7 +196,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 				if (TextUtils.isEmpty(character) || null == character){ 
 					removeListView(exactPhraseListView);
 				} else {
-					scheduleSearchTask(character, 2000, exactPhraseListView);
+					scheduleSearchTask(character, 800, exactPhraseListView);
 				};
 			}
 
@@ -185,7 +218,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 				if (TextUtils.isEmpty(character) || null == character){ 
 					removeListView(anyWordsListView);
 				} else {
-					scheduleSearchTask(character, 2000, anyWordsListView);
+					scheduleSearchTask(character, 800, anyWordsListView);
 				};
 			}
 
@@ -207,7 +240,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 				if (TextUtils.isEmpty(character) || null == character){ 
 					removeListView(noneWordsListView);
 				} else {
-					scheduleSearchTask(character, 2000, noneWordsListView);
+					scheduleSearchTask(character, 800, noneWordsListView);
 				};
 			}
 
@@ -411,7 +444,9 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 				mNewsTriggers.get(checkedSystemAgentPosition).setPastDatePosition(position);
 			}
 		} else {
+			
 			String name = agents.get(position).getName();
+			
 			if (parentView == allWordsListView) {
 				allWordsEdt.setText(name);
 				removeListView(allWordsListView);
@@ -439,12 +474,20 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			}
 			systemAgentAdapter.notifyDataSetChanged();
 			
+			Boolean haveChecked = false;
 			for (int i = 0 ; i < mDateRanks.size(); i++) {
-				mDateRanks.get(i).setChecked(false);
+				if (mDateRanks.get(i).getChecked()) {
+					haveChecked = true;
+				}
 			}
-			mDateRanks.get(mDateRanks.size() - 1).setChecked(true);
+			
+			if (!haveChecked) {
+				mDateRanks.get(mDateRanks.size() - 2).setChecked(true);
+			}
 			dataRangesAdapter.notifyDataSetChanged();
+			
 			thePastLayout.setVisibility(View.VISIBLE);
+			difineLayout.setVisibility(View.VISIBLE);
 		}
 			
 	}

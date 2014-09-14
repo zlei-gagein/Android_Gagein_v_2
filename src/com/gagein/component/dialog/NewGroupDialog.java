@@ -43,6 +43,7 @@ public class NewGroupDialog implements OnClickListener {
 	 * @param enable true ? enable : closer
 	 */
 	public NewGroupDialog(final Context mContext) {
+		
 		this.mContext = mContext;
 		dialog = new Dialog(mContext, R.style.dialog);
 		inflater = LayoutInflater.from(mContext);
@@ -67,6 +68,7 @@ public class NewGroupDialog implements OnClickListener {
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
 		});
+		
 	}
 
 	public void showDialog() {

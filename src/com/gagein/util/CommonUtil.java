@@ -68,6 +68,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.AutoLoginInfo;
 import com.gagein.model.Contact;
 import com.gagein.model.Group;
+import com.gagein.model.SavedSearch;
 import com.gagein.model.Update;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
@@ -975,6 +976,7 @@ public class CommonUtil {
 		Filters mFilters = Constant.MFILTERS;
 		
 		//News Triggers
+		if (mFilters == null) return;
 		List<FilterItem> newsTriggers = mFilters.getNewsTriggers();
 		for (int i = 0; i < newsTriggers.size(); i ++) {
 			if (i == 0) {
@@ -1123,6 +1125,9 @@ public class CommonUtil {
 
 	//Init Company Sort By
 	public static void initBuzSortBy() {
+		
+		if (null == Constant.MFILTERS) return;
+		
 		List<FilterItem> sortBy = Constant.MFILTERS.getSortByFromBuz();
 		for (int i = 0; i < sortBy.size(); i ++) {
 			if (i == 0) {
@@ -1135,6 +1140,9 @@ public class CommonUtil {
 	
 	//Init Person Sort By
 	public static void initConSortBy() {
+		
+		if (null == Constant.MFILTERS) return;
+		
 		List<FilterItem> sortBy = Constant.MFILTERS.getSortByFromContact();
 		for (int i = 0; i < sortBy.size(); i ++) {
 			if (i == 0) {
@@ -1601,11 +1609,26 @@ public class CommonUtil {
 		
 	}
 	
-	public static void sendBroadcast(Context mContext, String action) {
+	public static void sendSimpleBroadcast(Context mContext, String action) {
 		
 		Intent intent = new Intent();
 		intent.setAction(action);
 		mContext.sendBroadcast(intent);
+		
+	}
+	
+	public static Boolean ifExistSameSavedSearchName(String savedName, String searchType) {
+		
+		for (int i = 0; i < Constant.locationSavedSearchs.size(); i ++) {
+			SavedSearch savedSearch = Constant.locationSavedSearchs.get(i);
+			if (savedSearch.getType().equalsIgnoreCase(searchType)) {
+				if (savedSearch.getName().equalsIgnoreCase(savedName)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 		
 	}
 	

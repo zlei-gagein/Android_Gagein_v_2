@@ -35,7 +35,7 @@ public class RemoveFromGroupDialog implements OnClickListener{
 	
 	public void setRemovePt(Boolean isSingular) {
 		String removeText = mContext.getResources().getString(R.string.remove_from_group_pt);
-		removeText = String.format(removeText, isSingular ? "company" : "companies");
+		removeText = String.format(removeText, isSingular ? "This company" : "These companies");
 		removePt.setText(removeText);
 	}
 

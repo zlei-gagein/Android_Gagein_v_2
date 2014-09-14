@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.Contact;
 import com.gagein.model.Facet;
 import com.gagein.model.FacetItemIndustry;
 import com.gagein.model.Happening;
+import com.gagein.model.SavedSearch;
 import com.gagein.model.Update;
 import com.gagein.model.filter.Filters;
 
@@ -52,7 +54,15 @@ public abstract class Constant {
 	
 	public static String SUGGEST = "suggest";
 	
+	public static String SEARCH_COMPANY = "buz";
+	
+	public static String SEARCH_PEOPLE = "cnt";
+	
 	private static List<Update> updates;
+	
+	public static List<Agent> locationAgents = new ArrayList<Agent>();
+	
+	public static List<SavedSearch> locationSavedSearchs = new ArrayList<SavedSearch>();
 	
 	public static String APP_VERSION_NAME;
 	
@@ -150,6 +160,8 @@ public abstract class Constant {
 	public static String BROADCAST_REFRESH_COMPANIES = "broadcast refresh companies";
 	
 	public static String BROADCAST_REFRESH_GROUPSACTIVITY = "broadcast refresh groupsActivity";
+	
+	public static String BROADCAST_GET_SAVED_SEARCH = "broadcast get saved search";
 	
 	public static String BROADCAST_ADD_COMPANIES = "broadcast add companies";
 	

@@ -14,7 +14,6 @@
         android:text="@string/unfollow"
         android:textColor="@color/red"
         android:textSize="22sp"
-        android:textStyle="bold"
         android:gravity="center"
         />
     

@@ -120,20 +120,14 @@ public class PendingCompanyDialog implements OnClickListener {
 			final String website = websiteEdt.getText().toString().trim();
 			
 			if (TextUtils.isEmpty(name) || TextUtils.isEmpty(website)) return;
-			if (TextUtils.isEmpty(name)) {
-				CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_name));
-				return;
-			}
-			if (TextUtils.isEmpty(website)) {
-				CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_website));
-				return;
-			}
 			
 			Pattern pattern1 = Pattern.compile(Utils.regular_url1);
 			Matcher matcher1 = pattern1.matcher(website);
 			Pattern pattern2 = Pattern.compile(Utils.regular_url2);
 			Matcher matcher2 = pattern2.matcher(website);
-			if (matcher1.matches() || matcher2.matches()) {
+			
+			if (website.contains(".") && (matcher1.matches() || matcher2.matches())) {
+				
 				CommonUtil.showLoadingDialog(mContext);
 				mApiHttp.addCompanyWebsite(companyId, name , website, false, new Listener<JSONObject>() {
 	
