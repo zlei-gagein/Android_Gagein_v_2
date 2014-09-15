@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -53,6 +54,7 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 	private HeadquartersAdapter headerquartersAdapter;
 	private ImageView add;
 	private Filters mFilters;
+	private LinearLayout noResultLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 		listView = (ListView) findViewById(R.id.listView);
 		searchListView = (ListView) findViewById(R.id.searchListView);
 		add = (ImageView) findViewById(R.id.add);
+		noResultLayout = (LinearLayout) findViewById(R.id.noResultLayout);
 	}
 	
 	@Override
@@ -94,8 +97,12 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 				String character = s.toString().trim();
 				
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
+					noResultLayout.setVisibility(View.GONE);
+					
 				} else {
 					scheduleSearchTask(character, 800);
 				};
@@ -131,6 +138,9 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 	}
 	
 	private void setSearchLocation() {
+		
+		noResultLayout.setVisibility(searchLocations.size() == 0 ? View.VISIBLE : View.GONE);
+		
 		searchLocationAdapter = new SearchLocationAdapter(mContext, searchLocations);
 		searchListView.setAdapter(searchLocationAdapter);
 		CommonUtil.setListViewHeight(searchListView);

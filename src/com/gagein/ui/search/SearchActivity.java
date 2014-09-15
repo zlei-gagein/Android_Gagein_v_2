@@ -40,7 +40,6 @@ import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.adapter.CompanyPersonAdapter;
 import com.gagein.adapter.SearchCompanyAdapter;
-import com.gagein.adapter.SearchPersonAdapter;
 import com.gagein.adapter.search.SearchSavedAdapter;
 import com.gagein.component.dialog.AddNewCompanyDialog;
 import com.gagein.component.dialog.NewCompanySubmittedPromtDialog;
@@ -99,8 +98,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private RadioButton peopleBtn;
 	private XListView companyList;
 	private XListView personList;
-	private SearchCompanyAdapter companyAdapter;
 	private CompanyPersonAdapter personAdapter;
+	private SearchCompanyAdapter companyAdapter;
 	private Boolean isCompany = false;
 	private Boolean isPerson = false;
 	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();

@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -59,6 +60,7 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 	private Filters mFilters;
 	private OnHeadquartersFinish onHeadquartersFinish;
 	private OnSearchFromHeadquarters onSearchFromHeadquarters;
+	private LinearLayout noResultLayout;
 	
 	public void refreshAdapter() {
 		if (null != headerquartersAdapter) headerquartersAdapter.notifyDataSetChanged();
@@ -107,6 +109,8 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 		listView = (ListView) view.findViewById(R.id.listView);
 		searchListView = (ListView) view.findViewById(R.id.searchListView);
 		add = (ImageView) view.findViewById(R.id.add);
+		noResultLayout = (LinearLayout) view.findViewById(R.id.noResultLayout);
+		
 	}
 	
 	@Override
@@ -127,8 +131,12 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 			public void afterTextChanged(Editable s) {
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
+					noResultLayout.setVisibility(View.GONE);
+					
 				} else {
 					scheduleSearchTask(character, 800);
 				};
@@ -165,11 +173,15 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 	}
 	
 	private void setSearchLocation() {
+		
+		noResultLayout.setVisibility(searchLocations.size() == 0 ? View.VISIBLE : View.GONE);
+		
 		searchLocationAdapter = new SearchLocationAdapter(mContext, searchLocations);
 		searchListView.setAdapter(searchLocationAdapter);
 		CommonUtil.setListViewHeight(searchListView);
 		searchLocationAdapter.notifyDataSetChanged();
 		searchLocationAdapter.notifyDataSetInvalidated();
+		
 	}
 	
 	private void searchHeadquarters(String character) {

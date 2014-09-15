@@ -154,22 +154,21 @@ public class SearchCompanyAdapter extends BaseAdapter {
 			}
 		});
 		
-		if (CommonUtil.isTablet(mContext)) {//TODO
-			viewHolder.typeLayout.setVisibility(View.VISIBLE);
-			viewHolder.employeesLayout.setVisibility(View.VISIBLE);
-			viewHolder.revenueLayout.setVisibility(View.VISIBLE);
-			
-			viewHolder.ownership.setText(company.ownership);
+		if (CommonUtil.isTablet(mContext)) {
 			
 			if (!company.revenueSize.trim().equals(Constant.ZERO + "")) {
+				viewHolder.revenueLayout.setVisibility(View.VISIBLE);
 				viewHolder.revenue.setText(CommonUtil.revenueFormat(company.revenueSize));
 			} else {
+				viewHolder.revenueLayout.setVisibility(View.INVISIBLE);
 				viewHolder.revenue.setText("");
 			}
 			
 			if (!company.employeeSize.trim().equals(Constant.ZERO + "") && !TextUtils.isEmpty(company.employeeSize)) {
+				viewHolder.employeesLayout.setVisibility(View.VISIBLE);
 				viewHolder.employees.setText(CommonUtil.employeesSizeFromat(company.employeeSize)); 
 			} else {
+				viewHolder.employeesLayout.setVisibility(View.INVISIBLE);
 				viewHolder.employees.setText("");
 			}
 			
@@ -182,6 +181,11 @@ public class SearchCompanyAdapter extends BaseAdapter {
 			} else if (!TextUtils.isEmpty(company.russell_rank)) {
 				viewHolder.rank.setText("Russell " + company.russell_rank);
 			}
+			
+			viewHolder.typeLayout.setVisibility(View.VISIBLE);
+			
+			viewHolder.ownership.setText(company.ownership);
+			
 		}
 		return convertView;
 	}

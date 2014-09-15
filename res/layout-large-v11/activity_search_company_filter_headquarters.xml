@@ -73,6 +73,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:divider="@null" />
+            
+            <LinearLayout 
+                android:id="@+id/noResultLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:background="@color/silver_weak"
+                >
+            
+	            <TextView 
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_marginTop="10dp"
+	                android:layout_marginBottom="10dp"
+	                android:layout_marginLeft="50dp"
+	                android:textColor="@color/text_dark"
+                    android:textSize="18sp"
+	                android:text="@string/no_results"/>
+            
+            	<include layout="@layout/lines"/>
+            
+            </LinearLayout>
+            
         </LinearLayout>
     </ScrollView>
 

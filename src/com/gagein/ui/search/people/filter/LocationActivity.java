@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -53,6 +54,7 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 	private Timer timer;
 	private ImageView add;
 	private List<Location> mLocations = new ArrayList<Location>();
+	private LinearLayout noResultLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 		listView = (ListView) findViewById(R.id.listView);
 		searchListView = (ListView) findViewById(R.id.searchListView);
 		add = (ImageView) findViewById(R.id.add);
+		noResultLayout = (LinearLayout) findViewById(R.id.noResultLayout);
 		
 	}
 	
@@ -91,10 +94,16 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
+				
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
+					noResultLayout.setVisibility(View.GONE);
+					
 				} else {
 					scheduleSearchTask(character, 2000);
 				};

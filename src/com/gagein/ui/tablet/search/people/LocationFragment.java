@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -59,6 +60,7 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 	private List<Location> mLocations;
 	private OnLocationFinish onLocationFinish;
 	private OnSearchFromLocation onSearchFromLocation;
+	private LinearLayout noResultLayout;
 	
 	public void refreshAdapter() {
 		if (null != headerquartersAdapter) headerquartersAdapter.notifyDataSetChanged();
@@ -107,6 +109,7 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 		listView = (ListView) view.findViewById(R.id.listView);
 		searchListView = (ListView) view.findViewById(R.id.searchListView);
 		add = (ImageView) view.findViewById(R.id.add);
+		noResultLayout = (LinearLayout) view.findViewById(R.id.noResultLayout);
 		
 	}
 	
@@ -126,10 +129,16 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
+				
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
 					searchLocations.clear();
 					searchLocationAdapter.notifyDataSetChanged();
+					noResultLayout.setVisibility(View.GONE);
+					
 				} else {
 					scheduleSearchTask(character, 2000);
 				};
