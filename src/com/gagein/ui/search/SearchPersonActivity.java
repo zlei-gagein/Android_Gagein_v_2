@@ -439,13 +439,12 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		
 		if (null != jobTitleStr && !jobTitleStr.isEmpty()) {
 			
-			
 			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
+
 			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
 			TextView textView = (TextView) view.findViewById(R.id.text);
 			
 			buttonLayout.setOnClickListener(new OnClickListener() {
-				
 				
 				@Override
 				public void onClick(View arg0) {
