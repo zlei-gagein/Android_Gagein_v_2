@@ -119,6 +119,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private Boolean haveProvisionDate;
 	private Boolean isProcessed;
 	private long provisionDate;
+	private String provisionDateStr;
 	private SearchCompanyAdapter searchCompanyAdapter;
 	private final List<Company> parentsAndSubsidiaries = new ArrayList<Company>();
 	
@@ -682,9 +683,12 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						
 						isProcessed = dataObject.optBoolean("is_processed");
 						provisionDate = dataObject.optLong("provision_date");
+						provisionDateStr = dataObject.optString("provision_date_str");
 						
 					}
 				}
+				
+				getNews(false, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0, false);
 			}
 			
 		}, new Response.ErrorListener() {
@@ -706,7 +710,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			public void onResponse(JSONObject jsonObject) {
 				
 				getProvisionDateWithCompanyID();
-				getNews(false, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0, false);
+				
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (null != jsonObject) {
@@ -889,8 +893,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 											}
 										}
 									} else {
-										String provisionPtStr = "This company is being provisioned and will be done by %s at %s.";
-										provisionPt.setText(String.format(provisionPtStr, "Jun 8", "7:12am"));
+										String provisionPtStr = "This company is being provisioned and will be done by %s.";
+										provisionPt.setText(String.format(provisionPtStr,  (!TextUtils.isEmpty(provisionDateStr) ? provisionDateStr : "Jun 8 by 7:12am")));
 										provisionedLayout.setVisibility(View.VISIBLE);
 									}
 									
