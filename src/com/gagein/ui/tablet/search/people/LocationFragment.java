@@ -233,11 +233,15 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 	}
 	
 	private void setSearchLocation() {
+		
+		noResultLayout.setVisibility(searchLocations.size() == 0 ? View.VISIBLE : View.GONE);
+		
 		searchLocationAdapter = new SearchLocationAdapter(mContext, searchLocations);
 		searchListView.setAdapter(searchLocationAdapter);
 		CommonUtil.setListViewHeight(searchListView);
 		searchLocationAdapter.notifyDataSetChanged();
 		searchLocationAdapter.notifyDataSetInvalidated();
+		
 	}
 	
 	/**stop schedule search*/

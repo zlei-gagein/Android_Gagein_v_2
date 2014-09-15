@@ -66,6 +66,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private String personal = "personal";
 	private TextView rankText;
 	private String savedId = "";
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -338,6 +339,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
 				
+				
 				buttonLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -436,9 +438,13 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		final String jobTitleStr = queryInfo.getJobTitle();
 		
 		if (null != jobTitleStr && !jobTitleStr.isEmpty()) {
+			
+			
 			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-			Button button = (Button) view.findViewById(R.id.button);
-			button.setOnClickListener(new OnClickListener() {
+			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+			TextView textView = (TextView) view.findViewById(R.id.text);
+			
+			buttonLayout.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
@@ -457,7 +463,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				}
 				
 			});
-			button.setText(jobTitleStr);
+			
+			textView.setText(jobTitleStr);
+			
+			CommonUtil.setFilterMaxWith(textView);
+			
 			pesonalInfoLayout.addView(view);
 		}	
 		

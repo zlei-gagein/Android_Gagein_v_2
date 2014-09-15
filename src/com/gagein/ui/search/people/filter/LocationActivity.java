@@ -205,6 +205,8 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 	
 	private void setSearchLocation() {
 		
+		noResultLayout.setVisibility(searchLocations.size() == 0 ? View.VISIBLE : View.GONE);
+		
 		searchLocationAdapter = new SearchLocationAdapter(mContext, searchLocations);
 		searchListView.setAdapter(searchLocationAdapter);
 		CommonUtil.setListViewHeight(searchListView);
