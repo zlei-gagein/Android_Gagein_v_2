@@ -190,7 +190,11 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 					cancelSearchTask();
 					removeListView(allWordsListView);
 					
-					difineLayout.setVisibility(View.GONE);
+					if (difineLayout.getVisibility() == View.VISIBLE) {
+						allWordsEdt.setHint(R.string.all_of_these_words);
+					} else {
+						allWordsEdt.setHint(R.string.search_keyword);
+					}
 					
 				} else {
 					
@@ -214,14 +218,19 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					cancelSearchTask();
-					if (TextUtils.isEmpty(textView.getText().toString())) {
-						return false;
-					}
+				
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					
-					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
+					allWordsEdt.setText(textView.getText().toString());
+					
+					cancelSearchTask();
+					
+					if (TextUtils.isEmpty(textView.getText().toString())) return false;
+					
+					
+//					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
 					return true;
 				}
 				return false;

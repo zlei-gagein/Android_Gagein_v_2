@@ -72,11 +72,16 @@ public class NewGroupDialog implements OnClickListener {
 	}
 
 	public void showDialog() {
+		
 		cancel.setOnClickListener(this);
 		save.setOnClickListener(this);
+		
 		CommonUtil.setDialogWith(dialog);
 		dialog.setCancelable(false);
 		dialog.show();
+		
+		CommonUtil.showSoftKeyBoard(300);
+		
 	}
 
 	@Override

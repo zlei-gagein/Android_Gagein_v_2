@@ -317,36 +317,35 @@
                         android:paddingRight="10dp"
                         android:visibility="gone" >
 
-                        <LinearLayout
-                            android:id="@+id/followCompanyLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:visibility="gone" >
+<!--                         <LinearLayout -->
+<!--                             android:id="@+id/followCompanyLayout" -->
+<!--                             android:layout_width="wrap_content" -->
+<!--                             android:layout_height="wrap_content" -->
+<!--                             android:orientation="horizontal" -->
+<!--                             android:visibility="gone" > -->
 
-                            <TextView
-                                android:id="@+id/followCompany"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/follow_company"
-                                android:textColor="@color/yellow"
-                                android:textSize="20sp" />
+<!--                             <TextView -->
+<!--                                 android:id="@+id/followCompany" -->
+<!--                                 android:layout_width="wrap_content" -->
+<!--                                 android:layout_height="wrap_content" -->
+<!--                                 android:text="@string/follow_company" -->
+<!--                                 android:textColor="@color/yellow" -->
+<!--                                 android:textSize="20sp" /> -->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
-                                android:text="@string/or"
-                                android:textColor="@color/text_weak"
-                                android:textSize="20sp" />
-                        </LinearLayout>
+<!--                             <TextView -->
+<!--                                 android:layout_width="wrap_content" -->
+<!--                                 android:layout_height="wrap_content" -->
+<!--                                 android:layout_marginLeft="10dp" -->
+<!--                                 android:layout_marginRight="10dp" -->
+<!--                                 android:text="@string/or" -->
+<!--                                 android:textColor="@color/text_weak" -->
+<!--                                 android:textSize="20sp" /> -->
+<!--                         </LinearLayout> -->
 
                         <TextView
                             android:id="@+id/shareGagein"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/followCompanyLayout"
                             android:text="@string/share_gagein"
                             android:textColor="@color/yellow"
                             android:textSize="20sp" />
@@ -369,7 +368,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/no_competitors_found"
+                android:text="@string/no_competitors"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
                 android:visibility="visible" />
@@ -399,7 +398,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/no_people_found"
+                android:text="@string/no_people"
                 android:textColor="@color/text_dark"
                 android:textSize="22sp"
                 android:visibility="visible" />

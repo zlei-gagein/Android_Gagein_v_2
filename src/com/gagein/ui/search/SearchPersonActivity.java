@@ -65,6 +65,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private String employer = "employer";
 	private String personal = "personal";
 	private TextView rankText;
+	private String savedId = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setTitle(R.string.results);
 		setLeftImageButton(R.drawable.back_arrow);
 		setRightButton(R.string.u_save);
@@ -89,6 +91,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		listView = (XListView) findViewById(R.id.listView);
 		emptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
 		rankText = (TextView) findViewById(R.id.rank);
+		
 	}
 	
 	@Override
@@ -99,13 +102,19 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		
 		setSortBy();
 		
+		savedId = getIntent().getStringExtra(Constant.SAVEDID);
+		if (null != savedId) {
+			searchSavedResult(savedId);
+			return;
+		}
+		
 		searchAdvancedPersons(false);
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		//TODO
+		
 		if (requestCode == this.requestCode && resultCode == RESULT_OK) {
 			setSortBy();
 			PAGENUM = 1;
@@ -114,6 +123,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	}
 	
 	public void searchSavedResult(String savedId) {
+		
 		showLoadingDialog();
 		PAGENUM = 1;
 		mApiHttp.getSavedSearch(savedId, PAGENUM, new Listener<JSONObject>() {
@@ -135,22 +145,28 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				showConnectionError();
 			}
 		});
+		
 	}
 	
 	public void initSearch() {
+		
 		PAGENUM = 1;
 		searchAdvancedPersons(false);
+		
 	}
 	
 	private void setTitle(long num) {
+		
 		if (num == 0) {
 			setTitle("No people found");
 		} else {
 			setTitle(num + " people found");
 		}
+		
 	}
 	
 	public void setSortBy() {
+		
 		sortByList = mFilters.getSortByFromContact();
 		for (int i = 0; i < sortByList.size(); i ++) {
 			if (sortByList.get(i).getChecked()) {
@@ -159,9 +175,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				setRank(value);
 			}
 		}
+		
 	}
 	
 	private void setRank(String value) {
+		
 		if (value.equalsIgnoreCase("Job Level") || value.equalsIgnoreCase("Company Name")) {
 			rankText.setText(Constant.REVERSE ? " : Low-High" : " : High-Low");
 		} else if (value.equalsIgnoreCase("Name")) {
@@ -170,11 +188,13 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			Constant.REVERSE = false;
 			rankText.setText("");
 		}
+		
 	}
 	
 	private void searchAdvancedPersons(final Boolean loadMore) {
+		
 		if (!loadMore) showLoadingDialog();
-		mApiHttp.searchAdvancedPersons(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(false), new Listener<JSONObject>() {
+		mApiHttp.searchAdvancedPersons(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(false, true).get(0), new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -196,9 +216,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				showConnectionError();
 			}
 		});
+		
 	}
 	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
+		
 		if (!loadMore) seachedPersons.clear();
 		
 		//将API返回数据同步到本地的filter options
@@ -215,8 +237,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		//set query info layout
 		pesonalInfoLayout.removeAllViews();
 		employerInfoLayout.removeAllViews();
-		setEmployerInfoLayout();
 		setPersonalInfoLayout();
+		setEmployerInfoLayout();
 		
 		DataPage dataPage = parser.parseGetSearchPeople();
 		if (dataPage.items != null) {
@@ -237,39 +259,47 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		
 		if (seachedPersons.size() == 0) {
 			emptyLayout.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
 		} else {
 			emptyLayout.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
 		}
+		
 	}
 	
 	private void setPersons() {
+		
 		personAdapter = new SearchPersonFilterAdapter(mContext, seachedPersons);
 		listView.setAdapter(personAdapter);
 		personAdapter.notifyDataSetChanged();
 		personAdapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override
 	protected void setOnClickListener() {
 		super.setOnClickListener();
+		
 		showDetailsTx.setOnClickListener(this);
 		sortByText.setOnClickListener(this);
 		rankText.setOnClickListener(this);
 		listView.setXListViewListener(this);
 		listView.setOnItemClickListener(this);
+		
 	}
 	
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
 			
 			finish();
 			
 		} else if (v == rightBtn) {
 			
-			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false), queryInfo.getQueryInfoResult());
-			dialog.showDialog();
+			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false, false).get(0), queryInfo.getQueryInfoResult());
+			dialog.showDialog(Constant.SEARCH_PEOPLE);
 			
 		} else if (v == showDetailsTx) {
 			
@@ -294,16 +324,21 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			}
 			initSearch();
 		}
+		
 	}
 	
 	private void setInfoDetailButton(List<QueryInfoItem> queryInfoItemList, final String type, List<QueryInfoItem> queryInfoItemList2) {
+		
 		if (null != queryInfoItemList) {
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
+				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
-				button.setOnClickListener(new OnClickListener() {
+				
+				buttonLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
@@ -313,7 +348,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 							pesonalInfoLayout.removeView(view);
 						}
 						//TODO 数据删除
-						Log.v("silen", "type = " + queryType);
+						Log.v("silen", "delte - queryType = " + queryType);
 						String id = queryInfoItem.getId();
 						
 						if (queryType.equalsIgnoreCase("mer_for_id")) {
@@ -334,9 +369,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
 							List<Industry> industryList = mFilters.getIndustries();
 							deleteIndustryFilters(id, industryList);
-						} else if (queryType.equalsIgnoreCase("location_code")) {//TODO
+						} else if (queryType.equalsIgnoreCase("location_code")) {
+							
 							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
+							
 						} else if (queryType.equalsIgnoreCase("org_employee_size")) {
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
@@ -380,7 +417,9 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 					queryInfoItem.setDisplayName(queryInfoItemList2);
 				}
 				
-				button.setText(queryInfoItem.getDisplayName());
+				textView.setText(queryInfoItem.getDisplayName());
+				
+				CommonUtil.setFilterMaxWith(textView);
 				
 				if (type.equalsIgnoreCase(employer)) {
 					employerInfoLayout.addView(view);
@@ -462,26 +501,57 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		//Functional Role
 		List<QueryInfoItem> functionalRoleList = queryInfo.getFunctionalRoles();
 		setInfoDetailButton(functionalRoleList, personal, null);
+		
 	}
 	
 	
 	private void setEmployerInfoLayout() {
+		
 		//NewsTriggers
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setInfoDetailButton(newsTriggersList, employer, null);
 		
+		//EventSearchKeywords
+		if (null != queryInfo.getEventSearchKeywords()) {
+			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
+			if (!TextUtils.isEmpty(eventSearchKeywords)) {
+				String type = queryInfo.getEventSearchKeywords().getType();
+				setEventSearchKeywordsButton(eventSearchKeywords, type);
+			}
+		}
+		
+		//DateRange
+		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
+		setInfoDetailButton(dateRangeList, employer, null);
+		
 		//Companies
-		//TODO
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
 		setInfoDetailButton(companiesList, employer, null);
 		
-		//Ranks
-		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setInfoDetailButton(ranksList, employer, null);
+		//SavedCompanies
+		List<QueryInfoItem> savedCompanies = queryInfo.getSavedCompany();
+		setInfoDetailButton(savedCompanies, employer, null);
 		
-		//FiscalMonth
-		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setInfoDetailButton(fiscalMonthList, employer, null);
+		//LocationCode
+		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
+		setInfoDetailButton(locationList, employer, null);
+		
+		//Industries
+		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
+		setInfoDetailButton(industriesList, employer, null);
+		
+		//EmployeeSize
+		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
+		setInfoDetailButton(employeeSizeList, employer, null);
+		
+		//RevenueSize
+		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
+		setInfoDetailButton(revenueSizeList, employer, null);
+		
+		
+		//Ownership
+		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
+		setInfoDetailButton(ownershipList, employer, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
@@ -495,38 +565,14 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			setInfoDetailButton(mileStoneTypeList, employer, mileStoneOccurrenceTypeList);
 		}
 		
-		//Industries
-		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setInfoDetailButton(industriesList, employer, null);
+		//Ranks
+		List<QueryInfoItem> ranksList = queryInfo.getRanks();
+		setInfoDetailButton(ranksList, employer, null);
 		
-		//LocationCode
-		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setInfoDetailButton(locationList, employer, null);
+		//FiscalMonth
+		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
+		setInfoDetailButton(fiscalMonthList, employer, null);
 		
-		//EmployeeSize
-		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setInfoDetailButton(employeeSizeList, employer, null);
-		
-		//DateRange
-		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setInfoDetailButton(dateRangeList, employer, null);
-		
-		//Ownership
-		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setInfoDetailButton(ownershipList, employer, null);
-		
-		//RevenueSize
-		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setInfoDetailButton(revenueSizeList, employer, null);
-		
-		//EventSearchKeywords
-		if (null != queryInfo.getEventSearchKeywords()) {
-			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
-			if (!TextUtils.isEmpty(eventSearchKeywords)) {
-				String type = queryInfo.getEventSearchKeywords().getType();
-				setEventSearchKeywordsButton(eventSearchKeywords, type);
-			}
-		}
 	}
 	
 	/**
@@ -535,6 +581,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	 * @param filterItems
 	 */
 	private void deleteFilters(String id, List<FilterItem> filterItems) {
+		
 		for (int i = 0; i < filterItems.size(); i ++) {
 			if (id.equalsIgnoreCase(filterItems.get(i).getKey())) {
 				filterItems.get(i).setChecked(false);
@@ -542,9 +589,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				searchAdvancedPersons(false);
 			}
 		}
+		
 	}
 	
 	private void deleteIndustryFilters(String id, List<Industry> industries) {
+		
 		for (int i = 0; i < industries.size(); i ++) {
 			if (id.equalsIgnoreCase(industries.get(i).getId())) {
 				industries.get(i).setChecked(false);
@@ -552,9 +601,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				searchAdvancedPersons(false);
 			}
 		}
+		
 	}
 	
 	private void deleteLocationFilters(String id, List<Location> locations) {
+		
 		for (int i = 0; i < locations.size(); i ++) {
 			if (id.equalsIgnoreCase(locations.get(i).getCode())) {
 				locations.get(i).setChecked(false);
@@ -562,9 +613,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				searchAdvancedPersons(false);
 			}
 		}
+		
 	}
 	
 	private void deleteJobTitleFilters(String id, List<JobTitle> jobTitles) {
+		
 		for (int i = 0; i < jobTitles.size(); i ++) {
 			if (id.equalsIgnoreCase(jobTitles.get(i).getId())) {
 				jobTitles.get(i).setChecked(false);
@@ -572,9 +625,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				searchAdvancedPersons(false);
 			}
 		}
+		
 	}
 	
 	private void setEventSearchKeywordsButton(String value, final String type) {
+		
 		final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
 		Button button = (Button) view.findViewById(R.id.button);
 		button.setOnClickListener(new OnClickListener() {
@@ -583,7 +638,6 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			public void onClick(View arg0) {
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
-				Log.v("silen", "type = " + type);
 				Constant.DEFINEWORDS = false;
 				Constant.ALLWORDS = "";
 				Constant.EXACTWORDS = "";
@@ -596,26 +650,33 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		});
 		button.setText(value);
 		employerInfoLayout.addView(view);
+		
 	}
 
 
 	@Override
 	public void onRefresh() {
+		
 		PAGENUM = 1;
 		searchAdvancedPersons(false);
+		
 	}
 
 	@Override
 	public void onLoadMore() {
+		
 		searchAdvancedPersons(true);
+		
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		
 		if (Constant.ZERO == position || position == seachedPersons.size() + 1) return;
 		Intent intent = new Intent();
 		intent.putExtra(Constant.PERSONID, seachedPersons.get(position - 1).id);
 		intent.setClass(mContext, PersonActivity.class);
 		startActivity(intent);
+		
 	}
 }

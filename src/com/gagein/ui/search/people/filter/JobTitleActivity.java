@@ -53,7 +53,7 @@ public class JobTitleActivity extends BaseActivity implements OnItemClickListene
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
 					
 					CommonUtil.hideSoftKeyBoard(mContext, JobTitleActivity.this);
 					if (TextUtils.isEmpty(textView.getText().toString())) return false;

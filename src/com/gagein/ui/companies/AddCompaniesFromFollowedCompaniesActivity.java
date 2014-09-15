@@ -96,7 +96,7 @@ public class AddCompaniesFromFollowedCompaniesActivity extends BaseActivity impl
 		
 		showLoadingDialog();
 		companies = new ArrayList<Company>();
-		mApiHttp.getFollowedCompanies(0, Constant.INDUSTRYID, APIHttpMetadata.kGGExceptPendingFollowCompanies, true, new Listener<JSONObject>() {
+		mApiHttp.getFollowedCompanies(0, Constant.INDUSTRYID, APIHttpMetadata.kGGExceptPendingFollowCompanies, false, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {

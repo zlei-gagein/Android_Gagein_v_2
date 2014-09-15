@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -39,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
+import com.gagein.adapter.CompanyPersonAdapter;
 import com.gagein.adapter.SearchCompanyAdapter;
 import com.gagein.adapter.SearchPersonAdapter;
 import com.gagein.adapter.search.SearchSavedAdapter;
@@ -100,7 +100,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private XListView companyList;
 	private XListView personList;
 	private SearchCompanyAdapter companyAdapter;
-	private SearchPersonAdapter personAdapter;
+	private CompanyPersonAdapter personAdapter;
 	private Boolean isCompany = false;
 	private Boolean isPerson = false;
 	private List<SavedSearch> mSavedSearchs = new ArrayList<SavedSearch>();
@@ -197,8 +197,10 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
 					cancelSearchTask();
 					searchCompanies.clear();
 					searchPersons.clear();
@@ -210,11 +212,16 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					mainLayout.setVisibility(View.VISIBLE);
 					searchLayout.setVisibility(View.GONE);
 					companyFoundLayout.setVisibility(View.GONE);
+					noCompanyResultsLayout.setVisibility(View.GONE);
+					noPeopleResultsLayout.setVisibility(View.GONE);
+					
 				} else {
+					
 					scheduleSearchTask(character, 2000);
 					searchLayout.setVisibility(View.VISIBLE);
 					mainLayout.setVisibility(View.GONE);
 					companyFoundLayout.setVisibility(View.GONE);
+					
 				};
 			}
 			
@@ -308,7 +315,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	
 	private void setSearchPersons() {
 		personList.setVisibility(isPerson ? View.VISIBLE : View.GONE);
-		personAdapter = new SearchPersonAdapter(mContext, searchPersons);
+		personAdapter = new CompanyPersonAdapter(mContext, searchPersons);
 		personList.setAdapter(personAdapter);
 		personAdapter.notifyDataSetChanged();
 		personAdapter.notifyDataSetInvalidated();
@@ -342,10 +349,10 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					
 					if (mSavedSearchs.size() > 0) {
 						savedList.setVisibility(View.VISIBLE);
-						noSavedSearches.setVisibility(View.GONE);
+						noSavedSearches.setVisibility(View.VISIBLE);
 					} else {
 						savedList.setVisibility(View.GONE);
-						noSavedSearches.setVisibility(View.VISIBLE);
+						noSavedSearches.setVisibility(View.GONE);
 					}
 					
 					PAGE_NUM_SAVESEARCH ++;
@@ -430,6 +437,11 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		});
 	}
 	
+	public void setNoCompanyResultsLayout() {
+		noSavedSearches.setVisibility(View.GONE);
+		savedList.setVisibility(View.GONE);
+	}
+	
 	private void searchPartPersons(String character, final Boolean loadMore) {
 		mApiHttp.searchAllPersons(character , PAGE_NUM_PERSON, new Listener<JSONObject>() {
 			
@@ -452,10 +464,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						}
 					}
 					
-//					//Log.v("silen", "pserson.size == " + searchPersons.size());
-//					for (int i = 0; i < searchPersons.size(); i ++) {//TODO
-//						Log.v("silen", "socialProfiles.size = " + searchPersons.get(i).socialProfiles.size());
-//					}
 					if (!loadMore) {
 						personAdapter.notifyDataSetChanged();
 						personAdapter.notifyDataSetInvalidated();
@@ -475,7 +483,9 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					
 					PAGE_NUM_PERSON ++;
 				}
+				
 				dismissLoadingDialog();
+				
 			}
 			
 		}, new Response.ErrorListener() {
@@ -562,8 +572,9 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					addNewCompany(dialog);
 
 				}
-				
 			});
+			
+			CommonUtil.showSoftKeyBoard(30);
 			
 		} else if (v == companiesBtn) {
 			
@@ -582,7 +593,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			noCompanyResultsLayout.setVisibility(View.GONE);
 			companyList.setVisibility(View.GONE);
-			noCompanyResultsLayout.setVisibility((searchPersons.size() > 0) ? View.GONE : View.VISIBLE);
+			noPeopleResultsLayout.setVisibility((searchPersons.size() > 0) ? View.GONE : View.VISIBLE);
 			personList.setVisibility((searchPersons.size() > 0) ? View.VISIBLE : View.GONE);
 			
 		} else if (v == buildCompany) {
@@ -655,6 +666,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					addNewCompany(dialog);
 				}
 			});
+			
+			CommonUtil.showSoftKeyBoard(30);
 			
 		}
 	}
@@ -914,6 +927,15 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					getFilter();
 					return;
 				}
+				
+				//TODO
+				if (null != Constant.MFILTERS) {
+					Constant.MFILTERS.getHeadquarters().clear();
+				}
+				Constant.REVERSE = false;
+				Constant.COMPANY_SEARCH_KEYWORDS = "";
+				CommonUtil.resetFilters();
+				CommonUtil.initBuzSortBy();
 				
 				SavedSearch mSavedSearch = mSavedSearchs.get(position - 1);
 				String type = mSavedSearch.getType();

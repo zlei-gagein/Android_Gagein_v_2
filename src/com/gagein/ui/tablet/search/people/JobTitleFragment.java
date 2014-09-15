@@ -91,7 +91,7 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
 					
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					if (TextUtils.isEmpty(textView.getText().toString())) return false;

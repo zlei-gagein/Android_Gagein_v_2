@@ -186,8 +186,9 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	}
 	
 	private void searchAdvancedPersons(final Boolean loadMore) {
+		
 		if (!loadMore) showLoadingDialog(mContext);
-		mApiHttp.searchAdvancedPersons(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(false), new Listener<JSONObject>() {
+		mApiHttp.searchAdvancedPersons(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(false, true).get(0), new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -226,8 +227,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		//set query info layout
 		pesonalInfoLayout.removeAllViews();
 		employerInfoLayout.removeAllViews();
-		setEmployerInfoLayout();
 		setPersonalInfoLayout();
+		setEmployerInfoLayout();
 		
 		DataPage dataPage = parser.parseGetSearchPeople();
 		if (dataPage.items != null) {
@@ -282,7 +283,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			
 		} else if (v == rightBtn) {
 			
-			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false), queryInfo.getQueryInfoResult());
+			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_PEOPLE);
 			
 		} else if (v == showDetailsTx) {
@@ -317,11 +318,12 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
 				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
 				
-				button.setOnClickListener(new OnClickListener() {
+				buttonLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
@@ -422,7 +424,9 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					queryInfoItem.setDisplayName(queryInfoItemList2);
 				}
 				
-				button.setText(queryInfoItem.getDisplayName());
+				textView.setText(queryInfoItem.getDisplayName());
+				
+				CommonUtil.setFilterMaxWith(textView);
 				
 				if (type.equalsIgnoreCase(employer)) {
 					employerInfoLayout.addView(view);
@@ -508,22 +512,52 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	
 	
 	private void setEmployerInfoLayout() {
+		
 		//NewsTriggers
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setInfoDetailButton(newsTriggersList, employer, null);
 		
+		//EventSearchKeywords
+		if (null != queryInfo.getEventSearchKeywords()) {
+			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
+			if (!TextUtils.isEmpty(eventSearchKeywords)) {
+				String type = queryInfo.getEventSearchKeywords().getType();
+				setEventSearchKeywordsButton(eventSearchKeywords, type);
+			}
+		}
+		
+		//DateRange
+		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
+		setInfoDetailButton(dateRangeList, employer, null);
+		
 		//Companies
-		//TODO
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
 		setInfoDetailButton(companiesList, employer, null);
 		
-		//Ranks
-		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setInfoDetailButton(ranksList, employer, null);
+		//SavedCompanies
+		List<QueryInfoItem> savedCompanies = queryInfo.getSavedCompany();
+		setInfoDetailButton(savedCompanies, employer, null);
 		
-		//FiscalMonth
-		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setInfoDetailButton(fiscalMonthList, employer, null);
+		//LocationCode
+		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
+		setInfoDetailButton(locationList, employer, null);
+		
+		//Industries
+		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
+		setInfoDetailButton(industriesList, employer, null);
+		
+		//EmployeeSize
+		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
+		setInfoDetailButton(employeeSizeList, employer, null);
+		
+		//RevenueSize
+		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
+		setInfoDetailButton(revenueSizeList, employer, null);
+		
+		
+		//Ownership
+		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
+		setInfoDetailButton(ownershipList, employer, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
@@ -537,38 +571,14 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			setInfoDetailButton(mileStoneTypeList, employer, mileStoneOccurrenceTypeList);
 		}
 		
-		//Industries
-		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setInfoDetailButton(industriesList, employer, null);
+		//Ranks
+		List<QueryInfoItem> ranksList = queryInfo.getRanks();
+		setInfoDetailButton(ranksList, employer, null);
 		
-		//LocationCode
-		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setInfoDetailButton(locationList, employer, null);
+		//FiscalMonth
+		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
+		setInfoDetailButton(fiscalMonthList, employer, null);
 		
-		//EmployeeSize
-		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setInfoDetailButton(employeeSizeList, employer, null);
-		
-		//DateRange
-		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setInfoDetailButton(dateRangeList, employer, null);
-		
-		//Ownership
-		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setInfoDetailButton(ownershipList, employer, null);
-		
-		//RevenueSize
-		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setInfoDetailButton(revenueSizeList, employer, null);
-		
-		//EventSearchKeywords
-		if (null != queryInfo.getEventSearchKeywords()) {
-			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
-			if (!TextUtils.isEmpty(eventSearchKeywords)) {
-				String type = queryInfo.getEventSearchKeywords().getType();
-				setEventSearchKeywordsButton(eventSearchKeywords, type);
-			}
-		}
 	}
 	
 	/**

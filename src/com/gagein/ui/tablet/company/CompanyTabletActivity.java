@@ -275,6 +275,7 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 
 	@Override
 	public void onCompetitorFilterClickListener() {
+		
 		transaction = getSupportFragmentManager().beginTransaction();
 		if (null == competitorFilterFragment) {
 			competitorFilterFragment = new CompetitorFilterFragment();
@@ -292,6 +293,7 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		
 		transaction.commit();
 		setLeftLayoutVisible(View.VISIBLE);
+		
 	}
 
 	@Override
@@ -403,6 +405,10 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		
 		if (null != competitorFilterSortByFragment) {
 			transaction.hide(competitorFilterSortByFragment);
+		}
+		
+		if (null != competitorFilterFragment) {
+			transaction.hide(competitorFilterFragment);
 		}
 		
 		transaction.commit();

@@ -83,7 +83,7 @@ public class FilterLinkedProfileFragment extends BaseFragment implements OnItemC
 		} else {
 			for (int i = 0; i < linkedProfiles.size(); i ++) {
 				if (Constant.LINKED_PROFILE_ID == linkedProfiles.get(i).id) {
-					checkedList.set(i + 1, true);
+					checkedList.set(i, true);
 				}
 			}
 		}

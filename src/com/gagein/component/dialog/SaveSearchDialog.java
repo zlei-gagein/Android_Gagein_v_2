@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
+import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
@@ -38,6 +39,7 @@ public class SaveSearchDialog implements OnClickListener {
 	private Button save;
 	private String type;
 	private String queryInfo;
+	private String searchType;
 
 	/**
 	 * 
@@ -98,40 +100,51 @@ public class SaveSearchDialog implements OnClickListener {
 		save.setTextColor(mContext.getResources().getColor(TextUtils.isEmpty(string) ? R.color.c8f8f8f : R.color.yellow));
 	}
 
-	public void showDialog() {
+	public void showDialog(String searchType) {
+		
+		this.searchType = searchType;
 		CommonUtil.setDialogWith(dialog);
 		cancel.setOnClickListener(this);
 		save.setOnClickListener(this);
 		dialog.setCancelable(false);
 		dialog.show();
+		
 	}
 	
 	@Override
 	public void onClick(View v) {
+		
 		if (v == cancel) {
 			
 			dismissDialog();
 
 		} else if (v == save) {
 			
-			String website = websiteEdt.getText().toString().trim();
-			if (TextUtils.isEmpty(website)) return;
+			String savedName = websiteEdt.getText().toString().trim();
+			if (TextUtils.isEmpty(savedName)) return;
+			
+			if (CommonUtil.ifExistSameSavedSearchName(savedName, searchType)) {
+				CommonUtil.showShortToast("Having the same name!");
+				return;
+			}
 			
 			dismissDialog();
 			CommonUtil.showLoadingDialog(mContext);
 			
 			if (type.equalsIgnoreCase("buz")) {
 				
-				new APIHttp(mContext).saveSearchCompanies(website, queryInfo,  new Listener<JSONObject>() {
+				new APIHttp(mContext).saveSearchCompanies(savedName, queryInfo,  new Listener<JSONObject>() {
 					
 					@Override
 					public void onResponse(JSONObject jsonObject) {
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {//TODO send broadcast
+							
 							Intent intent = new Intent();
 							intent.setAction(Constant.BROADCAST_REFRESH_SEARCH);
 							mContext.sendBroadcast(intent);
 							CommonUtil.showShortToast(mContext.getResources().getString(R.string.Saved));
+							
 							dismissDialog();
 						} else {
 							CommonUtil.alertMessageForParser(parser);
@@ -149,7 +162,7 @@ public class SaveSearchDialog implements OnClickListener {
 				
 			} else if (type.equalsIgnoreCase("con")) {
 				
-				new APIHttp(mContext).saveSearchPersons(website, queryInfo, new Listener<JSONObject>() {
+				new APIHttp(mContext).saveSearchPersons(savedName, queryInfo, new Listener<JSONObject>() {
 					
 					@Override
 					public void onResponse(JSONObject jsonObject) {

@@ -474,7 +474,7 @@
          
          <activity
             android:configChanges="orientation|keyboardHidden|screenSize" 
-            android:name="com.gagein.ui.search.people.filter.PeopleFilterCompaniesActivity"
+            android:name="com.gagein.ui.search.people.filter.CompaniesTypeFromConActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
          

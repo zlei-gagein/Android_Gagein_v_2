@@ -160,10 +160,14 @@ public class AddToGroupActivity extends BaseActivity implements OnItemClickListe
 		super.onClick(v);
 		
 		if (v == rightBtn) {
+			
 			finish();
+			
 		} else if (v == newGroup) {
+			
 			NewGroupDialog dialog = new NewGroupDialog(mContext);
 			dialog.showDialog();
+			
 		}
 	}
 

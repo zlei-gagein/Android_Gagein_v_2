@@ -142,7 +142,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 					});
 				}
 			};
-			timer.schedule(timerTask, 500);
+			timer.schedule(timerTask, 30);
 		}
 		transaction.commit();
 		
@@ -475,7 +475,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -510,7 +510,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -545,7 +545,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -580,7 +580,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -615,7 +615,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -650,7 +650,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -685,7 +685,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -720,7 +720,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -754,7 +754,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -845,7 +845,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override

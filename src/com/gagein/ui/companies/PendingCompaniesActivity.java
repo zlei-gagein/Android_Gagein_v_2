@@ -142,6 +142,7 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 		Company company = pendingCompanies.get(position - 1);
 		PendingCompanyDialog dialog = new PendingCompanyDialog(mContext);
 		dialog.showDialog(company.name, company.website, company.orgID);
+		CommonUtil.showSoftKeyBoard(30);
 		
 	}
 	

@@ -287,8 +287,6 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			NewGroupDialog dialog = new NewGroupDialog(mContext);
 			dialog.showDialog();
 			
-			CommonUtil.showSoftKeyBoard(100);
-			
 		} else if (v == rightBtn) {
 			
 			isEdit = !isEdit;

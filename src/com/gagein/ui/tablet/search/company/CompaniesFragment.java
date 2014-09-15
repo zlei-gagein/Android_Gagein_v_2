@@ -100,19 +100,28 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
 					
 					String text = textView.getText().toString();
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					
 					if (TextUtils.isEmpty(text)) {
+						
+						onSearchFromCompanies.onSearchFromCompanies();
 						return false;
+						
 					} else {
+						
 						if (text.trim().length() < 2) {
+							
 							showShortToast("Keywords must be at least two characters long.");
 							return false;
+							
 						} else {
+							
 							Constant.COMPANY_SEARCH_KEYWORDS = text;
+							onSearchFromCompanies.onSearchFromCompanies();
+							
 						}
 					}
 					
@@ -194,13 +203,27 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		adapter.notifyDataSetChanged();
 		
 		if (position == 0) {
+			
 			onSearchFromCompanies.onSearchFromCompanies();
-		} else if (position == 2) {//TODO
-			String requestStr = CommonUtil.packageRequestDataForCompanyOrPeople(true);
-			String baseStr = "{'sortBy':'noe','search_company_for_type':'0','reverse':false}";
-			if (requestStr.equalsIgnoreCase(baseStr)) {
-				Log.v("silen", "00000");
+			
+		} else if (position == 2) {
+			
+			List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+			String requestStr = requestDataList.get(0);
+			String haveSelectCondition = requestDataList.get(1);
+			Log.v("silen", "requestStr = " + requestStr);
+			Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+			
+			if (haveSelectCondition.equalsIgnoreCase("false")) {
+				
+				showShortToast("You have to enter in search criteria! Try again.");
+				
+			} else {
+				
+				onSearchFromCompanies.onSearchFromCompanies();
+				
 			}
+			
 		}
 	}
 

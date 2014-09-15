@@ -36,6 +36,7 @@ import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class CompaniesFragment extends BaseFragment implements OnItemClickListener{
 	
@@ -116,19 +117,27 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {// COMPANY_SEARCH_KEYWORDS
 					
 					String text = textView.getText().toString();
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					
 					if (TextUtils.isEmpty(text)) {
+						
 						return false;
+						
 					} else {
+						
 						if (text.trim().length() < 2) {
+							
 							showShortToast("Keywords must be at least two characters long.");
 							return false;
+							
 						} else {
+							
 							Constant.COMPANY_SEARCH_KEYWORDS = text;
+							onSearchFromCompanies.onSearchFromCompanies();
+							
 						}
 					}
 					
@@ -160,9 +169,11 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			}
 		}
 		
-		getSavedCompany(false);
-		
-		getSavedCompany(false);
+		if (mFilters.getSavedCompanies().size() == 0) {
+			
+			getSavedCompany(false);
+			
+		}
 	}
 	
 	private void setSavedCompany() {
@@ -188,8 +199,20 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 							mSavedSearchs.add((SavedSearch) obj);
 						}
 						
+						List<FilterItem> savedCompanies = new ArrayList<FilterItem>();
+						
 						for (int i = 0; i < mSavedSearchs.size(); i ++) {
-							mSavedSearchs.get(i).setChecked((i == 0) ? true : false);
+							
+							SavedSearch savedSearch = mSavedSearchs.get(i);
+							savedSearch.setChecked((i == 0) ? true : false);
+							
+							FilterItem filterItem = new FilterItem();
+							filterItem.setChecked(savedSearch.getChecked());
+							filterItem.setKey(savedSearch.getId());
+							filterItem.setValue(savedSearch.getName());
+							savedCompanies.add(filterItem);
+							
+							mFilters.setSavedCompanies(savedCompanies);
 						}
 						if (!loadMore) setSavedCompany();
 						
@@ -252,6 +275,11 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
 						
+						if (mSavedSearchs.size() == 0) {
+							getSavedCompany(false);
+							return;
+						}
+						
 						for (int i = 0; i < mSavedSearchs.size(); i ++) {
 							mSavedSearchs.get(i).setChecked(false);
 						}
@@ -279,6 +307,30 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 						
 					}
 				}
+				
+				if (position == 4) {
+					
+					List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+					String requestStr = requestDataList.get(0);
+					String haveSelectCondition = requestDataList.get(1);
+					Log.v("silen", "requestStr = " + requestStr);
+					Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+					
+					if (haveSelectCondition.equalsIgnoreCase("false")) {
+						
+						showShortToast("You have to enter in search criteria! Try again.");
+						
+					} else {
+						
+						onSearchFromCompanies.onSearchFromCompanies();
+						
+					}
+					
+				} else {
+					
+					onSearchFromCompanies.onSearchFromCompanies();
+					
+				}
 			}
 			
 		} else if (parent == savedListView) {
@@ -287,10 +339,19 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			if (checked) {
 				return;
 			} else {// this item is not checked
+				
 				for (int i = 0; i < mSavedSearchs.size(); i ++) {
 					mSavedSearchs.get(i).setChecked(false);
 				}
+				
 				mSavedSearchs.get(position).setChecked(true);//set checked item
+				
+				List<FilterItem> savedCompanies = mFilters.getSavedCompanies();
+				for (int i = 0; i < savedCompanies.size(); i ++) {
+					savedCompanies.get(i).setChecked(false);
+				}
+				savedCompanies.get(position).setChecked(true);
+				
 			}
 			companiesAdapter.notifyDataSetChanged();
 			

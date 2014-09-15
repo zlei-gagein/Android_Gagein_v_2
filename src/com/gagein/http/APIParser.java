@@ -780,310 +780,6 @@ public class APIParser {
 		
 		companyQueryInfoStr = "";//组装save中的string
 		
-		//News Triggers
-		JSONArray newsTriggersArray = friendlyInfo.optJSONArray("mer_for_id");
-		if (null != newsTriggersArray) {
-			Log.v("silen", "newsTriggersArray = " + newsTriggersArray.toString());
-			queryInfo.setNewsTriggers(setQueryInfo(newsTriggersArray, "mer_for_id"));
-			
-			List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
-			setFilterOptionsCheck(newsTriggersArray, newsTriggerList);
-			
-			//根据返回的queryInfo 设置News Triggers
-			for (int i = 0; i < newsTriggersArray.length(); i ++) {
-				newsTriggerList.get(0).setChecked(false);
-				String id = newsTriggersArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < newsTriggerList.size(); j ++) {
-					String key = newsTriggerList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						newsTriggerList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//Company Companies
-		JSONArray companiesArray = friendlyInfo.optJSONArray("search_company_for_type");
-		if (null != companiesArray) {
-			if (fromCompany) {
-				queryInfo.setCompaniesForCompany(setQueryInfo(companiesArray, "search_company_for_type"));
-			} else {
-				queryInfo.setCompaniesForPeople(setQueryInfo(companiesArray, "search_company_for_type"));
-			}
-			
-			if (fromCompany) {
-				List<FilterItem> companiesForCompanyList = mFilters.getCompanyTypesFromCompany();
-				setFilterOptionsCheck(companiesArray, companiesForCompanyList);
-				
-				//根据返回的queryInfo 设置Companies
-				for (int i = 0; i < companiesArray.length(); i ++) {
-					companiesForCompanyList.get(0).setChecked(false);
-					String id = companiesArray.optJSONObject(i).optString("id");
-					for (int j = 0 ; j < companiesForCompanyList.size(); j ++) {
-						String key = companiesForCompanyList.get(j).getKey();
-						if (id.equalsIgnoreCase(key)) {
-							companiesForCompanyList.get(j).setChecked(true);
-						}
-					}
-				}
-			} else {
-				List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
-				setFilterOptionsCheck(companiesArray, companiesForPeopleList);
-				
-				//根据返回的queryInfo 设置Companies
-				for (int i = 0; i < companiesArray.length(); i ++) {
-					companiesForPeopleList.get(0).setChecked(false);
-					String id = companiesArray.optJSONObject(i).optString("id");
-					for (int j = 0 ; j < companiesForPeopleList.size(); j ++) {
-						String key = companiesForPeopleList.get(j).getKey();
-						if (id.equalsIgnoreCase(key)) {
-							companiesForPeopleList.get(j).setChecked(true);
-						}
-					}
-				}
-			}
-		}
-		
-		//companyQueryInfoStr
-		String companySearchKeywords = friendlyInfo.optString("company_search_keywords");
-		if (!companySearchKeywords.isEmpty()) {
-			if (companyQueryInfoStr.isEmpty()) {
-				companyQueryInfoStr = companySearchKeywords;
-			} else {
-				companyQueryInfoStr = companyQueryInfoStr + "," + companySearchKeywords;
-			}
-			queryInfo.setCompanySearchKeywords(companySearchKeywords);
-		}
-		
-		//Ranks
-		JSONArray ranksArray = friendlyInfo.optJSONArray("rank");
-		if (null != ranksArray) {
-			queryInfo.setRanks(setQueryInfo(ranksArray, "rank"));
-			
-			List<FilterItem> rankList = mFilters.getRanks();
-			setFilterOptionsCheck(ranksArray, rankList);
-			
-			//根据返回的queryInfo 设置rank
-			for (int i = 0; i < ranksArray.length(); i ++) {
-				rankList.get(0).setChecked(false);
-				String id = ranksArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < rankList.size(); j ++) {
-					String key = rankList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						rankList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//FiscalMonth
-		JSONArray fiscalMonthArray = friendlyInfo.optJSONArray("org_fiscal_month");
-		if (null != fiscalMonthArray) {
-			queryInfo.setFiscalMonth(setQueryInfo(fiscalMonthArray, "org_fiscal_month"));
-			
-			List<FilterItem> fiscalMothList = mFilters.getFiscalYearEndMonths();
-			setFilterOptionsCheck(fiscalMonthArray, fiscalMothList);
-			
-			//根据返回的queryInfo 设置rank
-			for (int i = 0; i < fiscalMonthArray.length(); i ++) {
-				fiscalMothList.get(0).setChecked(false);
-				String id = fiscalMonthArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < fiscalMothList.size(); j ++) {
-					String key = fiscalMothList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						fiscalMothList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//MileStoneOccurrenceType
-		JSONArray mileStoneOccurrenceTypeArray = friendlyInfo.optJSONArray("milestone_occurrence_type");
-		if (null != mileStoneOccurrenceTypeArray) {
-			queryInfo.setMileStoneOccurrenceType(setQueryInfo(mileStoneOccurrenceTypeArray, "milestone_occurrence_type"));
-			
-			List<FilterItem> occurredList = mFilters.getOccurreds();
-			setFilterOptionsCheck(mileStoneOccurrenceTypeArray, occurredList);
-			
-			//根据返回的queryInfo 设置MileStoneOccurrenceType
-			for (int i = 0; i < mileStoneOccurrenceTypeArray.length(); i ++) {
-				occurredList.get(0).setChecked(false);
-				String id = mileStoneOccurrenceTypeArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < occurredList.size(); j ++) {
-					String key = occurredList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						occurredList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//Industries
-		JSONArray industryArray = friendlyInfo.optJSONArray("org_industries");
-		if (null != industryArray) {
-			queryInfo.setIndustries(setQueryInfo(industryArray, "org_industries"));
-			
-			List<Industry> industryList = mFilters.getIndustries();
-			setIndustryFilterOptionsCheck(industryArray, industryList);
-			
-			//TODO
-			//根据返回的queryInfo 设置MileStoneOccurrenceType
-			for (int i = 0; i < industryArray.length(); i ++) {
-				industryList.get(0).setChecked(false);
-				String id = industryArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < industryList.size(); j ++) {
-					String key = industryList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						industryList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//LocationCode
-		JSONArray locationCodeArray = friendlyInfo.optJSONArray("location_code");
-		if (null != locationCodeArray) {
-			queryInfo.setLocationCode(setQueryInfo(locationCodeArray, "location_code"));
-			
-			List<Location> locationList = mFilters.getLocations();
-			setLocationFilterOptionsCheck(locationCodeArray, locationList);
-			
-			//根据返回的queryInfo 设置LocationCode
-			List<Location> headquarters = mFilters.getHeadquarters();
-			headquarters.clear();
-			for (int i = 0; i < locationCodeArray.length(); i ++) {
-				Location location = new Location();
-				location.setChecked(true);
-				location.setCode(locationCodeArray.optJSONObject(i).optString("id"));
-				location.setLocation(locationCodeArray.optJSONObject(i).optString("name"));
-				
-				headquarters.add(location);
-			}
-		}
-		
-		//EmployeeSize
-		JSONArray employeeSizeArray = friendlyInfo.optJSONArray("org_employee_size");
-		if (null != employeeSizeArray) {
-			queryInfo.setEmployeeSize(setQueryInfo(employeeSizeArray, "org_employee_size"));
-			
-			List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
-			setFilterOptionsCheck(employeeSizeArray, employeeSizeList);
-			
-			//根据返回的queryInfo 设置employeesize
-			for (int i = 0; i < employeeSizeArray.length(); i ++) {
-				employeeSizeList.get(0).setChecked(false);
-				String id = employeeSizeArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < employeeSizeList.size(); j ++) {
-					String key = employeeSizeList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						employeeSizeList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//DateRange
-		JSONArray dateRangeArray = friendlyInfo.optJSONArray("search_date_range");
-		if (null != dateRangeArray) {
-			queryInfo.setDateRange(setQueryInfo(dateRangeArray, "search_date_range"));
-			
-			List<FilterItem> dateRangeList = mFilters.getDateRanges();
-			setFilterOptionsCheck(dateRangeArray, dateRangeList);
-			
-			//根据返回的queryInfo 设置MileStoneOccurrenceType
-			for (int i = 0; i < dateRangeArray.length(); i ++) {
-				dateRangeList.get(3).setChecked(false);
-				String id = dateRangeArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < dateRangeList.size(); j ++) {
-					String key = dateRangeList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						dateRangeList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//MileStoneType
-		JSONArray mileStoneTypeArray = friendlyInfo.optJSONArray("milestone_type");
-		if (null != mileStoneTypeArray) {
-			queryInfo.setMileStoneType(setQueryInfo(mileStoneTypeArray, "milestone_type"));
-			
-			List<FilterItem> mileStoneTypeList = mFilters.getMileStones();
-			setFilterOptionsCheck(mileStoneTypeArray, mileStoneTypeList);
-			
-			//根据返回的queryInfo 设置MileStoneOccurrenceType
-			for (int i = 0; i < mileStoneTypeArray.length(); i ++) {
-				String id = mileStoneTypeArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < mileStoneTypeList.size(); j ++) {
-					String key = mileStoneTypeList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						mileStoneTypeList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//Ownership
-		JSONArray ownershipArray = friendlyInfo.optJSONArray("org_ownership");
-		if (null != ownershipArray) {
-			queryInfo.setOwnership(setQueryInfo(ownershipArray, "org_ownership"));
-			
-			List<FilterItem> ownershipList = mFilters.getOwnerships();
-			setFilterOptionsCheck(ownershipArray, ownershipList);
-			
-			//根据返回的queryInfo 设置ownership
-			for (int i = 0; i < ownershipArray.length(); i ++) {
-				ownershipList.get(0).setChecked(false);
-				String id = ownershipArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < ownershipList.size(); j ++) {
-					String key = ownershipList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						ownershipList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//RevenueSize
-		JSONArray revenueSizeArray = friendlyInfo.optJSONArray("org_revenue_size");
-		if (null != revenueSizeArray) {
-			queryInfo.setRevenueSize(setQueryInfo(revenueSizeArray, "org_revenue_size"));
-			
-			List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
-			setFilterOptionsCheck(revenueSizeArray, revenueSizeList);
-			
-			//根据返回的queryInfo 设置revenueSize
-			for (int i = 0; i < revenueSizeArray.length(); i ++) {
-				revenueSizeList.get(0).setChecked(false);
-				String id = revenueSizeArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < revenueSizeList.size(); j ++) {
-					String key = revenueSizeList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						revenueSizeList.get(j).setChecked(true);
-					}
-				}
-			}
-		}
-		
-		//EventSearchKeywords
-		String eventSearchKeywords = friendlyInfo.optString("event_search_keywords");
-		if (!TextUtils.isEmpty(eventSearchKeywords)) {
-			QueryInfoItem queryInfoItem = new QueryInfoItem();
-			queryInfoItem.setName(eventSearchKeywords);
-			queryInfoItem.setType("event_search_keywords");
-			queryInfo.setEventSearchKeywords(queryInfoItem);
-			
-			//TODO
-//			mFilters.get
-			Log.v("silen", "eventSearchKeywords = " + eventSearchKeywords);
-			if (TextUtils.isEmpty(companyQueryInfoStr)) {
-				companyQueryInfoStr = eventSearchKeywords;
-			} else {
-				companyQueryInfoStr = companyQueryInfoStr + "," + eventSearchKeywords;
-			}
-		}
-		
-		//TODO
 		//Job Title
 		String jobTitleStr = friendlyInfo.optString("dop_title");
 		if (!jobTitleStr.isEmpty()) {
@@ -1153,6 +849,342 @@ public class APIParser {
 					String key = functionalRoleList.get(j).getKey();
 					if (id.equalsIgnoreCase(key)) {
 						functionalRoleList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+		//News Triggers
+		JSONArray newsTriggersArray = friendlyInfo.optJSONArray("mer_for_id");
+		if (null != newsTriggersArray) {
+			Log.v("silen", "newsTriggersArray = " + newsTriggersArray.toString());
+			queryInfo.setNewsTriggers(setQueryInfo(newsTriggersArray, "mer_for_id"));
+			
+			List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
+			setFilterOptionsCheck(newsTriggersArray, newsTriggerList);
+			
+			//根据返回的queryInfo 设置News Triggers
+			for (int i = 0; i < newsTriggersArray.length(); i ++) {
+				newsTriggerList.get(0).setChecked(false);
+				String id = newsTriggersArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < newsTriggerList.size(); j ++) {
+					String key = newsTriggerList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						newsTriggerList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+
+		//DateRange
+		JSONArray dateRangeArray = friendlyInfo.optJSONArray("search_date_range");
+		if (null != dateRangeArray) {
+			queryInfo.setDateRange(setQueryInfo(dateRangeArray, "search_date_range"));
+			
+			List<FilterItem> dateRangeList = mFilters.getDateRanges();
+			setFilterOptionsCheck(dateRangeArray, dateRangeList);
+			
+			//根据返回的queryInfo 设置MileStoneOccurrenceType
+			for (int i = 0; i < dateRangeArray.length(); i ++) {
+				dateRangeList.get(3).setChecked(false);
+				String id = dateRangeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < dateRangeList.size(); j ++) {
+					String key = dateRangeList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						dateRangeList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+		//Company Companies
+		JSONArray companiesArray = friendlyInfo.optJSONArray("search_company_for_type");
+		if (null != companiesArray) {
+			if (fromCompany) {
+				queryInfo.setCompaniesForCompany(setQueryInfo(companiesArray, "search_company_for_type"));
+			} else {
+				queryInfo.setCompaniesForPeople(setQueryInfo(companiesArray, "search_company_for_type"));
+			}
+			
+			if (fromCompany) {
+				List<FilterItem> companiesForCompanyList = mFilters.getCompanyTypesFromCompany();
+				setFilterOptionsCheck(companiesArray, companiesForCompanyList);
+				
+				//根据返回的queryInfo 设置Companies
+				for (int i = 0; i < companiesArray.length(); i ++) {
+					companiesForCompanyList.get(0).setChecked(false);
+					String id = companiesArray.optJSONObject(i).optString("id");
+					for (int j = 0 ; j < companiesForCompanyList.size(); j ++) {
+						String key = companiesForCompanyList.get(j).getKey();
+						if (id.equalsIgnoreCase(key)) {
+							companiesForCompanyList.get(j).setChecked(true);
+						}
+					}
+				}
+			} else {
+				List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
+				setFilterOptionsCheck(companiesArray, companiesForPeopleList);
+				
+				//根据返回的queryInfo 设置Companies
+				for (int i = 0; i < companiesArray.length(); i ++) {
+					companiesForPeopleList.get(0).setChecked(false);
+					String id = companiesArray.optJSONObject(i).optString("id");
+					for (int j = 0 ; j < companiesForPeopleList.size(); j ++) {
+						String key = companiesForPeopleList.get(j).getKey();
+						Log.v("silen", "APIParser-key = " + key);
+						if (id.equalsIgnoreCase(key)) {
+							companiesForPeopleList.get(j).setChecked(true);
+						}
+					}
+				}
+			}
+		}
+		
+		//EventSearchKeywords
+		String eventSearchKeywords = friendlyInfo.optString("event_search_keywords");
+		if (!TextUtils.isEmpty(eventSearchKeywords)) {
+			QueryInfoItem queryInfoItem = new QueryInfoItem();
+			queryInfoItem.setName(eventSearchKeywords);
+			queryInfoItem.setType("event_search_keywords");
+			queryInfo.setEventSearchKeywords(queryInfoItem);
+			
+			//TODO
+//			mFilters.get
+			Log.v("silen", "eventSearchKeywords = " + eventSearchKeywords);
+			if (TextUtils.isEmpty(companyQueryInfoStr)) {
+				companyQueryInfoStr = eventSearchKeywords;
+			} else {
+				companyQueryInfoStr = companyQueryInfoStr + "," + eventSearchKeywords;
+			}
+		}
+		
+		//filter_saved_company_search
+		JSONArray savedCompanyArray = friendlyInfo.optJSONArray("filter_saved_company_search");
+		
+		if (null != savedCompanyArray) {
+			
+			queryInfo.setSavedCompany(setQueryInfo(savedCompanyArray, "filter_saved_company_search"));
+			
+			List<FilterItem> savedCompaniesList = mFilters.getSavedCompanies();
+			setFilterOptionsCheck(savedCompanyArray, savedCompaniesList);
+			
+			//根据返回的queryInfo 设置savedCompany
+			for (int i = 0; i < savedCompanyArray.length(); i ++) {
+				savedCompaniesList.get(0).setChecked(false);
+				String id = savedCompanyArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < savedCompaniesList.size(); j ++) {
+					String key = savedCompaniesList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						savedCompaniesList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+
+		//companyQueryInfoStr
+		String companySearchKeywords = friendlyInfo.optString("company_search_keywords");
+		if (!companySearchKeywords.isEmpty()) {
+			if (companyQueryInfoStr.isEmpty()) {
+				companyQueryInfoStr = companySearchKeywords;
+			} else {
+				companyQueryInfoStr = companyQueryInfoStr + "," + companySearchKeywords;
+			}
+			queryInfo.setCompanySearchKeywords(companySearchKeywords);
+		}
+		
+		//LocationCode
+		JSONArray locationCodeArray = friendlyInfo.optJSONArray("location_code");
+		
+		if (null != locationCodeArray) {
+			
+			queryInfo.setLocationCode(setQueryInfo(locationCodeArray, "location_code"));
+			
+			List<Location> headquarters = mFilters.getHeadquarters();
+			setLocationFilterOptionsCheck(locationCodeArray, headquarters);
+			
+			//根据返回的queryInfo 设置LocationCode
+//			List<Location> headquarters = mFilters.getHeadquarters();
+//			headquarters.clear();
+			for (int i = 0; i < locationCodeArray.length(); i ++) {
+				Location location = new Location();
+				location.setChecked(true);
+				location.setCode(locationCodeArray.optJSONObject(i).optString("id"));
+				location.setLocation(locationCodeArray.optJSONObject(i).optString("name"));
+				
+				headquarters.add(location);
+			}
+		}
+
+		//Industries
+		JSONArray industryArray = friendlyInfo.optJSONArray("org_industries");
+		if (null != industryArray) {
+			
+			queryInfo.setIndustries(setQueryInfo(industryArray, "org_industries"));
+			
+			List<Industry> industryList = mFilters.getIndustries();
+			setIndustryFilterOptionsCheck(industryArray, industryList);
+			
+			//TODO
+			//根据返回的queryInfo 设置MileStoneOccurrenceType
+			for (int i = 0; i < industryArray.length(); i ++) {
+				industryList.get(0).setChecked(false);
+				String id = industryArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < industryList.size(); j ++) {
+					String key = industryList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						industryList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+		//EmployeeSize
+		JSONArray employeeSizeArray = friendlyInfo.optJSONArray("org_employee_size");
+		
+		if (null != employeeSizeArray) {
+			
+			queryInfo.setEmployeeSize(setQueryInfo(employeeSizeArray, "org_employee_size"));
+			
+			List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
+			setFilterOptionsCheck(employeeSizeArray, employeeSizeList);
+			
+			//根据返回的queryInfo 设置employeesize
+			for (int i = 0; i < employeeSizeArray.length(); i ++) {
+				employeeSizeList.get(0).setChecked(false);
+				String id = employeeSizeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < employeeSizeList.size(); j ++) {
+					String key = employeeSizeList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						employeeSizeList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+
+		//RevenueSize
+		JSONArray revenueSizeArray = friendlyInfo.optJSONArray("org_revenue_size");
+		if (null != revenueSizeArray) {
+			queryInfo.setRevenueSize(setQueryInfo(revenueSizeArray, "org_revenue_size"));
+			
+			List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
+			setFilterOptionsCheck(revenueSizeArray, revenueSizeList);
+			
+			//根据返回的queryInfo 设置revenueSize
+			for (int i = 0; i < revenueSizeArray.length(); i ++) {
+				revenueSizeList.get(0).setChecked(false);
+				String id = revenueSizeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < revenueSizeList.size(); j ++) {
+					String key = revenueSizeList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						revenueSizeList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+
+		//Ownership
+		JSONArray ownershipArray = friendlyInfo.optJSONArray("org_ownership");
+		if (null != ownershipArray) {
+			queryInfo.setOwnership(setQueryInfo(ownershipArray, "org_ownership"));
+			
+			List<FilterItem> ownershipList = mFilters.getOwnerships();
+			setFilterOptionsCheck(ownershipArray, ownershipList);
+			
+			//根据返回的queryInfo 设置ownership
+			for (int i = 0; i < ownershipArray.length(); i ++) {
+				ownershipList.get(0).setChecked(false);
+				String id = ownershipArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < ownershipList.size(); j ++) {
+					String key = ownershipList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						ownershipList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+
+		//MileStoneType
+		JSONArray mileStoneTypeArray = friendlyInfo.optJSONArray("milestone_type");
+		if (null != mileStoneTypeArray) {
+			queryInfo.setMileStoneType(setQueryInfo(mileStoneTypeArray, "milestone_type"));
+			
+			List<FilterItem> mileStoneTypeList = mFilters.getMileStones();
+			setFilterOptionsCheck(mileStoneTypeArray, mileStoneTypeList);
+			
+			//根据返回的queryInfo 设置MileStoneOccurrenceType
+			for (int i = 0; i < mileStoneTypeArray.length(); i ++) {
+				String id = mileStoneTypeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < mileStoneTypeList.size(); j ++) {
+					String key = mileStoneTypeList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						mileStoneTypeList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+
+		//MileStoneOccurrenceType
+		JSONArray mileStoneOccurrenceTypeArray = friendlyInfo.optJSONArray("milestone_occurrence_type");
+		if (null != mileStoneOccurrenceTypeArray) {
+			queryInfo.setMileStoneOccurrenceType(setQueryInfo(mileStoneOccurrenceTypeArray, "milestone_occurrence_type"));
+			
+			List<FilterItem> occurredList = mFilters.getOccurreds();
+			setFilterOptionsCheck(mileStoneOccurrenceTypeArray, occurredList);
+			
+			//根据返回的queryInfo 设置MileStoneOccurrenceType
+			for (int i = 0; i < mileStoneOccurrenceTypeArray.length(); i ++) {
+				occurredList.get(0).setChecked(false);
+				String id = mileStoneOccurrenceTypeArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < occurredList.size(); j ++) {
+					String key = occurredList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						occurredList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+		
+		//Ranks
+		JSONArray ranksArray = friendlyInfo.optJSONArray("rank");
+		if (null != ranksArray) {
+			queryInfo.setRanks(setQueryInfo(ranksArray, "rank"));
+			
+			List<FilterItem> rankList = mFilters.getRanks();
+			setFilterOptionsCheck(ranksArray, rankList);
+			
+			//根据返回的queryInfo 设置rank
+			for (int i = 0; i < ranksArray.length(); i ++) {
+				rankList.get(0).setChecked(false);
+				String id = ranksArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < rankList.size(); j ++) {
+					String key = rankList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						rankList.get(j).setChecked(true);
+					}
+				}
+			}
+		}
+		
+		//FiscalMonth
+		JSONArray fiscalMonthArray = friendlyInfo.optJSONArray("org_fiscal_month");
+		if (null != fiscalMonthArray) {
+			queryInfo.setFiscalMonth(setQueryInfo(fiscalMonthArray, "org_fiscal_month"));
+			
+			List<FilterItem> fiscalMothList = mFilters.getFiscalYearEndMonths();
+			setFilterOptionsCheck(fiscalMonthArray, fiscalMothList);
+			
+			//根据返回的queryInfo 设置rank
+			for (int i = 0; i < fiscalMonthArray.length(); i ++) {
+				fiscalMothList.get(0).setChecked(false);
+				String id = fiscalMonthArray.optJSONObject(i).optString("id");
+				for (int j = 0 ; j < fiscalMothList.size(); j ++) {
+					String key = fiscalMothList.get(j).getKey();
+					if (id.equalsIgnoreCase(key)) {
+						fiscalMothList.get(j).setChecked(true);
 					}
 				}
 			}

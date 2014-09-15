@@ -44,7 +44,6 @@ import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 
 public class CompaniesActivity extends BaseActivity implements OnItemClickListener, IXListViewListener{
 	
@@ -63,7 +62,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	private Facet facet;
 	private List<FacetItemIndustry> industryData = new ArrayList<FacetItemIndustry>();
 	private int requestCode = 1;
-	private LinearLayout noFollowedCompanies;
+	private LinearLayout noFollowedCompaniesLayout;
 	private LinearLayout bottomLayoutIsNotSystem;
 	private RelativeLayout bottomLayoutLinkedCompanies;
 	private Group group;
@@ -106,6 +105,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			getCompaniesOfGroup(false, false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES)) {
+			
+			if (noFollowedCompaniesLayout.getVisibility() == View.VISIBLE) noFollowedCompaniesLayout.setVisibility(View.GONE);
 			
 			edit = false;
 			setEditStatus();
@@ -170,7 +171,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		bottomBtn = (Button) findViewById(R.id.bottomBtn);
 		importBtn = (Button) findViewById(R.id.importBtn);
 		addCompaniesBtn = (Button) findViewById(R.id.addCompaniesBtn);
-		noFollowedCompanies = (LinearLayout) findViewById(R.id.noFollowedCompanies);
+		noFollowedCompaniesLayout = (LinearLayout) findViewById(R.id.noFollowedCompanies);
 		addToBtn = (Button) findViewById(R.id.addToBtn);
 		removeBtn = (Button) findViewById(R.id.removeBtn);
 		unfollowBtn = (Button) findViewById(R.id.unfollowBtn);
@@ -264,7 +265,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 						companies.clear();
 						if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
 					}
-					noFollowedCompanies.setVisibility(View.VISIBLE);
+					noFollowedCompaniesLayout.setVisibility(View.VISIBLE);
 					setNoCompaniesPromt();
 				}
 				
@@ -305,14 +306,14 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		
 		if (companies.size() == 0) {
 			
-			noFollowedCompanies.setVisibility(View.VISIBLE);
+			noFollowedCompaniesLayout.setVisibility(View.VISIBLE);
 			setNoCompaniesPromt();
 			
 			if (edit) setBottomButton(companies);
 			
 		} else {
 			
-			noFollowedCompanies.setVisibility(View.GONE);
+			noFollowedCompaniesLayout.setVisibility(View.GONE);
 			
 		}
 	}
@@ -367,7 +368,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		filterBtn.setOnClickListener(this);
 		bottomBtn.setOnClickListener(this);
 		noSectionListView.setOnItemClickListener(this);
-		noFollowedCompanies.setOnClickListener(this);
+		noFollowedCompaniesLayout.setOnClickListener(this);
 		importBtn.setOnClickListener(this);
 		addCompaniesBtn.setOnClickListener(this);
 		addToBtn.setOnClickListener(this);
@@ -448,7 +449,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 				startToSuggestedCompanyActivity();
 			}
 			
-		} else if (v == noFollowedCompanies) {
+		} else if (v == noFollowedCompaniesLayout) {
 			
 			getCompaniesOfGroup(true, false);
 			

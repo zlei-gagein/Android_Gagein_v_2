@@ -70,7 +70,6 @@ public class SortBySearchDialog {
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		CommonUtil.setDialogWith(dialog);
-		dialog.setCancelable(false);
 		dialog.show();
 	}
 	

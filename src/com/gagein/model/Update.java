@@ -123,7 +123,7 @@ public class Update extends DataModel implements Serializable{
 		// company
 		this.company = new Company();
 		this.company.parseData(jsonObject);
-		this.irrelevant = jsonObject.optInt("irrelevant_flagged") == 1 ? true : false;
+		this.irrelevant = jsonObject.optBoolean("irrelevant_flagged");
 
 	}
 	

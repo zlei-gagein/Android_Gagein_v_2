@@ -41,7 +41,7 @@
                     android:textColor="@color/text_weak"
                     android:textSize="16sp" />
 
-                <com.gagein.component.xlistview.XListView
+                <ListView
                     android:id="@+id/savedListView"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

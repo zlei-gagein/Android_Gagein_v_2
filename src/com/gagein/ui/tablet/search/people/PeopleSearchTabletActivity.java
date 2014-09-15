@@ -136,7 +136,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 					});
 				}
 			};
-			timer.schedule(timerTask, 500);
+			timer.schedule(timerTask, 300);
 		}
 		transaction.commit();
 		
@@ -148,7 +148,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			Log.v("silen", "RefreshFilterBroadcastReceiver 00000000000000000000000000");
+			
 			if (null != jobTitleFragment) jobTitleFragment.refreshAdapter();
 			if (null != jobLevelFragment) jobLevelFragment.refreshAdapter();
 			if (null != locationFragment) locationFragment.refreshAdapter();
@@ -611,7 +611,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -646,7 +646,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -681,7 +681,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -716,7 +716,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -751,7 +751,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -786,7 +786,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -821,7 +821,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -856,7 +856,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -891,7 +891,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -926,7 +926,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -961,7 +961,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -996,7 +996,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -1032,7 +1032,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 
 	@Override
@@ -1067,7 +1067,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 				});
 			}
 		};
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 30);
 	}
 	
 	private void setLeftLayoutVisible(int visible) {

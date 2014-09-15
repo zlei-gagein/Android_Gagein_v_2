@@ -18,6 +18,8 @@ public class Filters implements Serializable{
 	
 	private List<FilterItem> CompanyTypesFromPeople = new ArrayList<FilterItem>();
 	
+	private List<FilterItem> SavedCompanies= new ArrayList<FilterItem>();
+	
 	private List<FilterItem> CompanyTypesFromCompany = new ArrayList<FilterItem>();
 	
 	private List<FilterItem> EmployeeSizeFromBuz = new ArrayList<FilterItem>();
@@ -50,6 +52,14 @@ public class Filters implements Serializable{
 	
 	private List<JobTitle> jobTitles = new ArrayList<JobTitle>();
 	
+	public List<FilterItem> getSavedCompanies() {
+		return SavedCompanies;
+	}
+
+	public void setSavedCompanies(List<FilterItem> savedCompanies) {
+		SavedCompanies = savedCompanies;
+	}
+
 	public List<FilterItem> getOwnerships() {
 		return Ownerships;
 	}

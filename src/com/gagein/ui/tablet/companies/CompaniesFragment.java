@@ -69,7 +69,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private Facet facet;
 	private List<FacetItemIndustry> industryData = new ArrayList<FacetItemIndustry>();
 	private int requestCode = 1;
-	private LinearLayout noFollowedCompanies;
+	private LinearLayout noFollowedCompaniesLayout;
 	private LinearLayout bottomLayoutIsNotSystem;
 	private RelativeLayout bottomLayoutLinkedCompanies;
 	private Group group;
@@ -134,7 +134,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		bottomBtn = (Button) view.findViewById(R.id.bottomBtn);
 		importBtn = (Button) view.findViewById(R.id.importBtn);
 		addCompaniesBtn = (Button) view.findViewById(R.id.addCompaniesBtn);
-		noFollowedCompanies = (LinearLayout) view.findViewById(R.id.noFollowedCompanies);
+		noFollowedCompaniesLayout = (LinearLayout) view.findViewById(R.id.noFollowedCompanies);
 		addToBtn = (Button) view.findViewById(R.id.addToBtn);
 		removeBtn = (Button) view.findViewById(R.id.removeBtn);
 		unfollowBtn = (Button) view.findViewById(R.id.unfollowBtn);
@@ -233,7 +233,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 						companies.clear();
 						if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
 					}
-					noFollowedCompanies.setVisibility(View.VISIBLE);
+					noFollowedCompaniesLayout.setVisibility(View.VISIBLE);
 					setNoCompaniesPromt();
 				}
 				
@@ -276,14 +276,14 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		
 		if (companies.size() == 0) {
 			
-			noFollowedCompanies.setVisibility(View.VISIBLE);
+			noFollowedCompaniesLayout.setVisibility(View.VISIBLE);
 			setNoCompaniesPromt();
 			
 			if (edit) setBottomButton(companies);
 			
 		} else {
 			
-			noFollowedCompanies.setVisibility(View.GONE);
+			noFollowedCompaniesLayout.setVisibility(View.GONE);
 			
 		}
 	}
@@ -338,7 +338,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		filterBtn.setOnClickListener(this);
 		bottomBtn.setOnClickListener(this);
 		noSectionListView.setOnItemClickListener(this);
-		noFollowedCompanies.setOnClickListener(this);
+		noFollowedCompaniesLayout.setOnClickListener(this);
 		importBtn.setOnClickListener(this);
 		addCompaniesBtn.setOnClickListener(this);
 		addToBtn.setOnClickListener(this);
@@ -353,6 +353,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == filterBtn) {
 			if (industryData.size() == 0) {
 				showShortToast(R.string.no_filters);
@@ -403,7 +404,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			} else {
 				startToSuggestedCompanyActivity();
 			}
-		} else if (v == noFollowedCompanies) {
+		} else if (v == noFollowedCompaniesLayout) {
 			
 			getCompaniesOfGroup(true, false);
 			
@@ -599,6 +600,10 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	
 	public void setEditStatus() {
 		setRightButton(edit ? R.string.cancel : R.string.edit);
+	}
+	
+	public void setNoFollowedCompaniesLayoutGone() {
+		if (noFollowedCompaniesLayout.getVisibility() == View.VISIBLE) noFollowedCompaniesLayout.setVisibility(View.GONE);
 	}
 
 	public void setBottomLayoutStatus() {

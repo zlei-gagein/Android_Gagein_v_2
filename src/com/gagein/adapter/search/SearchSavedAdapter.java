@@ -21,6 +21,7 @@ import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.SavedSearch;
+import com.gagein.ui.search.SearchActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.MessageCode;
 
@@ -94,14 +95,22 @@ public class SearchSavedAdapter extends BaseAdapter {
 
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
 							CommonUtil.showShortToast(mContext.getResources().getString(R.string.deleted));
 							savedSearchs.remove(position);
 							SearchSavedAdapter.this.notifyDataSetChanged();
+							
+							if (null == savedSearchs || savedSearchs.size() == 0) {
+								((SearchActivity) mContext).setNoCompanyResultsLayout();
+							}
+							
 						} else {
+							
 							String msg = MessageCode.messageForCode(parser.messageCode());
 							if (msg != null && msg.length() > 0) {
 								CommonUtil.showDialog(msg);
 							}
+							
 						}
 						CommonUtil.dissmissLoadingDialog();
 					}

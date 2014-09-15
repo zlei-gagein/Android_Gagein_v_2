@@ -62,6 +62,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	private List<FilterItem> sortByList;
 	private String type = "buz";
 	private int requestCode = 1;
+	private String savedId = "";
 	
 	@Override
 	protected List<String> observeNotifications() {
@@ -107,6 +108,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setLeftImageButton(R.drawable.back_arrow);
 		setRightButton(R.string.u_save);
 		setTitle(R.string.results);
@@ -118,19 +120,28 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		companyInfoLayout = (AutoNewLineLayout) findViewById(R.id.companyInfoLayout);
 		listView = (XListView) findViewById(R.id.listView);
 		emptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
+		
 	}
 	
 	@Override
 	protected void initData() {
 		super.initData();
+		
 		mFilters = Constant.MFILTERS;
 		
 		setSortBy();
+		
+		savedId = getIntent().getStringExtra(Constant.SAVEDID);
+		if (null != savedId) {
+			searchSavedResult(savedId);
+			return;
+		}
 		
 		searchAdvancedCompanies(false);
 	}
 	
 	public void searchSavedResult(String savedId) {
+		
 		showLoadingDialog();
 		PAGENUM = 1;
 		mApiHttp.getSavedSearch(savedId, PAGENUM, new Listener<JSONObject>() {
@@ -156,11 +167,14 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	}
 	
 	public void initSearch() {
+		
 		PAGENUM = 1;
 		searchAdvancedCompanies(false);
+		
 	}
 	
 	private void setTitle(long num) {
+		
 		if (num == 0) {
 			setTitle("No companies found");
 		} else if (num == 1) {
@@ -168,9 +182,15 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		} else {
 			setTitle(num + " companies found");
 		}
+		
 	}
 	
 	public void setSortBy() {
+		
+		if (null == mFilters.getSortByFromBuz()) {
+			return;
+		}
+		
 		sortByList = mFilters.getSortByFromBuz();
 		for (int i = 0; i < sortByList.size(); i ++) {
 			if (sortByList.get(i).getChecked()) {
@@ -179,6 +199,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 				setRank(value);
 			}
 		}
+		
 	}
 
 	private void setRank(String value) {
@@ -193,8 +214,9 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	}
 	
 	private void searchAdvancedCompanies(final Boolean loadMore) {
+		
 		if (!loadMore) showLoadingDialog();
-		mApiHttp.searchAdvancedCompanies(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(true), new Listener<JSONObject>() {
+		mApiHttp.searchAdvancedCompanies(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(true, true).get(0), new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -271,15 +293,18 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	}
 	
 	private void setQueryInfoDetailButton(List<QueryInfoItem> queryInfoItemList, List<QueryInfoItem> queryInfoItemList2) {
+		
 		if (null != queryInfoItemList) {
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
+				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
 				
-				button.setOnClickListener(new OnClickListener() {
-					
+				buttonLayout.setOnClickListener(new OnClickListener() {
+				
 					@Override
 					public void onClick(View arg0) {
 						
@@ -376,7 +401,9 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 					queryInfoItem.setDisplayName(queryInfoItemList2);
 				}
 				
-				button.setText(queryInfoItem.getDisplayName());
+				textView.setText(queryInfoItem.getDisplayName());
+				
+				CommonUtil.setFilterMaxWith(textView);
 				
 				companyInfoLayout.addView(view);
 			}
@@ -464,7 +491,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		} else if (v == rightBtn) {
 			
 			if (null == queryInfo) return;
- 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true), queryInfo.getQueryInfoResult());
+ 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_COMPANY);
 			
 		} else if (v == showDetailsTx) {
@@ -519,6 +546,19 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setQueryInfoDetailButton(newsTriggersList, null);
 		
+		//EventSearchKeywords
+		if (null != queryInfo.getEventSearchKeywords()) {
+			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
+			if (!TextUtils.isEmpty(eventSearchKeywords)) {
+				String type = queryInfo.getEventSearchKeywords().getType();
+				setEventSearchKeywordsButton(eventSearchKeywords, type);
+			}
+		}
+		
+		//DateRange
+		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
+		setQueryInfoDetailButton(dateRangeList, null);
+		
 		//Companies
 		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
 		if (!companySearchKeywords.isEmpty()) {
@@ -540,14 +580,25 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForCompany();
 		setQueryInfoDetailButton(companiesList, null);
 		
+		//LocationCode
+		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
+		setQueryInfoDetailButton(locationList, null);
 		
-		//Ranks
-		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setQueryInfoDetailButton(ranksList, null);
+		//Industries
+		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
+		setQueryInfoDetailButton(industriesList, null);
 		
-		//FiscalMonth
-		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setQueryInfoDetailButton(fiscalMonthList, null);
+		//EmployeeSize
+		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
+		setQueryInfoDetailButton(employeeSizeList, null);
+		
+		//RevenueSize
+		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
+		setQueryInfoDetailButton(revenueSizeList, null);
+		
+		//Ownership
+		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
+		setQueryInfoDetailButton(ownershipList, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
@@ -561,38 +612,13 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			setQueryInfoDetailButton(mileStoneTypeList, mileStoneOccurrenceTypeList);
 		}
 		
-		//Industries
-		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setQueryInfoDetailButton(industriesList, null);
+		//Ranks
+		List<QueryInfoItem> ranksList = queryInfo.getRanks();
+		setQueryInfoDetailButton(ranksList, null);
 		
-		//LocationCode
-		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setQueryInfoDetailButton(locationList, null);
-		
-		//EmployeeSize
-		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setQueryInfoDetailButton(employeeSizeList, null);
-		
-		//DateRange
-		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setQueryInfoDetailButton(dateRangeList, null);
-		
-		//Ownership
-		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setQueryInfoDetailButton(ownershipList, null);
-		
-		//RevenueSize
-		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setQueryInfoDetailButton(revenueSizeList, null);
-		
-		//EventSearchKeywords
-		if (null != queryInfo.getEventSearchKeywords()) {
-			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
-			if (!TextUtils.isEmpty(eventSearchKeywords)) {
-				String type = queryInfo.getEventSearchKeywords().getType();
-				setEventSearchKeywordsButton(eventSearchKeywords, type);
-			}
-		}
+		//FiscalMonth
+		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
+		setQueryInfoDetailButton(fiscalMonthList, null);
 	}
 
 	@Override

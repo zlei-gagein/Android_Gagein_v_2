@@ -127,7 +127,6 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private long provisionDate;
 	private TextView provisionPt;
 	private RelativeLayout provisionBottomLayout;
-	private LinearLayout followCompanyLayout;
 	private LinearLayout provisionedLayout;
 	private LinearLayout noNewsShowLayout;
 	private TextView noNewsPt;
@@ -216,7 +215,6 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		resourceShowLayout = (LinearLayout) view.findViewById(R.id.resourceShowLayout);
 		provisionPt = (TextView) view.findViewById(R.id.provisionPt);
 		provisionBottomLayout = (RelativeLayout) view.findViewById(R.id.provisionBottomLayout);
-		followCompanyLayout = (LinearLayout) view.findViewById(R.id.followCompanyLayout);
 		provisionedLayout = (LinearLayout) view.findViewById(R.id.provisionedLayout);
 		noNewsShowLayout = (LinearLayout) view.findViewById(R.id.noNewsShowLayout);
 		noNewsPt = (TextView) view.findViewById(R.id.noNewsPt);
@@ -772,10 +770,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 												
 												String provisionPtStr = "This company is waiting to be provisioned. Help speed up processing:";
 												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.VISIBLE);
-												if (!mCompany.followed) {
-													followCompanyLayout.setVisibility(View.VISIBLE);
-												}
+												provisionBottomLayout.setVisibility(View.GONE);
 												
 											}
 											
@@ -941,8 +936,11 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
+			
 			leftBtnClick.onLeftBtnClick();
+			
 		} else if (v == rightBtn) {
 			
 			if (!mCompany.followed) {

@@ -19,16 +19,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -42,7 +42,6 @@ import com.gagein.model.Agent;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
-import com.gagein.ui.search.company.filter.NewsTriggersActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -182,7 +181,11 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 					cancelSearchTask();
 					removeListView(allWordsListView);
 					
-					difineLayout.setVisibility(View.GONE);
+					if (difineLayout.getVisibility() == View.VISIBLE) {
+						allWordsEdt.setHint(R.string.all_of_these_words);
+					} else {
+						allWordsEdt.setHint(R.string.search_keyword);
+					}
 					
 				} else {
 					
@@ -206,14 +209,19 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					cancelSearchTask();
-					if (TextUtils.isEmpty(textView.getText().toString())) {
-						return false;
-					}
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					
-					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
+					allWordsEdt.setText(textView.getText().toString());
+					
+					cancelSearchTask();
+					
+					if (TextUtils.isEmpty(textView.getText().toString())) return false;
+					
+					
+//					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
+					
 					return true;
 				}
 				return false;

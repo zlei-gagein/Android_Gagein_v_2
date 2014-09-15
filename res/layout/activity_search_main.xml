@@ -127,8 +127,8 @@
                 android:id="@+id/noSavedSearches"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginBottom="10dp" >
+                android:layout_marginBottom="10dp"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -173,6 +173,7 @@
                 android:layout_marginBottom="45dp"
                 android:divider="@color/silver"
                 android:dividerHeight="1dp"
+                android:visibility="gone"
                 android:scrollbars="none" />
         </LinearLayout>
     </LinearLayout>
@@ -223,7 +224,7 @@
         </RadioGroup>
 
         <LinearLayout
-            android:id="@+id/noResultsLayout"
+            android:id="@+id/noCompanyResultsLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
@@ -258,6 +259,25 @@
                 android:text="@string/add_it_now"
                 android:textColor="@color/yellow"
                 android:textSize="18sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/noPeopleResultsLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/no_results"
+                android:textColor="@color/text_dark"
+                android:textSize="22sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -317,7 +337,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:divider="@null"
+            android:divider="@color/silver"
+            android:dividerHeight="1dp"
             android:listSelector="#00000000"
             android:visibility="gone" />
 
@@ -326,7 +347,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:divider="@null"
+            android:divider="@color/silver"
+            android:dividerHeight="1dp"
             android:listSelector="#00000000"
             android:visibility="gone" />
     </LinearLayout>

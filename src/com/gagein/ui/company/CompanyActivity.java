@@ -110,12 +110,10 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private LinearLayout resourceParentLayout;
 	private LinearLayout noNewsShowLayout;
 	private LinearLayout provisionedLayout;
-	private LinearLayout followCompanyLayout;
 	private RelativeLayout provisionBottomLayout;
 	private TextView noNewsPt;
 	private TextView provisionPt;
 	private TextView shareGagein;
-	private TextView followCompany;
 	private ListView parentsOrSubsidiariesList;
 	private Boolean haveProcessed = false;
 	private Boolean haveProvisionDate;
@@ -194,8 +192,9 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
 		for (int i = 0 ; i < updates.size(); i ++) {
-			if (updatesId == updates.get(i).orgID) {
+			if (updatesId == updates.get(i).newsId) {
 				updates.get(i).liked = like;
+				Log.v("silen", "like = " + like);
 			}
 		}
 		if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
@@ -206,7 +205,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
 		for (int i = 0 ; i < updates.size(); i ++) {
-			if (updatesId == updates.get(i).orgID) {
+			if (updatesId == updates.get(i).newsId) {
 				updates.get(i).saved = save;
 			}
 		}
@@ -218,7 +217,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		long updatesId = intent.getLongExtra(Constant.UPDATEID, 0);
 		for (int i = 0 ; i < updates.size(); i ++) {
-			if (updatesId == updates.get(i).orgID) {
+			if (updatesId == updates.get(i).newsId) {
 				updates.get(i).irrelevant = irrelevant;
 			}
 		}
@@ -253,13 +252,11 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		resourceShowLayout = (LinearLayout) findViewById(R.id.resourceShowLayout);
 		resourceParentLayout = (LinearLayout) findViewById(R.id.resourceParentLayout);
 		provisionedLayout = (LinearLayout) findViewById(R.id.provisionedLayout);
-		followCompanyLayout = (LinearLayout) findViewById(R.id.followCompanyLayout);
 		noNewsShowLayout = (LinearLayout) findViewById(R.id.noNewsShowLayout);
 		provisionBottomLayout = (RelativeLayout) findViewById(R.id.provisionBottomLayout);
 		noNewsPt = (TextView) findViewById(R.id.noNewsPt);
 		provisionPt = (TextView) findViewById(R.id.provisionPt);
 		shareGagein = (TextView) findViewById(R.id.shareGagein);
-		followCompany = (TextView) findViewById(R.id.followCompany);
 		parentsOrSubsidiariesList = (ListView) findViewById(R.id.parentsOrSubsidiariesList);
 		
 		newsBtn = (TextView) findViewById(R.id.news);
@@ -803,10 +800,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 												
 												String provisionPtStr = "This company is waiting to be provisioned. Help speed up processing:";
 												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.VISIBLE);
-												if (!mCompany.followed) {
-													followCompanyLayout.setVisibility(View.VISIBLE);
-												}
+												provisionBottomLayout.setVisibility(View.GONE);
 												
 											}
 											
@@ -1092,10 +1086,6 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			setNoDatasGone();
 			if (isNoCompetitor) noCompetitors.setVisibility(View.VISIBLE);
 			
-		} else if (v == followCompany) {
-			
-			followCompany();
-			
 		} else if (v == shareGagein) {
 			
 			startActivitySimple(ShareActivity.class);
@@ -1293,7 +1283,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		sortBy.setOnClickListener(this);
 		
 		shareGagein.setOnClickListener(this);
-		followCompany.setOnClickListener(this);
+		
 	}
 
 }

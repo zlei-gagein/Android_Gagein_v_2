@@ -27,6 +27,8 @@ public class QueryInfo {
 	
 	private List<QueryInfoItem> RevenueSize;
 	
+	private List<QueryInfoItem> SavedCompany;
+	
 	private QueryInfoItem EventSearchKeywords;	/// 用户自定义trigger
 	
 	private String queryInfoResult = "";
@@ -97,6 +99,13 @@ public class QueryInfo {
 		return conditions;
 	}
 	
+	public List<QueryInfoItem> getSavedCompany() {
+		return SavedCompany;
+	}
+	
+	public void setSavedCompany(List<QueryInfoItem> savedCompany) {
+		SavedCompany = savedCompany;
+	}
 	public List<Location> getLocations() {
 		return Locations;
 	}

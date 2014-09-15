@@ -965,6 +965,21 @@ public class CommonUtil {
 	     view.setLayoutParams(params);
 	}
 	
+	public static void setFilterMaxWith(TextView textView) {
+		ViewGroup.LayoutParams params = textView.getLayoutParams();
+		int viewWith = getViewWith(textView);
+		int screenWith = GageinApplication.getContext().getResources().getDisplayMetrics().widthPixels;
+		Log.v("silen", "viewWith = " + viewWith);
+		Log.v("silen", "screenWith = " + screenWith);
+		if (viewWith > screenWith - 300) {
+			params.width = screenWith - 200;
+		} else {
+			params.width = viewWith;
+		}
+		
+		textView.setLayoutParams(params);
+	}
+	
 	public static void resetFilters() {//TODO
 		
 		Constant.DEFINEWORDS = false;
@@ -1111,6 +1126,16 @@ public class CommonUtil {
 			}
 		}
 		
+		//Saved Companies
+		List<FilterItem> savedCompanies = mFilters.getSavedCompanies();
+		for (int i = 0; i < savedCompanies.size(); i ++) {
+			if (i == 0) {
+				savedCompanies.get(i).setChecked(true);
+			} else {
+				savedCompanies.get(i).setChecked(false);
+			}
+		}
+		
 		//Company types from Company
 		List<FilterItem> companyTypesFromCompany = mFilters.getCompanyTypesFromCompany();
 		for (int i = 0; i < companyTypesFromCompany.size(); i ++) {
@@ -1153,36 +1178,114 @@ public class CommonUtil {
 		}
 	}
 	
-	public static String packageRequestDataForCompanyOrPeople(Boolean isCompany) {//TODO
+	/**
+	 *  String List 中的 0 为 requestInfo , 1 为 是否选择了条件
+	 *  needContainsSortBy search result 时需要传递sort by ， 保存时不需要
+	 * @param isCompany
+	 * @return
+	 */
+	public static List<String> packageRequestDataForCompanyOrPeople(Boolean isCompany, Boolean needContainsSortBy) {//TODO
+		
+		List<String> requestList = new ArrayList<String>();
+		
+		Boolean haveSelectCondition = false;
+		
 		Filters mFilters = Constant.MFILTERS;
 		JSONObject jsonObject = new JSONObject();
+		
 		try {
-			if (isCompany) {
-				//Sort By From Buz
-				List<FilterItem> sortByFromBuzList = mFilters.getSortByFromBuz();
-				JSONArray sortByFromBuzArray = new JSONArray();
-				for (int i = 0; i < sortByFromBuzList.size(); i ++) {
-					if (sortByFromBuzList.get(i).getChecked()) {
-						String key = sortByFromBuzList.get(i).getKey();
-						sortByFromBuzArray.put(key);
-						jsonObject.put("sortBy", key);
+			
+			if (needContainsSortBy) {
+				
+				if (isCompany) {
+					//Sort By From Buz
+					List<FilterItem> sortByFromBuzList = mFilters.getSortByFromBuz();
+					JSONArray sortByFromBuzArray = new JSONArray();
+					for (int i = 0; i < sortByFromBuzList.size(); i ++) {
+						if (sortByFromBuzList.get(i).getChecked()) {
+							String key = sortByFromBuzList.get(i).getKey();
+							sortByFromBuzArray.put(key);
+							jsonObject.put("sortBy", key);
+						}
+					}
+				} else {
+					//Sort By From Con
+					List<FilterItem> sortByFromConList = mFilters.getSortByFromContact();
+					JSONArray sortByFromConArray = new JSONArray();
+					for (int i = 0; i < sortByFromConList.size(); i ++) {
+						if (sortByFromConList.get(i).getChecked()) {
+							String key = sortByFromConList.get(i).getKey();
+							sortByFromConArray.put(key);
+							jsonObject.put("sortBy", key);
+						}
 					}
 				}
-			} else {
-				//Sort By From Con
-				List<FilterItem> sortByFromConList = mFilters.getSortByFromContact();
-				JSONArray sortByFromConArray = new JSONArray();
-				for (int i = 0; i < sortByFromConList.size(); i ++) {
-					if (sortByFromConList.get(i).getChecked()) {
-						String key = sortByFromConList.get(i).getKey();
-						sortByFromConArray.put(key);
-						jsonObject.put("sortBy", key);
-					}
+				
+				jsonObject.put("reverse", Constant.REVERSE);
+				
+			}
+			
+
+			//Job Title
+			List<JobTitle> jobTitleList = mFilters.getJobTitles();
+			
+			for (int i = 0; i < jobTitleList.size(); i ++) {
+				
+				if (jobTitleList.get(i).getChecked()) {
+					
+					String name = jobTitleList.get(i).getName();
+					jsonObject.put("dop_title", name);
+					haveSelectCondition = true;
+					
 				}
 			}
 			
-			jsonObject.put("reverse", Constant.REVERSE);
+			//Job Level
+			List<FilterItem> jobLevelList = mFilters.getJobLevel();
+			JSONArray jobLevelArray = new JSONArray();
+			for (int i = 0; i < jobLevelList.size(); i ++) {
+				if (jobLevelList.get(i).getChecked()) {
+					String name = jobLevelList.get(i).getValue();
+					if (!name.equalsIgnoreCase("All")) {
+						jobLevelArray.put(jobLevelList.get(i).getKey());
+					}
+				}
+			}
+			if (jobLevelArray.length() > 0) {
+				jsonObject.put("dop_job_level", jobLevelArray);
+				haveSelectCondition = true;
+			}
 			
+
+			//People Location Code 
+			List<Location> locationList = mFilters.getLocations();
+			JSONArray locationArray = new JSONArray();
+			for (int i = 0; i < locationList.size(); i ++) {
+				if (locationList.get(i).getChecked()) {
+					locationArray.put(locationList.get(i).getCode());
+				}
+			}
+			if (locationArray.length() > 0) {
+				jsonObject.put("people_location_code", locationArray);
+				haveSelectCondition = true;
+			}
+			
+			//Functional Role
+			List<FilterItem> funcationRoleList = mFilters.getFunctionalRoles();
+			JSONArray funcationRoleArray = new JSONArray();
+			for (int i = 0; i < funcationRoleList.size(); i ++) {
+				if (funcationRoleList.get(i).getChecked()) {
+					String name = funcationRoleList.get(i).getValue();
+					String key = funcationRoleList.get(i).getKey();
+					if (!name.equalsIgnoreCase("All")) {
+						funcationRoleArray.put(key);
+					}
+				}
+			}
+			if (funcationRoleArray.length() > 0) {
+				jsonObject.put("dop_functional_role", funcationRoleArray);
+				haveSelectCondition = true;
+			}
 			
 			//News Triggers
 			List<FilterItem> mDateRanges;
@@ -1214,6 +1317,7 @@ public class CommonUtil {
 				}
 				Log.v("silen", "keyword = " + searchKeywords);
 				jsonObject.put("event_search_keywords", searchKeywords);
+				haveSelectCondition = true;
 				
 				for (int i = 0; i < mDateRanges.size(); i ++) {
 					if (mDateRanges.get(i).getChecked()) {
@@ -1244,6 +1348,50 @@ public class CommonUtil {
 					jsonObject.put("search_date_range", dateRange);
 				}
 			}
+
+			//search_company_for_type
+			List<FilterItem> searchCompanyForTypes = isCompany ? mFilters.getCompanyTypesFromCompany() : mFilters.getCompanyTypesFromPeople();
+			
+			for (int i = 0; i < searchCompanyForTypes.size(); i ++) {
+				
+				if (searchCompanyForTypes.get(i).getChecked()) {
+					
+					String key = searchCompanyForTypes.get(i).getKey();
+					jsonObject.put("search_company_for_type", key);
+					
+					Log.v("silen", "key = " + key);
+					
+					if (key.equalsIgnoreCase("1")) {//specific
+						
+						Log.v("silen", "Constant.COMPANY_SEARCH_KEYWORDS = " + Constant.COMPANY_SEARCH_KEYWORDS);
+						jsonObject.put("company_search_keywords", Constant.COMPANY_SEARCH_KEYWORDS);
+						
+					} else if (key.equalsIgnoreCase("3")) {//saved companies search
+						
+						if (!isCompany) {
+							
+							List<FilterItem> savedCompanies = mFilters.getSavedCompanies();
+							for (int k = 0; k < savedCompanies.size(); k ++) {
+								
+								if (savedCompanies.get(k).getChecked()) {
+									
+									String savedCompanyId = savedCompanies.get(k).getKey();
+									jsonObject.put("filter_saved_company_search", savedCompanyId);
+									
+								}
+							}
+							
+						}
+						
+					}//TODO
+				}
+			}
+			
+			//TODO
+			//filter_saved_company_search
+//			if (!TextUtils.isEmpty(Constant.FILTER_SAVED_COMPANY_SEARCH_NAME)) {
+//				jsonObject.put("filter_saved_company_search", Constant.FILTER_SAVED_COMPANY_SEARCH_ID);
+//			}
 			
 			//Headquarters
 			List<Location> mHeadquarters = mFilters.getHeadquarters();
@@ -1256,20 +1404,9 @@ public class CommonUtil {
 			}
 			if (headquarterArray.length() > 0) {
 				jsonObject.put("location_code", headquarterArray);
+				haveSelectCondition = true;
 			}
 			
-			//search_company_for_type
-			List<FilterItem> searchCompanyForTypes = isCompany ? mFilters.getCompanyTypesFromCompany() : mFilters.getCompanyTypesFromPeople();
-			for (int i = 0; i < searchCompanyForTypes.size(); i ++) {
-				if (searchCompanyForTypes.get(i).getChecked()) {
-					String key = searchCompanyForTypes.get(i).getKey();
-					jsonObject.put("search_company_for_type", key);
-					if (key.equalsIgnoreCase("1")) {
-						Log.v("silen", "Constant.COMPANY_SEARCH_KEYWORDS = " + Constant.COMPANY_SEARCH_KEYWORDS);
-						jsonObject.put("company_search_keywords", Constant.COMPANY_SEARCH_KEYWORDS);
-					}
-				}
-			}
 			
 			//TODO
 			//Industry
@@ -1288,6 +1425,7 @@ public class CommonUtil {
 			}
 			if (industryArray.length() > 0) {
 				jsonObject.put("org_industries", industryArray);
+				haveSelectCondition = true;
 			}
 			if (industryNum == 1) {//有子公司
 				JSONArray industryChildrenArray = new JSONArray();
@@ -1308,6 +1446,7 @@ public class CommonUtil {
 				}
 				if (industryChildrenArray.length() > 0) {
 					jsonObject.put("org_sub_industries", industryChildrenArray);
+					haveSelectCondition = true;
 				}
 			}
 			
@@ -1324,6 +1463,7 @@ public class CommonUtil {
 			}
 			if (employeeArray.length() > 0) {
 				jsonObject.put("org_employee_size", employeeArray);
+				haveSelectCondition = true;
 			}
 			
 			//Revenue Size
@@ -1339,6 +1479,7 @@ public class CommonUtil {
 			}
 			if (mSalesVolumeArray.length() > 0) {
 				jsonObject.put("org_revenue_size", mSalesVolumeArray);
+				haveSelectCondition = true;
 			}
 			
 			//Ownership
@@ -1354,6 +1495,7 @@ public class CommonUtil {
 			}
 			if (mOwnershipsArray.length() > 0) {
 				jsonObject.put("org_ownership", mOwnershipsArray);
+				haveSelectCondition = true;
 			}
 			
 			//Milestone
@@ -1382,6 +1524,7 @@ public class CommonUtil {
 			}
 			
 			if (milestoneDateRanksArray.length() > 0) {
+				haveSelectCondition = true;
 				jsonObject.put("milestone_occurrence_type", milestoneDateRanksArray);
 				if (mMilestonesArray.length() > 0) {
 					jsonObject.put("milestone_type", mMilestonesArray);
@@ -1401,6 +1544,7 @@ public class CommonUtil {
 			}
 			if (mRanksArray.length() > 0) {
 				jsonObject.put("rank", mRanksArray);
+				haveSelectCondition = true;
 			}
 			
 			//Fiscal Year End
@@ -1416,58 +1560,7 @@ public class CommonUtil {
 			}
 			if (mFiscalYearEndMonthsArray.length() > 0) {
 				jsonObject.put("org_fiscal_month", mFiscalYearEndMonthsArray);
-			}
-			
-			//Job Title
-			List<JobTitle> jobTitleList = mFilters.getJobTitles();
-			for (int i = 0; i < jobTitleList.size(); i ++) {
-				if (jobTitleList.get(i).getChecked()) {
-					String name = jobTitleList.get(i).getName();
-					jsonObject.put("dop_title", name);
-				}
-			}
-			
-			//Job Level
-			List<FilterItem> jobLevelList = mFilters.getJobLevel();
-			JSONArray jobLevelArray = new JSONArray();
-			for (int i = 0; i < jobLevelList.size(); i ++) {
-				if (jobLevelList.get(i).getChecked()) {
-					String name = jobLevelList.get(i).getValue();
-					if (!name.equalsIgnoreCase("All")) {
-						jobLevelArray.put(jobLevelList.get(i).getKey());
-					}
-				}
-			}
-			if (jobLevelArray.length() > 0) {
-				jsonObject.put("dop_job_level", jobLevelArray);
-			}
-			
-			//People Location Code 
-			List<Location> locationList = mFilters.getLocations();
-			JSONArray locationArray = new JSONArray();
-			for (int i = 0; i < locationList.size(); i ++) {
-				if (locationList.get(i).getChecked()) {
-					locationArray.put(locationList.get(i).getCode());
-				}
-			}
-			if (locationArray.length() > 0) {
-				jsonObject.put("people_location_code", locationArray);
-			}
-			
-			//Functional Role
-			List<FilterItem> funcationRoleList = mFilters.getFunctionalRoles();
-			JSONArray funcationRoleArray = new JSONArray();
-			for (int i = 0; i < funcationRoleList.size(); i ++) {
-				if (funcationRoleList.get(i).getChecked()) {
-					String name = funcationRoleList.get(i).getValue();
-					String key = funcationRoleList.get(i).getKey();
-					if (!name.equalsIgnoreCase("All")) {
-						funcationRoleArray.put(key);
-					}
-				}
-			}
-			if (funcationRoleArray.length() > 0) {
-				jsonObject.put("dop_functional_role", funcationRoleArray);
+				haveSelectCondition = true;
 			}
 			
 		} catch (JSONException e) {
@@ -1475,7 +1568,11 @@ public class CommonUtil {
 		}
 		
 		Log.v("silen", "RequestData = " + jsonObject.toString());
-		return jsonObject.toString();
+		
+		requestList.add(jsonObject.toString());
+		requestList.add(haveSelectCondition + "");
+		
+		return requestList;
 	}
 	
 	public static void setLayoutWith(LinearLayout layout, FragmentActivity activity) {

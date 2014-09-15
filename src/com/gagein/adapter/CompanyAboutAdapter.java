@@ -391,6 +391,7 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		
 		setInformationValue(founed, R.string.founded, R.layout.item_about_detail, layout);
 		setInformationValue(industry, R.string.industry, R.layout.item_about_detail, layout);
+		setInformationValue(specialities, R.string.specialty, R.layout.item_about_detail, layout);
 		if (!employees.trim().equals(Constant.ZERO + "")) {
 			setInformationValue(employees, R.string.employees, R.layout.item_about_detail, layout);
 		}
@@ -401,7 +402,6 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		}
 		setInformationValue(fortuneRank, R.string.fortune_rank, R.layout.item_about_detail, layout);
 		setInformationValue(fiscalyear, R.string.fiscal_year, R.layout.item_about_detail, layout);
-		setInformationValue(specialities, R.string.specialty, R.layout.item_about_detail, layout);
 		setInformationValue(ownership, R.string.ownership, R.layout.item_about_detail, layout);
 		
 	}

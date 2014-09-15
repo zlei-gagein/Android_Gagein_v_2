@@ -4,23 +4,55 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/button"
+    <LinearLayout 
+        android:id="@+id/buttonLayout"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
-        android:background="@drawable/sort_pressed_button"
-        android:drawablePadding="15dp"
-        android:drawableRight="@drawable/sort_clear_button"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginRight="2dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textColor="@drawable/sort_text_color"
-        android:textSize="16sp" >
-    </Button>
+        android:background="@drawable/sort_pressed_button"
+        >
+        
+        <TextView 
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+	        android:ellipsize="end"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginLeft="10dp"
+	        android:textColor="@drawable/sort_text_color"
+	        android:textSize="16sp"
+	        android:text="fdasfsafdaf"
+            />
+        
+        <ImageView 
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sort_clear_button"
+            android:layout_marginRight="10dp"
+            />
+        
+    </LinearLayout>
+<!--     <Button -->
+<!--         android:id="@+id/button" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="28dp" -->
+<!--         android:background="@drawable/sort_pressed_button" -->
+<!--         android:drawablePadding="15dp" -->
+<!--         android:drawableRight="@drawable/sort_clear_button" -->
+<!--         android:gravity="center_vertical" -->
+<!--         android:paddingLeft="10dp" -->
+<!--         android:paddingRight="10dp" -->
+<!--         android:layout_marginTop="2dp" -->
+<!--         android:layout_marginBottom="2dp" -->
+<!--         android:layout_marginRight="2dp" -->
+<!--         android:singleLine="true" -->
+<!--         android:ellipsize="end" -->
+<!--         android:textColor="@drawable/sort_text_color" -->
+<!--         android:textSize="16sp" > -->
+<!--     </Button> -->
 
 </LinearLayout>

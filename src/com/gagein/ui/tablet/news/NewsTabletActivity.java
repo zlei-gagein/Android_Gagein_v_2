@@ -42,7 +42,8 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		return stringList(Constant.BROADCAST_REFRESH_NEWS, Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_LIKED_NEWS
 				,Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
 				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES,
-				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS);
+				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS, 
+				Constant.BROADCAST_IRRELEVANT_TRUE, Constant.BROADCAST_IRRELEVANT_FALSE);
 		
 	}
 	
@@ -97,6 +98,10 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 			newsFragment.refreshNews(false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_REMOVE_BOOKMARKS) || actionName.equals(Constant.BROADCAST_REMOVE_BOOKMARKS)) {
+			
+			newsFragment.refreshNews(false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_IRRELEVANT_TRUE) || actionName.equals(Constant.BROADCAST_IRRELEVANT_FALSE)) {
 			
 			newsFragment.refreshNews(false);
 			

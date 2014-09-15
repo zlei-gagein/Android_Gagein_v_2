@@ -113,14 +113,23 @@ public class CompanyNewsFilterFragment extends BaseFragment implements OnClickLi
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
+			
 			back();
+			
 		} else if (v == rightBtn) {
+			
 			closeLeftLayoutListener.closeLeftLayoutListener();
+			
 		} else if (v == news || v == newsBtn) {
+			
 			newsBtnListener.onNewsBtnListener();
+			
 		} else if (v == relevance || v == relevanceBtn) {
+			
 			relevanceBtnListener.onRelevanceBtnListener();
+			
 		}
 	}
 

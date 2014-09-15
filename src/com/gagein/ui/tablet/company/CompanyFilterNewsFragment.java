@@ -74,7 +74,7 @@ public class CompanyFilterNewsFragment extends BaseFragment implements OnItemCli
 	protected void initView() {
 		super.initView();
 		
-		setTitle(R.string.u_news);
+		setTitle(R.string.filters);
 		setLeftImageButton(R.drawable.back_arrow);
 		setRightButton(R.string.done);
 		

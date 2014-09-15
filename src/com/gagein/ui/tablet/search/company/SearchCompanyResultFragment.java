@@ -196,7 +196,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	private void searchAdvancedCompanies(final Boolean loadMore) {
 		
 		if (!loadMore) showLoadingDialog(mContext);
-		mApiHttp.searchAdvancedCompanies(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(true), new Listener<JSONObject>() {
+		mApiHttp.searchAdvancedCompanies(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(true, true).get(0), new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -274,13 +274,17 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	private void setQueryInfoDetailButton(List<QueryInfoItem> queryInfoItemList, List<QueryInfoItem> queryInfoItemList2) {
 		
 		if (null != queryInfoItemList) {
+			
 			for (int i = 0; i < queryInfoItemList.size(); i ++) {
+				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
-				button.setOnClickListener(new OnClickListener() {
-					
+				
+				buttonLayout.setOnClickListener(new OnClickListener() {
+				
 					@Override
 					public void onClick(View arg0) {
 						//判断是否有选中条件 TODO
@@ -294,6 +298,11 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 							
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
+							
+						} else if (queryType.equalsIgnoreCase("search_date_range")) {
+							
+							List<FilterItem> ranks = mFilters.getDateRanges();
+							deleteFilters(id, ranks);
 							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							
@@ -331,11 +340,6 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 							List<FilterItem> employeeSizeList = mFilters.getEmployeeSizeFromBuz();
 							deleteFilters(id, employeeSizeList);
 							
-						} else if (queryType.equalsIgnoreCase("search_date_range")) {
-							
-							List<FilterItem> ranks = mFilters.getDateRanges();
-							deleteFilters(id, ranks);
-							
 						} else if (queryType.equalsIgnoreCase("milestone_type")) {
 							
 							List<FilterItem> mileStoneList = mFilters.getMileStones();
@@ -360,7 +364,9 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 					queryInfoItem.setDisplayName(queryInfoItemList2);
 				}
 				
-				button.setText(queryInfoItem.getDisplayName());
+				textView.setText(queryInfoItem.getDisplayName());
+				
+				CommonUtil.setFilterMaxWith(textView);
 				
 				companyInfoLayout.addView(view);
 			}
@@ -458,7 +464,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 			
 			if (null == queryInfo) return;
 			
- 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true), queryInfo.getQueryInfoResult());
+ 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_COMPANY);
 			
 		} else if (v == showDetailsTx) {
@@ -505,6 +511,19 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setQueryInfoDetailButton(newsTriggersList, null);
 		
+		//EventSearchKeywords
+		if (null != queryInfo.getEventSearchKeywords()) {
+			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
+			if (!TextUtils.isEmpty(eventSearchKeywords)) {
+				String type = queryInfo.getEventSearchKeywords().getType();
+				setEventSearchKeywordsButton(eventSearchKeywords, type);
+			}
+		}
+		
+		//DateRange
+		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
+		setQueryInfoDetailButton(dateRangeList, null);
+		
 		//Companies
 		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
 		if (!companySearchKeywords.isEmpty()) {
@@ -523,17 +542,29 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 			companyInfoLayout.addView(view);
 		}
 		
+		
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForCompany();
 		setQueryInfoDetailButton(companiesList, null);
 		
+		//LocationCode
+		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
+		setQueryInfoDetailButton(locationList, null);
 		
-		//Ranks
-		List<QueryInfoItem> ranksList = queryInfo.getRanks();
-		setQueryInfoDetailButton(ranksList, null);
+		//Industries
+		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
+		setQueryInfoDetailButton(industriesList, null);
 		
-		//FiscalMonth
-		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
-		setQueryInfoDetailButton(fiscalMonthList, null);
+		//EmployeeSize
+		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
+		setQueryInfoDetailButton(employeeSizeList, null);
+		
+		//RevenueSize
+		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
+		setQueryInfoDetailButton(revenueSizeList, null);
+		
+		//Ownership
+		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
+		setQueryInfoDetailButton(ownershipList, null);
 		
 		//MileStoneOccurrenceType
 		List<QueryInfoItem> mileStoneOccurrenceTypeList = queryInfo.getMileStoneOccurrenceType();
@@ -547,38 +578,14 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 			setQueryInfoDetailButton(mileStoneTypeList, mileStoneOccurrenceTypeList);
 		}
 		
-		//Industries
-		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
-		setQueryInfoDetailButton(industriesList, null);
+		//Ranks
+		List<QueryInfoItem> ranksList = queryInfo.getRanks();
+		setQueryInfoDetailButton(ranksList, null);
 		
-		//LocationCode
-		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
-		setQueryInfoDetailButton(locationList, null);
+		//FiscalMonth
+		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
+		setQueryInfoDetailButton(fiscalMonthList, null);
 		
-		//EmployeeSize
-		List<QueryInfoItem> employeeSizeList = queryInfo.getEmployeeSize();
-		setQueryInfoDetailButton(employeeSizeList, null);
-		
-		//DateRange
-		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setQueryInfoDetailButton(dateRangeList, null);
-		
-		//Ownership
-		List<QueryInfoItem> ownershipList = queryInfo.getOwnership();
-		setQueryInfoDetailButton(ownershipList, null);
-		
-		//RevenueSize
-		List<QueryInfoItem> revenueSizeList = queryInfo.getRevenueSize();
-		setQueryInfoDetailButton(revenueSizeList, null);
-		
-		//EventSearchKeywords
-		if (null != queryInfo.getEventSearchKeywords()) {
-			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
-			if (!TextUtils.isEmpty(eventSearchKeywords)) {
-				String type = queryInfo.getEventSearchKeywords().getType();
-				setEventSearchKeywordsButton(eventSearchKeywords, type);
-			}
-		}
 	}
 
 	@Override

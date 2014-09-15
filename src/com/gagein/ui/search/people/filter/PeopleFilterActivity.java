@@ -111,7 +111,7 @@ public class PeopleFilterActivity extends BaseActivity {
 		} else if (v == newsTriggers) {
 			startActivitySimple(NewsTriggersActivity.class);
 		} else if (v == companies) {
-			startActivitySimple(PeopleFilterCompaniesActivity.class);
+			startActivitySimple(CompaniesTypeFromConActivity.class);
 		} else if (v == headquarters) {
 			startActivitySimple(HeadquartersActivity.class);
 		} else if (v == industry) {

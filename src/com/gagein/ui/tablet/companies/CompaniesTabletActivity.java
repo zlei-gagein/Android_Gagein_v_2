@@ -50,6 +50,7 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 					
 			} else if (actionName.equals(Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES)) {
 				
+				companiesFragment.setNoFollowedCompaniesLayoutGone();
 				companiesFragment.edit = false;
 				companiesFragment.nextPage = "";
 				companiesFragment.setEditStatus();
