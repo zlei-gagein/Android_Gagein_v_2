@@ -446,6 +446,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			
 			buttonLayout.setOnClickListener(new OnClickListener() {
 				
+				
 				@Override
 				public void onClick(View arg0) {
 					
