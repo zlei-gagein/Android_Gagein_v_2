@@ -775,129 +775,123 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 									isNoNews = true;
 									noNewsLayout.setVisibility(View.VISIBLE);
 									
+									/// data preparation
 									JSONObject extraInfoObject = response.optJSONObject("msg_extra_info");
-									String grade = (null == extraInfoObject) ? "" : extraInfoObject.optString("grade");
+									String grade = mCompany.grade;//(null == extraInfoObject) ? "" : extraInfoObject.optString("grade");
 									Boolean haveResource = false;
 									JSONArray resourceArray = (null == extraInfoObject) ? null : extraInfoObject.optJSONArray("resources");
 									if (null != resourceArray && resourceArray.length() > 0) haveResource = true;
 									
-									if (grade.equalsIgnoreCase("c")) {
-										
-										if (haveResource) {//have resource
-											
-											//show resource if have resource 
-											showResource(resourceArray);
-											
-										} else {//have not resource
-											// 是否是provisioned
-											
-											if (haveProcessed) {//being provisioned and will be done...
-												
-												String provisionPtStr = "This company is being provisioned and will be done by %s at %s.";
-												provisionPt.setText(String.format(provisionPtStr, "Jun 8", "7:12am"));
-												
-											} else {//is waiting to be provisioned
-												
-												String provisionPtStr = "This company is waiting to be provisioned. Help speed up processing:";
-												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.GONE);
-												
-											}
-											
-											provisionedLayout.setVisibility(View.VISIBLE);
-											
+									final List<Company> parents = mCompany.parents;
+									final List<Company> subsidiaries = mCompany.subsidiaries;
+									final List<Company> divisions = mCompany.divisions;
+									final List<Company> joinVentures = mCompany.joinVentures;
+									
+									int parentsSize = 0;
+									int subsidiariesSize = 0;
+									parentsAndSubsidiaries.clear();
+									for (int i = 0; i < parents.size(); i ++) {
+										if (!parents.get(i).followed) {
+											parentsAndSubsidiaries.add(parents.get(i));
+											parentsSize ++;
 										}
-									} else {//grade is not "c", may be is A or A2 or B
-										
-										final List<Company> parents = mCompany.parents;
-										final List<Company> subsidiaries = mCompany.subsidiaries;
-										final List<Company> divisions = mCompany.divisions;
-										final List<Company> joinVentures = mCompany.joinVentures;
-										
-										int parentsSize = 0;
-										int subsidiariesSize = 0;
-										parentsAndSubsidiaries.clear();
-										for (int i = 0; i < parents.size(); i ++) {
-											if (!parents.get(i).followed) {
-												parentsAndSubsidiaries.add(parents.get(i));
-												parentsSize ++;
-											}
+									}
+									for (int i = 0; i < subsidiaries.size(); i ++) {
+										if (!subsidiaries.get(i).followed) {
+											parentsAndSubsidiaries.add(subsidiaries.get(i));
+											subsidiariesSize ++;
 										}
-										for (int i = 0; i < subsidiaries.size(); i ++) {
-											if (!subsidiaries.get(i).followed) {
-												parentsAndSubsidiaries.add(subsidiaries.get(i));
-												subsidiariesSize ++;
-											}
+									}
+									for (int i = 0; i < joinVentures.size(); i ++) {
+										if (!joinVentures.get(i).followed) {
+											parentsAndSubsidiaries.add(joinVentures.get(i));
+											subsidiariesSize ++;
 										}
-										for (int i = 0; i < joinVentures.size(); i ++) {
-											if (!joinVentures.get(i).followed) {
-												parentsAndSubsidiaries.add(joinVentures.get(i));
-												subsidiariesSize ++;
-											}
+									}
+									for (int i = 0; i < divisions.size(); i ++) {
+										if (!divisions.get(i).followed) {
+											parentsAndSubsidiaries.add(divisions.get(i));
+											subsidiariesSize ++;
 										}
-										for (int i = 0; i < divisions.size(); i ++) {
-											if (!divisions.get(i).followed) {
-												parentsAndSubsidiaries.add(divisions.get(i));
-												subsidiariesSize ++;
-											}
-										}
+									}
+									
+									/// real logic goes here
+									//if (_associatedCompanies.count > 0 && [_company isFuckingGradeAorB]) {
+									
+									
+									if ((parentsSize > 0 || subsidiariesSize > 0) && isFuckingAorB(grade)) {
 										
+										noNewsShowLayout.setVisibility(View.VISIBLE);
 										
-										if (parentsSize > 0 || subsidiariesSize > 0) {
-											noNewsShowLayout.setVisibility(View.VISIBLE);
-											
-											String noNewsPromot = "There are no news stories in the last 180 days. Follow this company's %s to receive more news.";
-											
-											if (parentsSize > 0 && subsidiariesSize == 0) {
-												
-												noNewsPromot = String.format(noNewsPromot, (parentsSize > 1) ? "parents" : "parent");
-												
-											} else if (subsidiariesSize > 0 && parentsSize == 0) {
-												
-												noNewsPromot = String.format(noNewsPromot, (parentsSize > 1) ? "subsidiaries" : "subsidiary");
-												
-											} else {
-												
-												if (parentsSize == 1 && subsidiariesSize == 1) {
-													noNewsPromot = String.format(noNewsPromot, "parent and/or subsidiary");
-												} else if (parentsSize > 1 && subsidiariesSize == 1) {
-													noNewsPromot = String.format(noNewsPromot, "parents and/or subsidiary");
-												} else if (parentsSize == 1 && subsidiariesSize > 1) {
-													noNewsPromot = String.format(noNewsPromot, "parent and/or subsidiaries");
-												} else {
-													noNewsPromot = String.format(noNewsPromot, "parents and/or subsidiaries");
-												}
-												
-											}
-											
-											noNewsPt.setText(noNewsPromot);
-											
-											searchCompanyAdapter = new SearchCompanyAdapter(mContext, parentsAndSubsidiaries);
-											parentsOrSubsidiariesList.setAdapter(searchCompanyAdapter);
-											CommonUtil.setViewHeight(parentsOrSubsidiariesList, parentsOrSubsidiariesList.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
-											searchCompanyAdapter.notifyDataSetChanged();
-											searchCompanyAdapter.notifyDataSetInvalidated();
-											parentsOrSubsidiariesList.setOnItemClickListener(new OnItemClickListener() {
-												
-												@Override
-												public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
-													Intent intent = new Intent();
-													intent.putExtra(Constant.COMPANYID, parentsAndSubsidiaries.get(position).orgID);
-													intent.setClass(mContext, CompanyActivity.class);
-													startActivity(intent);
-												}
-											});
-											
-										} else if (haveResource) {
-											
-											showResource(resourceArray);
-											
+										String noNewsPromot = "There are no news stories in the last 180 days. Follow this company's %s to receive more news.";
+										
+										if (parentsSize > 0 && subsidiariesSize == 0) {
+											noNewsPromot = String.format(noNewsPromot, (parentsSize > 1) ? "parents" : "parent");
+										} else if (subsidiariesSize > 0 && parentsSize == 0) {
+											noNewsPromot = String.format(noNewsPromot, (parentsSize > 1) ? "subsidiaries" : "subsidiary");
 										} else {
+											if (parentsSize == 1 && subsidiariesSize == 1) {
+												noNewsPromot = String.format(noNewsPromot, "parent and/or subsidiary");
+											} else if (parentsSize > 1 && subsidiariesSize == 1) {
+												noNewsPromot = String.format(noNewsPromot, "parents and/or subsidiary");
+											} else if (parentsSize == 1 && subsidiariesSize > 1) {
+												noNewsPromot = String.format(noNewsPromot, "parent and/or subsidiaries");
+											} else {
+												noNewsPromot = String.format(noNewsPromot, "parents and/or subsidiaries");
+											}
 											
+										}
+										
+										noNewsPt.setText(noNewsPromot);
+										
+										searchCompanyAdapter = new SearchCompanyAdapter(mContext, parentsAndSubsidiaries);
+										parentsOrSubsidiariesList.setAdapter(searchCompanyAdapter);
+										CommonUtil.setViewHeight(parentsOrSubsidiariesList, parentsOrSubsidiariesList.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
+										searchCompanyAdapter.notifyDataSetChanged();
+										searchCompanyAdapter.notifyDataSetInvalidated();
+										parentsOrSubsidiariesList.setOnItemClickListener(new OnItemClickListener() {
+											
+											@Override
+											public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+												Intent intent = new Intent();
+												intent.putExtra(Constant.COMPANYID, parentsAndSubsidiaries.get(position).orgID);
+												intent.setClass(mContext, CompanyActivity.class);
+												startActivity(intent);
+											}
+										});
+									}  // end of parent/sub section
+									else if (haveResource) {
+										
+										showResource(resourceArray);
+										
+									} else if (grade.equalsIgnoreCase("a") 
+											|| grade.equalsIgnoreCase("a2")
+											|| grade.equalsIgnoreCase("b")) {
+										noNewsShowLayout.setVisibility(View.VISIBLE);
+										String noNewsPromot = "There are no news stories in the last 180 days.";
+										noNewsPt.setText(noNewsPromot);
+									} else if (!haveProcessed) {
+										if (grade.equalsIgnoreCase("a1")) {
 											noNewsShowLayout.setVisibility(View.VISIBLE);
 											String noNewsPromot = "There are no news stories in the last 180 days.";
 											noNewsPt.setText(noNewsPromot);
+										} else {
+											if (mCompany.followed) {
+												String provisionPtStr = "This company is waiting to be provisioned.";
+												provisionPt.setText(provisionPtStr);
+												provisionBottomLayout.setVisibility(View.GONE);
+												provisionedLayout.setVisibility(View.VISIBLE);
+											} else {
+												String provisionPtStr = "This company is waiting to be provisioned. Help speed up processing.";
+												provisionPt.setText(provisionPtStr);
+												provisionBottomLayout.setVisibility(View.GONE);
+												provisionedLayout.setVisibility(View.VISIBLE);
+											}
 										}
+									} else {
+										String provisionPtStr = "This company is being provisioned and will be done by %s at %s.";
+										provisionPt.setText(String.format(provisionPtStr, "Jun 8", "7:12am"));
+										provisionedLayout.setVisibility(View.VISIBLE);
 									}
 									
 								}
@@ -913,6 +907,13 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						}
 					});
 	};
+	
+	private boolean isFuckingAorB(String grade) {
+		return grade.equalsIgnoreCase("a") 
+				|| grade.equalsIgnoreCase("a1")
+				|| grade.equalsIgnoreCase("a2")
+				|| grade.equalsIgnoreCase("b");
+	}
 	
 	private void refreshParentsAndSubsidiariesStatus(Intent intent, Boolean isFollow) {
 		
