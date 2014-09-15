@@ -6,14 +6,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.gagein.R;
+import com.gagein.ui.tablet.settins.SettingsFragment.onFeedbackListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onMyAccountSelectedListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onNewsFilterSelectedListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onPrivacyListener;
+import com.gagein.ui.tablet.settins.SettingsFragment.onShareListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onTermsListener;
 import com.gagein.util.CommonUtil;
 
 public class SettingsTabletActivity extends FragmentActivity implements onNewsFilterSelectedListener, onMyAccountSelectedListener, 
-	onPrivacyListener, onTermsListener{
+	onPrivacyListener, onTermsListener, onShareListener, onFeedbackListener{
 	
 	protected boolean doubleBackToExitPressedOnce = false;
 	private FragmentTransaction transaction;
@@ -22,6 +24,8 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 	private NewsFilterFragment newsFilterFragment;
 	private PrivacyFragment privacyFragment;
 	private TermsFragment termsFragment;
+	private ShareFragment shareFragment;
+	private FeedbackFragment feedbackFragment;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -49,11 +53,17 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		if (null != newsFilterFragment) {
 			transaction.hide(newsFilterFragment);
 		}
-		if (null != privacyFragment) {
-			transaction.hide(privacyFragment);
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
 		}
 		if (null != termsFragment) {
 			transaction.hide(termsFragment);
+		}
+		if (null != privacyFragment) {
+			transaction.hide(privacyFragment);
 		}
 		transaction.commit();
 	}
@@ -69,11 +79,17 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
-		if (null != privacyFragment) {
-			transaction.hide(privacyFragment);
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
 		}
 		if (null != termsFragment) {
 			transaction.hide(termsFragment);
+		}
+		if (null != privacyFragment) {
+			transaction.hide(privacyFragment);
 		}
 		transaction.commit();
 	}
@@ -92,6 +108,12 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		if (null != newsFilterFragment) {
 			transaction.hide(newsFilterFragment);
 		}
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
+		}
 		if (null != termsFragment) {
 			transaction.hide(termsFragment);
 		}
@@ -100,22 +122,33 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 
 	@Override
 	public void onTermsClickListener() {
+		
 		transaction = getSupportFragmentManager().beginTransaction();
+		
 		if (null == termsFragment) {
 			termsFragment = new TermsFragment();
 			transaction.add(R.id.rightLayout, termsFragment);
 		}
+		
 		transaction.show(termsFragment);
+		
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
 		if (null != newsFilterFragment) {
 			transaction.hide(newsFilterFragment);
 		}
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
+		}
 		if (null != privacyFragment) {
 			transaction.hide(privacyFragment);
 		}
 		transaction.commit();
+		
 	}
 
 	@Override
@@ -134,6 +167,70 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 
             }
         }, 2000);
+	}
+
+	@Override
+	public void onShareListener() {
+		
+		transaction = getSupportFragmentManager().beginTransaction();
+		
+		if (null == shareFragment) {
+			shareFragment = new ShareFragment();
+			transaction.add(R.id.rightLayout, shareFragment);
+		}
+		
+		transaction.show(shareFragment);
+		
+		if (null != myAccountFragment) {
+			transaction.hide(myAccountFragment);
+		}
+		if (null != newsFilterFragment) {
+			transaction.hide(newsFilterFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
+		}
+		if (null != termsFragment) {
+			transaction.hide(termsFragment);
+		}
+		if (null != privacyFragment) {
+			transaction.hide(privacyFragment);
+		}
+		transaction.commit();
+		
+	}
+
+	@Override
+	public void onFeedbackListener() {
+		
+		transaction = getSupportFragmentManager().beginTransaction();
+		
+		if (null == feedbackFragment) {
+			feedbackFragment = new FeedbackFragment();
+			transaction.add(R.id.rightLayout, feedbackFragment);
+		}
+		
+		transaction.show(feedbackFragment);
+		
+		if (null != myAccountFragment) {
+			transaction.hide(myAccountFragment);
+		}
+		if (null != newsFilterFragment) {
+			transaction.hide(newsFilterFragment);
+		}
+		
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+	
+		if (null != termsFragment) {
+			transaction.hide(termsFragment);
+		}
+		if (null != privacyFragment) {
+			transaction.hide(privacyFragment);
+		}
+		transaction.commit();
+		
 	}
 	
 	

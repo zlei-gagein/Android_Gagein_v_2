@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -25,6 +26,7 @@ import com.gagein.component.dialog.ShareDialog;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Update;
+import com.gagein.util.ActivityHelper;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
 
@@ -158,6 +160,20 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 	
 	protected void alertMessageForParser(APIParser parser) {
 		CommonUtil.alertMessageForParser(parser);
+	}
+	
+	/** start web activity */
+	protected final void startWebActivity(String url) {
+		startWebActivity(url, true);
+	}
+	
+	protected final void startWebActivity(String url, boolean inApp) {
+		if (inApp) {
+			ActivityHelper.startWebActivity(url, mContext);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        	startActivity(intent);
+		}
 	}
 
 	@Override

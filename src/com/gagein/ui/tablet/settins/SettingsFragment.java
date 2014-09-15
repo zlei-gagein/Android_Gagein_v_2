@@ -23,7 +23,6 @@ import com.gagein.http.APIHttp;
 import com.gagein.ui.BaseFragment;
 import com.gagein.ui.main.LoginActivity;
 import com.gagein.ui.settings.FeedbackActivity;
-import com.gagein.ui.settings.ShareActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
@@ -39,15 +38,25 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	private Boolean tutorial = false;
 	private View view;
 	private Context mContext;
-	private onNewsFilterSelectedListener newsFilterSelectedListener;
-	private onMyAccountSelectedListener myAccountSelectedListener;
-	private onPrivacyListener privacySelectedListener;
-	private onTermsListener termsSelectedListener;
 	private TextView versionCode;
 	private TextView copyright;
 	private Button rateBtn;
 	private Button shareBtn;
 	private Button feedbackBtn;
+	private onNewsFilterSelectedListener newsFilterSelectedListener;
+	private onMyAccountSelectedListener myAccountSelectedListener;
+	private onPrivacyListener privacySelectedListener;
+	private onTermsListener termsSelectedListener;
+	private onShareListener shareListener;
+	private onFeedbackListener feedbackListener;
+	
+	public interface onFeedbackListener {
+		public void onFeedbackListener();
+	}
+	
+	public interface onShareListener {
+		public void onShareListener();
+	}
 	
 	public interface onNewsFilterSelectedListener {
 		public void onNewsFilterClickListener();
@@ -68,21 +77,37 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
+		try {
+			feedbackListener = (onFeedbackListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onFeedbackListener");
+		}
+		
+		try {
+			shareListener = (onShareListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onShareListener");
+		}
+		
 		try {
 			newsFilterSelectedListener = (onNewsFilterSelectedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement onNewsFilterSelectedListener");
 		}
+		
 		try {
 			myAccountSelectedListener = (onMyAccountSelectedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement onMyAccountSelectedListener");
 		}
+		
 		try {
 			privacySelectedListener = (onPrivacyListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement onWebPageListener");
 		}
+		
 		try {
 			termsSelectedListener = (onTermsListener) activity;
 		} catch (ClassCastException e) {
@@ -143,7 +168,9 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
+		
 		 if (v == loginOutBtn) {
+			 
 				final CommonDialog dialog = new CommonDialog(mContext);
 				dialog.setCancelable(false);
 				Window window = dialog.getWindow();
@@ -168,8 +195,16 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 						dialog.dismissDialog();
 					}
 				});
+				
+		} else if (v == rateBtn) {
+			
+			RateDialog dialog = new RateDialog(mContext);
+			dialog.showDialog();
+			
 		} else {
+			
 			resetAllButton();
+			
 			if (v == myAccountBtn) {
 				
 				setSelectedButton(myAccountBtn);
@@ -199,36 +234,45 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 				tutorial = !tutorial;
 				tutorialBtn.setBackgroundResource(tutorial ? R.drawable.tutorial_on : R.drawable.tutorial_off);
 				
-			} else if (v == rateBtn) {
-				
-				RateDialog dialog = new RateDialog(mContext);
-				dialog.showDialog();
-				
 			} else if (v == shareBtn) {
 				
-				Intent intent = new Intent();
-				intent.setClass(mContext, ShareActivity.class);
-				mContext.startActivity(intent);
+				setSelectedButton(shareBtn);
+				shareListener.onShareListener();
+				
+//				Intent intent = new Intent();
+//				intent.setClass(mContext, ShareActivity.class);
+//				mContext.startActivity(intent);
 				
 			} else if (v == feedbackBtn) {
 				
-				Intent intent = new Intent();
-				intent.setClass(mContext, FeedbackActivity.class);
-				mContext.startActivity(intent);
+				setSelectedButton(feedbackBtn);
+				feedbackListener.onFeedbackListener();
+				
+//				Intent intent = new Intent();
+//				intent.setClass(mContext, FeedbackActivity.class);
+//				mContext.startActivity(intent);
 				
 			}
 		}
 	}
 	
 	private void resetAllButton() {
+		
 		myAccountBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		myAccountBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
 		newsFilterBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		newsFilterBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
+		shareBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+		shareBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
 		privacyPolicyBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		privacyPolicyBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
 		termsBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		termsBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
 		loginOutBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		loginOutBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
 	}
