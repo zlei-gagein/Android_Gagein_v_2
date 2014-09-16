@@ -18,6 +18,7 @@
 	    android:paddingRight="@dimen/padingleft"
 	    android:divider="@null"
 	    android:listSelector="@color/transparent"
+	    android:layout_marginBottom="45dp"
 	    />
     
 </LinearLayout>

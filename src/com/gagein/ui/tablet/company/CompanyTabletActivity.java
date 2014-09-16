@@ -23,7 +23,6 @@ import com.gagein.ui.tablet.company.CompanyFragment.OnPeopleFilterClickListener;
 import com.gagein.ui.tablet.company.CompanyNewsFilterFragment.CloseLeftLayoutListener;
 import com.gagein.ui.tablet.company.CompanyNewsFilterFragment.NewsBtnClickListener;
 import com.gagein.ui.tablet.company.CompanyNewsFilterFragment.OnNewsFilterLeftBtnClickListener;
-import com.gagein.ui.tablet.company.CompanyNewsFilterFragment.RelevanceBtnClickListener;
 import com.gagein.ui.tablet.company.CompetitorFilterFragment.OnCompetitorFilterCancleBtnClickListener;
 import com.gagein.ui.tablet.company.CompetitorFilterFragment.OnCompetitorIndustryClickListener;
 import com.gagein.ui.tablet.company.CompetitorFilterIndustryFragment.OnRefreshCompetitors;
@@ -39,7 +38,7 @@ import com.gagein.ui.tablet.company.PeopleFilterFragment.OnStartFilterLinkedProf
 import com.gagein.util.Constant;
 
 public class CompanyTabletActivity extends BaseFragmentActivity implements OnNewsFilterClickListener, OnNewsFilterLeftBtnClickListener,
-	NewsBtnClickListener, RelevanceBtnClickListener, CloseLeftLayoutListener, OnFilterNewsLeftBtnClickListener, OnRefreshNewsFilterFromNewsListener
+	NewsBtnClickListener, CloseLeftLayoutListener, OnFilterNewsLeftBtnClickListener, OnRefreshNewsFilterFromNewsListener
 	, RefreshNewsFilterFromRelevance, OnFilterRelevanceLeftBtnClickListener, LeftBtnClick, OnCompetitorFilterClickListener, 
 	OnCompetitorFilterCancleBtnClickListener, OnCompetitorIndustryClickListener, 
 	OnShowCompetitorsFilterFromIndustryListener, OnShowCompetitorsFilterFromSortByListener, OnPeopleFilterClickListener, 
@@ -190,23 +189,6 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 	}
 
 	@Override
-	public void onRelevanceBtnListener() {
-		transaction = getSupportFragmentManager().beginTransaction();
-		if (null == filterRelevanceFragment) {
-			filterRelevanceFragment = new CompanyFilterRelevanceFragment();
-			transaction.add(R.id.leftLayout, filterRelevanceFragment);
-		}
-		transaction.show(filterRelevanceFragment);
-		if (null != filterNewsFragment) {
-			transaction.hide(filterNewsFragment);
-		}
-		if (null != newsFilterFragment) {
-			transaction.hide(newsFilterFragment);
-		}
-		transaction.commit();
-	}
-
-	@Override
 	public void onFilterRelevanceLeftBtnClickListener() {
 		transaction = getSupportFragmentManager().beginTransaction();
 		if (null == newsFilterFragment) {
@@ -228,7 +210,6 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		if (null == newsFilterFragment) {
 			newsFilterFragment = new CompanyNewsFilterFragment();
 		}
-		newsFilterFragment.getRelevance();
 		companyFragment.refreshNewsForFilter();
 	}
 
@@ -237,7 +218,6 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		if (null == newsFilterFragment) {
 			newsFilterFragment = new CompanyNewsFilterFragment();
 		}
-		newsFilterFragment.getRelevance();
 		
 		if (null == companyFragment) {
 			companyFragment = new CompanyFragment(mCompanyId);

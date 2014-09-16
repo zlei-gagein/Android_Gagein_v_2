@@ -182,6 +182,8 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 					
 					cancelSearchTask();
 					
+					packageAllWords();
+					
 					if (TextUtils.isEmpty(textView.getText().toString())) return false;
 					
 					difineLayout.setVisibility(View.VISIBLE);
@@ -269,6 +271,12 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		exactPhraseEdt.setText("");
 		anyWordsEdt.setText("");
 		noneWordsEdt.setText("");
+		
+		//reset triggers
+		for (int i = 0; i < mNewsTriggers.size(); i ++) {
+			mNewsTriggers.get(i).setChecked(false);
+		}
+		systemAgentAdapter.notifyDataSetChanged();
 		
 		Constant.ALLWORDS_FOR_TRIGGERS = allWordsStr;
 		

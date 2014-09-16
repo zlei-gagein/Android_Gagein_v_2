@@ -306,6 +306,12 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		anyWordsEdt.setText("");
 		noneWordsEdt.setText("");
 		
+		//reset triggers
+		for (int i = 0; i < mNewsTriggers.size(); i ++) {
+			mNewsTriggers.get(i).setChecked(false);
+		}
+		systemAgentAdapter.notifyDataSetChanged();
+		
 		Constant.ALLWORDS_FOR_TRIGGERS = allWordsStr;
 		
 		onSearchFromNewsTriggers.onSearchFromNewsTriggers();

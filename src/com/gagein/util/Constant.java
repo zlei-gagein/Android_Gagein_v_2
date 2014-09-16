@@ -60,7 +60,7 @@ public abstract class Constant {
 	
 	private static List<Update> updates;
 	
-	public static List<Agent> locationAgents = new ArrayList<Agent>();
+	public static List<Agent> locationNewsTriggers = new ArrayList<Agent>();
 	
 	public static List<SavedSearch> locationSavedSearchs = new ArrayList<SavedSearch>();
 	

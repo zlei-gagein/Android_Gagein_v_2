@@ -157,9 +157,9 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 						}
 						
 						Boolean haveSelected = false;
-						for (int i = 0; i < Constant.locationAgents.size(); i ++) {
+						for (int i = 0; i < Constant.locationNewsTriggers.size(); i ++) {
 							
-							Agent locationAgent = Constant.locationAgents.get(i);
+							Agent locationAgent = Constant.locationNewsTriggers.get(i);
 							
 							for (int j = 0; j < agents.size(); j ++) {
 								
@@ -202,11 +202,11 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 	
 	private void saveAgentToLocation() {
 		
-		Constant.locationAgents.clear();
+		Constant.locationNewsTriggers.clear();
 		
 		for (int i = 0; i < agents.size(); i ++) {
 			if (agents.get(i).checked) {
-				Constant.locationAgents.add(agents.get(i));
+				Constant.locationNewsTriggers.add(agents.get(i));
 			}
 		}
 		

@@ -50,47 +50,13 @@
     
 <!--     <include layout="@layout/lines"/> -->
     
-    <RelativeLayout
-        android:id="@+id/companyGroups" 
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/edit_hight"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/white">
-        
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:singleLine="true"
-            android:text="@string/u_groups"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/edit_text_size"/>
-        
-        <Button 
-            android:id="@+id/companyGroupsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/text_weak"
-            android:textSize="@dimen/edit_text_size"
-            android:drawableRight="@drawable/button_chevron"
-            android:drawablePadding="15dp"
-            android:background="@null"
-            />
-        
-    </RelativeLayout>
-    
-    <include layout="@layout/lines"/>
-    
     <RelativeLayout 
         android:id="@+id/news"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/edit_hight"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
+        android:layout_marginTop="30dp"
         android:background="@color/white">
         
         <TextView 

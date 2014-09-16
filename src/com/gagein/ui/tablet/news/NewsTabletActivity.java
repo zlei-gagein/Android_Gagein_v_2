@@ -259,7 +259,6 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 	}
 
 	private void refreshNews() {
-		newsFilterFragment.getRelevance();
 		if (null == newsFragment) {
 			newsFragment = new NewsFragment();
 		}

@@ -198,7 +198,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		unregisterReceiver(stratExploreReceiver);
 		mApiHttp.stop();
 		Constant.MFILTERS = null;
-		Constant.locationAgents.clear();
+		Constant.locationNewsTriggers.clear();
 		Constant.locationSavedSearchs.clear();
 	}
 

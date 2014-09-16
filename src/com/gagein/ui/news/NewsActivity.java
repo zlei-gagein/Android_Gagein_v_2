@@ -294,8 +294,8 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	private ArrayList<String> getAgentsId() {
 		
 		ArrayList<String> agentsId = new ArrayList<String>();
-		for (int i = 0; i < Constant.locationAgents.size() ; i++) {
-			Agent agent = Constant.locationAgents.get(i);
+		for (int i = 0; i < Constant.locationNewsTriggers.size() ; i++) {
+			Agent agent = Constant.locationNewsTriggers.get(i);
 			if (agent.checked && !agent.agentID.equalsIgnoreCase("0")) {
 				agentsId.add(agent.agentID);
 			}
