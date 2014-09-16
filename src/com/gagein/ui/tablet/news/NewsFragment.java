@@ -31,6 +31,7 @@ import com.gagein.component.xlistview.XListView.IXListViewListener;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
+import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.model.Update;
@@ -177,7 +178,15 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	
 	private ArrayList<String> getAgentsId() {
 		
-		return null;
+		ArrayList<String> agentsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.locationNewsTriggers.size() ; i++) {
+			Agent agent = Constant.locationNewsTriggers.get(i);
+			if (agent.checked && !agent.agentID.equalsIgnoreCase("0")) {
+				agentsId.add(agent.agentID);
+			}
+		}
+		
+		return agentsId;
 	}
 	
 	private ArrayList<String> getGroupsId() {

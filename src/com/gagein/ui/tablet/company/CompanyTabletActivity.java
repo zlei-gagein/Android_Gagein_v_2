@@ -215,9 +215,6 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 
 	@Override
 	public void onRefreshNewsFilterFromNewsListener() {
-		if (null == newsFilterFragment) {
-			newsFilterFragment = new CompanyNewsFilterFragment();
-		}
 		
 		if (null == companyFragment) {
 			companyFragment = new CompanyFragment(mCompanyId);

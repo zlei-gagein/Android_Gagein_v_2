@@ -167,10 +167,28 @@ public class APIHttp {
 	 * @param aPageFlag
 	 * @param aPageTime
 	 */
-	public void getCompanyUpdatesNoFilter(long aCompanyID, long agentID, long aNewsID, byte aPageFlag, long aPageTime, Listener<JSONObject> listener, ErrorListener errorListener) {
+	public void getCompanyUpdatesNoFilter(ArrayList<String> agentIds, long aCompanyID, long agentID, long aNewsID, byte aPageFlag, long aPageTime, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "company/" + aCompanyID + "/updates";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
+		
+		if (null != agentIds && agentIds.size() > 0) {
+			
+			if (agentIds.size() > 1) {
+				String agentKey = "agentid";
+				String agentValue = stringForMultipleValuesToOneKey(agentIds, agentKey);
+				params.put(agentKey, agentValue);
+			} else if (agentIds.size() == 1) {
+				String value = agentIds.get(0);
+				if (Integer.parseInt(value) != 0) {
+					params.put("agentid", value);
+				}
+			}
+			
+		} else {
+			params.put("agentid", "-10");
+		}
+		
 		params.put("newsid", aNewsID + "");
 		params.put("pageflag", aPageFlag + "");
 		params.put("pagetime", aPageTime + "");

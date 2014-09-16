@@ -62,6 +62,8 @@ public abstract class Constant {
 	
 	public static List<Agent> locationNewsTriggers = new ArrayList<Agent>();
 	
+	public static List<Agent> locationNewsTriggersForCompany = new ArrayList<Agent>();
+	
 	public static List<SavedSearch> locationSavedSearchs = new ArrayList<SavedSearch>();
 	
 	public static String APP_VERSION_NAME;

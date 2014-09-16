@@ -244,10 +244,11 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 
 	@Override
 	public void onRefreshNewsFilterFromNewsListener() {
-		if (null == newsFilterFragment) {
-			newsFilterFragment = new NewsFilterFragment();
+		if (null == newsFragment) {
+			newsFragment = new NewsFragment();
 		}
-		refreshNews();
+		
+		newsFragment.refreshNews(false);
 	}
 
 	@Override

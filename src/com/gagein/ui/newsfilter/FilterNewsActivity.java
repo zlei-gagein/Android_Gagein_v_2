@@ -218,8 +218,63 @@ public class FilterNewsActivity extends BaseActivity implements OnItemClickListe
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
 		selectionChanged = 1;
+		
 		Agent agent = (Agent)adapter.getItem(position);
-		agent.checked = !agent.checked;
+		Boolean checked = agent.checked;
+		
+		if (position == 0) {
+			
+			if (checked) {
+				return;
+			} else {
+				
+				for (int i = 0; i < agents.size(); i ++) {
+					agents.get(i).checked = (i == 0) ? true : false;
+				}
+				
+			}
+			
+		} else if (position == agents.size() - 1) {
+			
+			if (checked) {
+				return;
+			} else {
+				
+				for (int i = 0; i < agents.size(); i ++) {
+					agents.get(i).checked = (i == agents.size() - 1) ? true : false;
+				}
+				
+			}
+			
+		} else {
+			
+			if (checked) {
+				
+				agent.checked = !agent.checked;
+				
+				Boolean haveSelected = false;
+				for (int i = 0; i < agents.size(); i ++) {
+					
+					if (agents.get(i).checked) {
+						haveSelected = true;
+					}
+					
+				}
+				
+				if (!haveSelected) {
+					agents.get(0).checked = true;
+				}
+				
+			} else {
+				
+				agents.get(0).checked = false;
+				agents.get(agents.size() - 1).checked = false;
+				agent.checked = !agent.checked;
+				
+			}
+			
+		}
+			
 		adapter.notifyDataSetChanged();
 	}
 

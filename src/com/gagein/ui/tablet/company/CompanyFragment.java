@@ -46,6 +46,7 @@ import com.gagein.component.xlistview.XListView.IXListViewListener;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
+import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.model.Facet;
@@ -701,12 +702,24 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		});
 	}
 	
+	private ArrayList<String> getAgentsId() {
+		
+		ArrayList<String> agentsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.locationNewsTriggersForCompany.size() ; i++) {
+			Agent agent = Constant.locationNewsTriggersForCompany.get(i);
+			if (agent.checked && !agent.agentID.equalsIgnoreCase("0")) {
+				agentsId.add(agent.agentID);
+			}
+		}
+		
+		return agentsId;
+	}
 	
 	public void getNews(final boolean loadMore, final long aNewsID, byte aPageFlag, final long aPageTime, final boolean showDialog) {
 		
 		if (showDialog) showLoadingDialog(mContext);
 		if (0 == mCompanyId) return;
-			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, 0, aNewsID, aPageFlag, aPageTime,
+			mApiHttp.getCompanyUpdatesNoFilter(getAgentsId(), mCompanyId, 0, aNewsID, aPageFlag, aPageTime,
 					new Listener<JSONObject>() {
 
 						@Override

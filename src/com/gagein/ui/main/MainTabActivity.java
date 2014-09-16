@@ -199,6 +199,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		mApiHttp.stop();
 		Constant.MFILTERS = null;
 		Constant.locationNewsTriggers.clear();
+		Constant.locationNewsTriggersForCompany.clear();
 		Constant.locationSavedSearchs.clear();
 	}
 

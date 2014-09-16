@@ -32,7 +32,6 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 	private List<Agent> agents = new ArrayList<Agent>();
 	private DataPage agentsPage;
 	private ListView listView;
-	private int selectionChanged = 0;			// flag if the selection has ever been changed
 	private OnFilterNewsLeftBtnClickListener filterNewsLeftBtnListener;
 	private OnRefreshNewsFilterFromNewsListener refreshNewsFilterFromNewsListener;
 	
@@ -63,7 +62,7 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.activity_filter_news, container, false);
+		view = inflater.inflate(R.layout.activity_filter_news_company, container, false);
 		mContext = getActivity();
 		mApiHttp = new APIHttp(mContext);
 		doInit();
@@ -76,7 +75,6 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 		
 		setTitle(R.string.news_triggers);
 		setLeftImageButton(R.drawable.back_arrow);
-		setRightButton(R.string.done);
 		
 		listView = (ListView) view.findViewById(R.id.listView);
 	}
@@ -103,34 +101,6 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 			
 			back();
 			
-		} else if (v == rightBtn) {
-			
-			if (selectionChanged != 0) {
-				
-				if (null != agents) {
-					
-					Boolean haveSelected = false;
-					for (int i = 0; i < agents.size(); i ++) {
-						if (agents.get(i).checked) {
-							haveSelected = true;
-							break;
-						}
-					}
-					
-					if (!haveSelected) {
-						showShortToast(R.string.select_least_one_trigger);
-						return;
-					}
-					
-				}
-				
-				saveAgentToLocation();
-				
-			} else {
-				
-				back();
-				
-			}
 		}
 	}
 	
@@ -249,7 +219,6 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 			}
 		}
 		
-		back();
 		refreshNewsFilterFromNewsListener.onRefreshNewsFilterFromNewsListener();
 		
 	}
@@ -257,11 +226,65 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		selectionChanged = 1;
 		Agent agent = (Agent)adapter.getItem(position);
-		agent.checked = !agent.checked;
+		Boolean checked = agent.checked;
+		
+		if (position == 0) {
+			
+			if (checked) {
+				return;
+			} else {
+				
+				for (int i = 0; i < agents.size(); i ++) {
+					agents.get(i).checked = (i == 0) ? true : false;
+				}
+				
+			}
+			
+		} else if (position == agents.size() - 1) {
+			
+			if (checked) {
+				return;
+			} else {
+				
+				for (int i = 0; i < agents.size(); i ++) {
+					agents.get(i).checked = (i == agents.size() - 1) ? true : false;
+				}
+				
+			}
+			
+		} else {
+			
+			if (checked) {
+				
+				agent.checked = !agent.checked;
+				
+				Boolean haveSelected = false;
+				for (int i = 0; i < agents.size(); i ++) {
+					
+					if (agents.get(i).checked) {
+						haveSelected = true;
+					}
+					
+				}
+				
+				if (!haveSelected) {
+					agents.get(0).checked = true;
+				}
+				
+			} else {
+				
+				agents.get(0).checked = false;
+				agents.get(agents.size() - 1).checked = false;
+				agent.checked = !agent.checked;
+				
+			}
+			
+		}
+			
 		adapter.notifyDataSetChanged();
-		adapter.notifyDataSetChanged();
+		
+		saveAgentToLocation();
 		
 	}
 }

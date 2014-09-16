@@ -41,6 +41,7 @@ import com.gagein.component.xlistview.XListView;
 import com.gagein.component.xlistview.XListView.IXListViewListener;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
+import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.model.Facet;
@@ -50,7 +51,7 @@ import com.gagein.model.Person;
 import com.gagein.model.Resource;
 import com.gagein.model.Update;
 import com.gagein.ui.main.BaseActivity;
-import com.gagein.ui.newsfilter.FilterActivity;
+import com.gagein.ui.newsfilter.FilterNewsCompanyActivity;
 import com.gagein.ui.settings.ShareActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
@@ -734,12 +735,24 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		});
 	}
 	
+	private ArrayList<String> getAgentsId() {
+		
+		ArrayList<String> agentsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.locationNewsTriggersForCompany.size() ; i++) {
+			Agent agent = Constant.locationNewsTriggersForCompany.get(i);
+			if (agent.checked && !agent.agentID.equalsIgnoreCase("0")) {
+				agentsId.add(agent.agentID);
+			}
+		}
+		
+		return agentsId;
+	}
 	
 	private void getNews(final boolean loadMore, final long aNewsID, byte aPageFlag, final long aPageTime, final boolean showDialog) {
 		
 		if (showDialog) showLoadingDialog();
 		if (0 == mCompanyId) return;
-			mApiHttp.getCompanyUpdatesNoFilter(mCompanyId, 0, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0,
+			mApiHttp.getCompanyUpdatesNoFilter(getAgentsId(), mCompanyId, 0, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0,
 					new Listener<JSONObject>() {
 
 						@Override
@@ -1011,7 +1024,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			if (typeChecked == typeNews) {
 				Intent intent = new Intent();
-				intent.setClass(mContext, FilterActivity.class);
+				intent.setClass(mContext, FilterNewsCompanyActivity.class);
 				intent.putExtra(Constant.ACTIVITYNAME, "CompanyActivity");
 				startActivityForResult(intent, 0);
 			} else if (typeChecked == typePeople) {
