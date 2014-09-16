@@ -339,7 +339,6 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				final QueryInfoItem queryInfoItem = queryInfoItemList.get(i);
 				final String queryType = queryInfoItem.getType();
 				
-				
 				buttonLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -483,10 +482,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			for (int i = 0; i < peopleLocationCodes.size(); i ++) {
 				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				
 				final Location peopleLocationCode = peopleLocationCodes.get(i);
-				button.setOnClickListener(new OnClickListener() {
+				buttonLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
@@ -503,7 +503,10 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 					}
 				});
 				
-				button.setText(peopleLocationCode.getLocation());
+				textView.setText(peopleLocationCode.getLocation());
+				
+				CommonUtil.setFilterMaxWith(textView);
+				
 				pesonalInfoLayout.addView(view);
 			}
 		}
@@ -641,8 +644,10 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private void setEventSearchKeywordsButton(String value, final String type) {
 		
 		final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-		Button button = (Button) view.findViewById(R.id.button);
-		button.setOnClickListener(new OnClickListener() {
+		LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+		TextView textView = (TextView) view.findViewById(R.id.text);
+		
+		buttonLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -658,7 +663,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				searchAdvancedPersons(false);
 			}
 		});
-		button.setText(value);
+		
+		textView.setText(value);
+		
+		CommonUtil.setFilterMaxWith(textView);
+		
 		employerInfoLayout.addView(view);
 		
 	}

@@ -443,9 +443,12 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		final String jobTitleStr = queryInfo.getJobTitle();
 		
 		if (null != jobTitleStr && !jobTitleStr.isEmpty()) {
+			
 			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-			Button button = (Button) view.findViewById(R.id.button);
-			button.setOnClickListener(new OnClickListener() {
+			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+			TextView textView = (TextView) view.findViewById(R.id.text);
+			
+			buttonLayout.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
@@ -464,7 +467,11 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				}
 				
 			});
-			button.setText(jobTitleStr);
+			
+			textView.setText(jobTitleStr);
+			
+			CommonUtil.setFilterMaxWith(textView);
+			
 			pesonalInfoLayout.addView(view);
 		}	
 		
@@ -480,10 +487,12 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			for (int i = 0; i < peopleLocationCodes.size(); i ++) {
 				
 				final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-				Button button = (Button) view.findViewById(R.id.button);
-				
+				LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+				TextView textView = (TextView) view.findViewById(R.id.text);
 				final Location peopleLocationCode = peopleLocationCodes.get(i);
-				button.setOnClickListener(new OnClickListener() {
+				
+				buttonLayout.setOnClickListener(new OnClickListener() {
+				
 					
 					@Override
 					public void onClick(View arg0) {
@@ -500,7 +509,10 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					}
 				});
 				
-				button.setText(peopleLocationCode.getLocation());
+				textView.setText(peopleLocationCode.getLocation());
+				
+				CommonUtil.setFilterMaxWith(textView);
+				
 				pesonalInfoLayout.addView(view);
 			}
 		}
@@ -627,9 +639,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	}
 	
 	private void setEventSearchKeywordsButton(String value, final String type) {
+		
+		
 		final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-		Button button = (Button) view.findViewById(R.id.button);
-		button.setOnClickListener(new OnClickListener() {
+		LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+		TextView textView = (TextView) view.findViewById(R.id.text);
+		
+		buttonLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -646,8 +662,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				searchAdvancedPersons(false);
 			}
 		});
-		button.setText(value);
+		
+		textView.setText(value);
+		
+		CommonUtil.setFilterMaxWith(textView);
+		
 		employerInfoLayout.addView(view);
+		
 	}
 
 

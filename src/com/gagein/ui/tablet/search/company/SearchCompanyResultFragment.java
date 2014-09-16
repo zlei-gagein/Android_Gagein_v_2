@@ -417,8 +417,10 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	private void setEventSearchKeywordsButton(String value, final String type) {
 		
 		final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-		Button button = (Button) view.findViewById(R.id.button);
-		button.setOnClickListener(new OnClickListener() {
+		LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+		TextView textView = (TextView) view.findViewById(R.id.text);
+		
+		buttonLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -435,7 +437,11 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				searchAdvancedCompanies(false);
 			}
 		});
-		button.setText(value);
+		
+		textView.setText(value);
+		
+		CommonUtil.setFilterMaxWith(textView);
+		
 		companyInfoLayout.addView(view);
 		
 	}
@@ -527,9 +533,12 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		//Companies
 		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
 		if (!companySearchKeywords.isEmpty()) {
+			
 			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
-			Button button = (Button) view.findViewById(R.id.button);
-			button.setOnClickListener(new OnClickListener() {
+			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+			TextView textView = (TextView) view.findViewById(R.id.text);
+			
+			buttonLayout.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
@@ -538,7 +547,11 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				}
 				
 			});
-			button.setText(companySearchKeywords);
+			
+			textView.setText(companySearchKeywords);
+			
+			CommonUtil.setFilterMaxWith(textView);
+			
 			companyInfoLayout.addView(view);
 		}
 		
