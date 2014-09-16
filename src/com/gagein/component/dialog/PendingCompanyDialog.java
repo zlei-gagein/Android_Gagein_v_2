@@ -1,13 +1,9 @@
 package com.gagein.component.dialog;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,16 +13,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.gagein.R;
-import com.gagein.http.APIHttp;
-import com.gagein.http.APIParser;
 import com.gagein.util.CommonUtil;
-import com.gagein.util.Constant;
-import com.gagein.util.MessageCode;
-import com.gagein.util.Utils;
 
 /**
  * 
@@ -42,8 +30,6 @@ public class PendingCompanyDialog implements OnClickListener {
 	private EditText websiteEdt;
 	private Button cancel;
 	private Button save;
-	private long companyId;
-	private APIHttp mApiHttp;
 
 	/**
 	 * 
@@ -52,7 +38,6 @@ public class PendingCompanyDialog implements OnClickListener {
 	 */
 	public PendingCompanyDialog(final Context mContext) {
 		this.mContext = mContext;
-		mApiHttp = new APIHttp(mContext);
 		layout = R.layout.dialog_pending_company;
 		dialog = new Dialog(mContext, R.style.dialog);
 		inflater = LayoutInflater.from(mContext);
@@ -100,126 +85,35 @@ public class PendingCompanyDialog implements OnClickListener {
 		save.setTextColor(mContext.getResources().getColor(allFiledEntered ? R.color.blue_dialog : R.color.C7C7C7));
 	}
 
-	public void showDialog(String name,String website, long companyId) {
-		this.companyId = companyId;
-		nameEdt.setText(name);
-		websiteEdt.setText(website);
+	public void showDialog(OnClickListener saveClickListener) {
 		cancel.setOnClickListener(this);
-		save.setOnClickListener(this);
+		save.setOnClickListener(saveClickListener);
 		CommonUtil.setDialogWith(dialog);
 		dialog.setCancelable(false);
 		dialog.show();
+	}
+	
+	public ArrayList<String> getNameAndWebsite() {
+		String name = nameEdt.getText().toString().trim();
+		String website = websiteEdt.getText().toString().trim();
+		if (TextUtils.isEmpty(name)) {
+			CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_name));
+			return null;
+		}
+		if (TextUtils.isEmpty(website)) {
+			CommonUtil.showShortToast(mContext.getResources().getString(R.string.pls_input_website));
+			return null;
+		}
+		ArrayList<String> nameWebsite = new ArrayList<String>();
+		nameWebsite.add(name);
+		nameWebsite.add(website);
+		return nameWebsite;
 	}
 	
 	@Override
 	public void onClick(View v) {
 		if (v == cancel) {
 			dismissDialog();
-		} else if (v == save) {
-			final String name = nameEdt.getText().toString().trim();
-			final String website = websiteEdt.getText().toString().trim();
-			
-			if (TextUtils.isEmpty(name) || TextUtils.isEmpty(website)) return;
-			
-			Pattern pattern1 = Pattern.compile(Utils.regular_url1);
-			Matcher matcher1 = pattern1.matcher(website);
-			Pattern pattern2 = Pattern.compile(Utils.regular_url2);
-			Matcher matcher2 = pattern2.matcher(website);
-			
-			if (website.contains(".") && (matcher1.matches() || matcher2.matches())) {
-				
-				CommonUtil.showLoadingDialog(mContext);
-				mApiHttp.addCompanyWebsite(companyId, name , website, false, new Listener<JSONObject>() {
-	
-					@Override
-					public void onResponse(JSONObject jsonObject) {
-						
-						APIParser parser = new APIParser(jsonObject);
-						if (parser.isOK()) {
-							
-							dismissDialog();
-							
-							CommonUtil.showShortToast(mContext.getResources().getString(R.string.website_added));
-							// sent a broadcast to finish activity and refresh website
-							Intent intent = new Intent();
-							intent.setAction(Constant.BROADCAST_ADDED_PENDING_COMPANY);
-							mContext.sendBroadcast(intent);
-							
-						} else if (parser.messageCode() == MessageCode.CompanyWebConnectFailed){
-							
-							final VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
-							dialog.setCancelable(false);
-							dialog.showDialog(website, new OnClickListener() {
-								
-								@Override
-								public void onClick(View arg0) {
-									
-									dismissDialog();
-									
-									dialog.dismissDialog();
-								}
-							});
-							
-				            
-				        } else if (parser.messageCode() == MessageCode.CompanyWebConnectTimeout) {
-				        	
-				        	final VerifyingWebsiteDialog dialog = new VerifyingWebsiteDialog(mContext);
-				        	dialog.setCancelable(false);
-				        	dialog.showDialog(website, new OnClickListener() {
-								
-								@Override
-								public void onClick(View arg0) {
-									
-									dialog.dismissDialog();
-									
-									CommonUtil.showLoadingDialog(mContext);
-									mApiHttp.addNewCompanyWithName(name , website, true, new Listener<JSONObject>() {
-
-										@Override
-										public void onResponse(JSONObject jsonObject) {
-											
-											dismissDialog();
-											
-											CommonUtil.dissmissLoadingDialog();
-											APIParser parser = new APIParser(jsonObject);
-											
-											if (parser.isOK()) {
-												
-												CommonUtil.showShortToast(R.string.companies_added);
-												// sent a broadcast to finish activity and refresh website
-												Intent intent = new Intent();
-												intent.setAction(Constant.BROADCAST_ADDED_PENDING_COMPANY);
-												mContext.sendBroadcast(intent);
-												
-											}
-										}
-										
-									}, new Response.ErrorListener() {
-
-										@Override
-										public void onErrorResponse(VolleyError error) {
-											CommonUtil.dissmissLoadingDialog();
-											CommonUtil.showLongToast(mContext.getResources().getString(R.string.connection_error));
-										}
-									});
-											
-								}
-							});
-				        	
-				        }
-						CommonUtil.dissmissLoadingDialog();
-					}
-				}, new Response.ErrorListener() {
-	
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						CommonUtil.dissmissLoadingDialog();
-						CommonUtil.showLongToast(mContext.getResources().getString(R.string.connection_error));
-					}
-				});
-			} else {
-				CommonUtil.showShortToast(mContext.getResources().getString(R.string.enter_valid_url));
-			}
 		}
 	}
 	

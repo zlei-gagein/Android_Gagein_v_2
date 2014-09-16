@@ -1,9 +1,6 @@
 package com.gagein.ui;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,13 +8,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gagein.R;
 import com.gagein.adapter.CompanyCompetitorsAdapter;
-import com.gagein.http.APIParser;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.ui.main.BaseActivity;

@@ -26,7 +26,6 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.adapter.SettingsFilterAdapter;
-import com.gagein.http.APIHttp;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.model.Agent;
@@ -55,14 +54,19 @@ public class NewsFilterFragment extends BaseFragment implements OnItemClickListe
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.activity_news_filter, container, false);
-		mContext = getActivity();
-		mApiHttp = new APIHttp(mContext);
+		
 		doInit();
 		getFiltersData();
+		
 		return view;
 	}
 	
+	@Override
 	protected void initView() {
+		super.initView();
+		
+		setTitle(R.string.triggerchart);
+		
 		listView = (ListView) view.findViewById(R.id.listView);
 		selectTriggers = (TextView) view.findViewById(R.id.selectTriggers);
 		newsRelevance = (Button) view.findViewById(R.id.newsRelevance);

@@ -25,8 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.component.EmptyView;
 import com.gagein.component.dialog.ShareDialog;
@@ -36,8 +36,8 @@ import com.gagein.model.Update;
 import com.gagein.util.ActivityHelper;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.ConfigurableReceiver;
-import com.gagein.util.Constant;
 import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
+import com.gagein.util.Constant;
 import com.gagein.util.Log;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

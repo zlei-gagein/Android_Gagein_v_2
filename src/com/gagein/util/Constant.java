@@ -195,6 +195,8 @@ public abstract class Constant {
 	
 	public static String BROADCAST_ADD_BOOKMARKS = "broadcast add bookmarks";
 	
+	public static String BROADCAST_HAVE_READ_STORY = "broadcast have read story";
+	
 	public static String LINKEDIN = "linkedin";
 	public static String FACEBOOK = "facebook";
 	public static String TWITTER = "twitter";
@@ -288,6 +290,8 @@ public abstract class Constant {
 	public static String EXACTWORDS = "";
 	public static String ANYWORDS = "";
 	public static String NONEWORDS = "";
+	
+	public static int CURRENT_CATEGORY_TYPE_IN_SETTINGS = 0;
 	
 	public static List<Company> employmentHistory = new ArrayList<Company>();
 	

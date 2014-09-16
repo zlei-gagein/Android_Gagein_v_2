@@ -32,7 +32,6 @@ import com.gagein.model.filter.Filters;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 
 public class CompaniesTypeFromConActivity extends BaseActivity implements OnItemClickListener{
 	

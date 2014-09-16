@@ -3,7 +3,6 @@ package com.gagein.ui.tablet.settins;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,10 +21,8 @@ import com.gagein.R;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.ui.BaseFragment;
-import com.gagein.ui.settings.CategoryActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 
 public class FeedbackFragment extends BaseFragment implements OnClickListener{
 	
@@ -37,32 +34,47 @@ public class FeedbackFragment extends BaseFragment implements OnClickListener{
 	private RadioButton minorBtn;
 	private RadioButton majorBtn;
 	private RadioButton criticalBtn;
-	private int requestCode = 1;
 	private int categoryType = 0;
 	private String importance;
-//	private onFeedbackListener onFeedbackListener;
-//	
-//	public interface onFeedbackListener {
-//		public void onFeedbackListener();
-//	}
+	private OnCategoryListener onCategoryListener;
 	
-//	@Override
-//	public void onAttach(Activity activity) {
-//		super.onAttach(activity);
-//		
-//		try {
-//			onFeedbackListener = (onFeedbackListener) activity;
-//		} catch (ClassCastException e) {
-//			throw new ClassCastException(activity.toString() + "must implement onFeedbackListener");
-//		}
-//		
-//	}
+	public interface OnCategoryListener {
+		public void onCategoryListener();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		try {
+			onCategoryListener = (OnCategoryListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onCategoryListener");
+		}
+		
+	}
+	
+	private void resetAllStatus() {
+		
+		Constant.CURRENT_CATEGORY_TYPE_IN_SETTINGS = 0;
+		
+		categoryBtn.setText("");
+		importanceLayout.setVisibility(View.GONE);
+		subjectEdt.setText("");
+		msgEdt.setText("");
+		subjectEdt.clearFocus();
+		msgEdt.clearFocus();
+		minorBtn.setChecked(true);
+		majorBtn.setChecked(false);
+		criticalBtn.setChecked(false);
+		subjectLayout.setVisibility(View.GONE);
+		
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.activity_feedback, container, false);
-		mContext = getActivity();
 		
 		doInit();
 		return view;
@@ -95,16 +107,9 @@ public class FeedbackFragment extends BaseFragment implements OnClickListener{
 		criticalBtn.setOnClickListener(this);
 	}
 	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
-//		if (requestCode == this.requestCode) {
-//			categoryType = (null == data) ? 0 : data.getIntExtra(Constant.Category, 0);
-//			setCategoryButton(categoryType);
-//		}
-//	}
-	
-	private void setCategoryButton(int type) {
+	public void setCategoryButton() {
+		
+		int type = Constant.CURRENT_CATEGORY_TYPE_IN_SETTINGS;
 		if (APIHttpMetadata.kGGFeedbackCategoryBug == type) {
 			categoryBtn.setText(CommonUtil.stringFromResID(R.string.u_bug));
 		} else if (APIHttpMetadata.kGGFeedbackCategoryComment == type) {
@@ -134,9 +139,10 @@ public class FeedbackFragment extends BaseFragment implements OnClickListener{
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
+					
 					showShortToast(R.string.feedback_success);
-					//TODO
-//					finish();
+					resetAllStatus();
+					
 				}
 				dismissLoadingDialog();
 			}
@@ -155,11 +161,14 @@ public class FeedbackFragment extends BaseFragment implements OnClickListener{
 		super.onClick(v);
 		
 		if (v == categoryBtn) {
-			Intent intent = new Intent();
-			intent.setClass(mContext, CategoryActivity.class);
-			intent.putExtra(Constant.CategoryType, categoryType);
-			startActivityForResult(intent, requestCode);
+			
+			Constant.CURRENT_CATEGORY_TYPE_IN_SETTINGS = categoryType;
+			onCategoryListener.onCategoryListener();
+			
+			
 		} else if (v == rightBtn) {
+			
+			categoryType = Constant.CURRENT_CATEGORY_TYPE_IN_SETTINGS;
 			
 			boolean canShowExtra = (APIHttpMetadata.kGGFeedbackCategoryBug == categoryType 
 					|| APIHttpMetadata.kGGFeedbackCategoryFeatureRequest == categoryType 
@@ -187,7 +196,7 @@ public class FeedbackFragment extends BaseFragment implements OnClickListener{
 			} else if (criticalBtn.isChecked()) {
 				importance = APIHttpMetadata.GG_FEEDBACK_IMPORTANCE_CRITICAL;
 			}
-			Log.v("silen", "importance = " + importance);
+			
 			sendFeedback(categoryType, importance, message, subject);
 		}
 	}

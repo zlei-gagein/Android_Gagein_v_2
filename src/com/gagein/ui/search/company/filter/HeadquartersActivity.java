@@ -232,7 +232,9 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
+		
 		if (parent == searchListView) {
+			
 			Location location = searchLocations.get(position);
 			location.setChecked(true);
 			mHeadquarters.add(location);
@@ -240,12 +242,15 @@ public class HeadquartersActivity extends BaseActivity implements OnItemClickLis
 			add.requestFocus();//make addedt lost focus
 			CommonUtil.hideSoftKeyBoard(mContext, HeadquartersActivity.this);
 			CommonUtil.setListViewHeight(listView);
+			
 		} else if (parent == listView){
+			
 			Boolean checked = mHeadquarters.get(position).getChecked();
 			mHeadquarters.get(position).setChecked(!checked);
 			headerquartersAdapter.notifyDataSetChanged();
+			
 		}
-		//TODO
+		
 	}
 	
 }

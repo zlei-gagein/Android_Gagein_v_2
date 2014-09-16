@@ -22,7 +22,6 @@ import com.gagein.component.dialog.RateDialog;
 import com.gagein.http.APIHttp;
 import com.gagein.ui.BaseFragment;
 import com.gagein.ui.main.LoginActivity;
-import com.gagein.ui.settings.FeedbackActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
@@ -36,7 +35,6 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	private Button loginOutBtn;
 //	private TextView version;
 	private Boolean tutorial = false;
-	private View view;
 	private Context mContext;
 	private TextView versionCode;
 	private TextView copyright;
@@ -116,10 +114,10 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.activity_settings, container, false);
 		mContext = getActivity();
+		mApiHttp = new APIHttp(mContext);
 		
 		doInit();
 		return view;
@@ -127,7 +125,9 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	
 	@Override
 	protected void initView() {
-//		setTitle(R.string.u_settings);
+		super.initView();
+		
+		setTitle(R.string.u_settings);
 		
 		myAccountBtn = (Button) view.findViewById(R.id.myAccountBtn);
 		newsFilterBtn = (Button) view.findViewById(R.id.newsFilterBtn);
@@ -229,7 +229,7 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 				Constant.URL = APIHttp.serverURL + "/html/tos.html";
 				termsSelectedListener.onTermsClickListener();
 				
-			} else if (v == tutorialBtn) {//TODO 暂时没有改设计
+			} else if (v == tutorialBtn) {
 				
 				tutorial = !tutorial;
 				tutorialBtn.setBackgroundResource(tutorial ? R.drawable.tutorial_on : R.drawable.tutorial_off);
@@ -239,18 +239,10 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 				setSelectedButton(shareBtn);
 				shareListener.onShareListener();
 				
-//				Intent intent = new Intent();
-//				intent.setClass(mContext, ShareActivity.class);
-//				mContext.startActivity(intent);
-				
 			} else if (v == feedbackBtn) {
 				
 				setSelectedButton(feedbackBtn);
 				feedbackListener.onFeedbackListener();
-				
-//				Intent intent = new Intent();
-//				intent.setClass(mContext, FeedbackActivity.class);
-//				mContext.startActivity(intent);
 				
 			}
 		}
@@ -266,6 +258,9 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 		
 		shareBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		shareBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
+		
+		feedbackBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+		feedbackBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));
 		
 		privacyPolicyBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		privacyPolicyBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));

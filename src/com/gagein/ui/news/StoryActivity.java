@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,6 +47,40 @@ public class StoryActivity extends BaseActivity {
 	private Button twitters;
 	private Button webPage;
 	private List<Company> mentionedCompanies;
+
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_FOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, true);
+			
+		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
+			
+			refreshCompanyFollowStatus(intent, false);
+		}
+	}
+	
+	private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
+		
+		long companyId = intent.getLongExtra(Constant.COMPANYID, 0);
+		
+		for (int i = 0; i < update.mentionedCompanies.size(); i ++) {
+			long mCompanyId = update.mentionedCompanies.get(i).orgID;
+			if (companyId == mCompanyId) {
+				update.mentionedCompanies.get(i).followed = follow;
+			}
+		}
+		
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +93,7 @@ public class StoryActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		super.initView();
-//		setTitle(R.string.news);
+
 		setLeftImageButton(R.drawable.back_arrow);
 		setRightImageButton(R.drawable.share);
 		setRightImageButton2(0);
@@ -180,7 +215,8 @@ public class StoryActivity extends BaseActivity {
 	
 	private void getUpdateDetailFromHttp(final int position) {
 		showLoadingDialog();
-		mApiHttp.getCompanyUpdateDetail(updates.get(position).newsId, false,
+		final long newsId = updates.get(position).newsId;
+		mApiHttp.getCompanyUpdateDetail(newsId, false,
 				new Listener<JSONObject>() {
 
 					@Override
@@ -188,6 +224,12 @@ public class StoryActivity extends BaseActivity {
 
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							Intent intent = new Intent();
+							intent.putExtra(Constant.NEWSID, newsId);
+							intent.setAction(Constant.BROADCAST_HAVE_READ_STORY);
+							sendBroadcast(intent);
+							
 							update = parser.parseGetCompanyUpdateDetail();
 							updates.get(position).hasBeenRead = true;
 							

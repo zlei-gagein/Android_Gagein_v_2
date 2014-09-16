@@ -1,7 +1,5 @@
 package com.gagein.ui.company;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +7,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.gagein.R;
-import com.gagein.model.FacetItemIndustry;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.Constant;
 

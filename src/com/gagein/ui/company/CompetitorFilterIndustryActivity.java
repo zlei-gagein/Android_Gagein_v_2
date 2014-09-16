@@ -14,7 +14,6 @@ import com.gagein.adapter.CompetitorIndustryAdapter;
 import com.gagein.model.FacetItemIndustry;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 
 public class CompetitorFilterIndustryActivity extends BaseActivity implements OnItemClickListener{
 	

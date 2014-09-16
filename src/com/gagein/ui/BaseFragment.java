@@ -53,9 +53,14 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 	
 	/**do init in sequence: view, data, listenter */
 	protected void doInit() {
+		
+		mContext = getActivity();
+		mApiHttp = new APIHttp(mContext);
+		
 		initView();
 		initData();
 		setOnClickListener();
+		
 	}
 	
 	protected void initView() {

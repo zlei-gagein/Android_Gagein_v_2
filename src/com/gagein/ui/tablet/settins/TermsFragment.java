@@ -11,16 +11,12 @@ import android.webkit.WebView;
 import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.ui.BaseFragment;
-import com.gagein.util.Constant;
 import com.gagein.util.WebPageClient;
 
 public class TermsFragment extends BaseFragment{
 	
-	private View view;
 	private WebView webView;
-	private String url;
 	private WebSettings webSettings;
-	private String privacyURL;
 	private String termsURL;
 	private WebPageClient webPageClient;
 
@@ -29,34 +25,36 @@ public class TermsFragment extends BaseFragment{
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.activity_webpage, container, false);
 		
-		initData();
+		doInit();
 		return view;
 	}
 	
+	@Override
+	protected void initView() {
+		super.initView();
+		
+		setTitle(R.string.terms_of_service);
+		
+	}
+	
+	@Override
 	protected void initData() {
+		super.initData();
+		
 		webPageClient = new WebPageClient(mContext);
-		privacyURL = APIHttp.serverURL + "/html/privacy.html";
-		termsURL = APIHttp.serverURL + "/html/tos.html";
-		url = Constant.URL;
-		if (null == url) return;
-		if (!url.contains("http://") && !url.contains("https://")) {
-			url = "http://" + url;
-		}
+		termsURL = APIHttp.serverURL + "/html/tos_v2.0.html";
+		
 		webView = (WebView) view.findViewById(R.id.webview);
 		webSettings = webView.getSettings();
 		
-		if (url.equals(privacyURL) || url.equals(termsURL)) {
-			webView.setInitialScale(60);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				webSettings.setUseWideViewPort(true);
-				webSettings.setLoadWithOverviewMode(true);
-			}
-		} else {
-			webSettings.setSupportZoom(true);
-			webSettings.setBuiltInZoomControls(true);
-			webSettings.setDisplayZoomControls(false);
+		webView.setInitialScale(60);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			webSettings.setUseWideViewPort(true);
+			webSettings.setLoadWithOverviewMode(true);
 		}
+		
 		webView.setWebViewClient(webPageClient);
-		webView.loadUrl(url);
+		webView.loadUrl(termsURL);
+		
 	}
 }

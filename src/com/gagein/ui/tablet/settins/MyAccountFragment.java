@@ -38,7 +38,6 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	private LinearLayout clearJobTitle;
 	private LinearLayout layout;
 	private UserProfile profile;
-	private View view;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +50,12 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		return view;
 	}
 	
+	@Override
 	protected void initView() {
+		super.initView();
+		
+		setTitle(R.string.my_account);
+		
 		nameEdt = (EditText) view.findViewById(R.id.nameEdt);
 		emailEdt = (EditText) view.findViewById(R.id.emailEdt);
 		companyEdt = (EditText) view.findViewById(R.id.companyEdt);
@@ -63,7 +67,10 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		layout = (LinearLayout) view.findViewById(R.id.layout);
 	}
 	
+	@Override
 	protected void initData() {
+		super.initData();
+		
 		getMyOverView();
 	}
 	
@@ -94,7 +101,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		jobTitleEdt.setText(profile.orgTitle);
 	}
 	
-	private void getMyOverView() {
+	public void getMyOverView() {
 		showLoadingDialog(getActivity());
 		mApiHttp.getMyOverview(new Listener<JSONObject>() {
 

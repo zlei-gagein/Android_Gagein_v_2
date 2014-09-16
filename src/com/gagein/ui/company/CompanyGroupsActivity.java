@@ -20,8 +20,6 @@ import com.gagein.http.APIParser;
 import com.gagein.model.DataPage;
 import com.gagein.model.Group;
 import com.gagein.ui.main.BaseActivity;
-import com.gagein.util.CommonUtil;
-import com.gagein.util.Log;
 
 public class CompanyGroupsActivity extends BaseActivity implements OnItemClickListener{
 	

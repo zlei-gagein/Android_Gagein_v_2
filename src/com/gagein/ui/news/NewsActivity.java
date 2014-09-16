@@ -61,7 +61,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 				,Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_ADD_NEW_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY, 
 				Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_REMOVE_PENDING_COMPANIES, 
 				Constant.BROADCAST_REMOVE_COMPANIES, Constant.BROADCAST_REMOVE_BOOKMARKS, Constant.BROADCAST_ADD_BOOKMARKS, 
-				Constant.BROADCAST_IRRELEVANT_TRUE, Constant.BROADCAST_IRRELEVANT_FALSE);
+				Constant.BROADCAST_IRRELEVANT_TRUE, Constant.BROADCAST_IRRELEVANT_FALSE, Constant.BROADCAST_HAVE_READ_STORY);
 	}
 	
 	@Override
@@ -120,7 +120,26 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 			
 			refreshNews(false);
 			
+		} else if (actionName.equals(Constant.BROADCAST_HAVE_READ_STORY)) {
+			
+			haveReadStory(intent);
+			newsAdapter.notifyDataSetChanged();
+			
 		}
+		
+	}
+	
+	private void haveReadStory(Intent intent) {
+		
+		long newsId = intent.getLongExtra(Constant.NEWSID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			if (updates.get(i).newsId == newsId) {
+				updates.get(i).hasBeenRead = true;
+				
+			}
+		}
+		
 	}
 	
 	@Override

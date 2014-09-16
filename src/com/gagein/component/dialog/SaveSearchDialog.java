@@ -20,7 +20,6 @@ import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
-import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 

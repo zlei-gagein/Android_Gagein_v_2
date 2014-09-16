@@ -70,7 +70,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 	private String exactWords = "";
 	private String anyWords = "";
 	private String noneWords = "";
-	private ImageView search;
+	private ImageView searchIcon;
 	private ListView currentListView;
 	
 	@Override
@@ -89,7 +89,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		
 		systemAgentsListView = (ListView) findViewById(R.id.systemAgentsList);
 		dataRankListView = (ListView) findViewById(R.id.dataRankList);
-		search = (ImageView) findViewById(R.id.search);
+		searchIcon = (ImageView) findViewById(R.id.search);
 		
 		allWordsListView = (ListView) findViewById(R.id.allWordsListView);
 		exactPhraseListView = (ListView) findViewById(R.id.exactPhraseListView);
@@ -156,6 +156,8 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 						allWordsEdt.setHint(R.string.search_keyword);
 					}
 					
+					setSearchImageColor();
+					
 				} else {
 					
 					scheduleSearchTask(character, 800, allWordsListView);
@@ -200,9 +202,14 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
 					removeListView(exactPhraseListView);
+					
+					setSearchImageColor();
+					
 				} else {
 					scheduleSearchTask(character, 800, exactPhraseListView);
 				};
@@ -222,11 +229,18 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
+				
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
 					removeListView(anyWordsListView);
+					setSearchImageColor();
+					
 				} else {
+					
 					scheduleSearchTask(character, 800, anyWordsListView);
+					
 				};
 			}
 
@@ -244,11 +258,18 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
 				String character = s.toString().trim();
+				
 				if (TextUtils.isEmpty(character) || null == character){ 
+					
 					removeListView(noneWordsListView);
+					setSearchImageColor();
+					
 				} else {
+					
 					scheduleSearchTask(character, 800, noneWordsListView);
+					
 				};
 			}
 
@@ -266,6 +287,19 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		exactPhraseEdt.setOnFocusChangeListener(this);
 		anyWordsEdt.setOnFocusChangeListener(this);
 		noneWordsEdt.setOnFocusChangeListener(this);
+	}
+	
+	private void setSearchImageColor() {
+		
+		Boolean allEditHaveText = false;
+		
+		if (!TextUtils.isEmpty(allWordsEdt.getText().toString()) || !TextUtils.isEmpty(exactPhraseEdt.getText().toString())
+				|| !TextUtils.isEmpty(anyWordsEdt.getText().toString()) || !TextUtils.isEmpty(noneWordsEdt.getText().toString())) {
+			allEditHaveText = true;
+		}
+		
+		searchIcon.setBackgroundResource(allEditHaveText ? R.drawable.search_orange : R.drawable.search_gray);
+		
 	}
 	
 	@Override
@@ -439,7 +473,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			setPastDateShow();//set past date show or hide
 			
 			Constant.DEFINEWORDS = false;
-			search.setBackgroundResource(R.drawable.search_gray);
+			searchIcon.setBackgroundResource(R.drawable.search_gray);
 		} else if (parentView == dataRankListView) {
 			Boolean checked = mDateRanks.get(position).getChecked();
 			if (!checked) {
@@ -476,7 +510,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 				mNewsTriggers.get(i).setChecked(false);
 			}
 			Constant.DEFINEWORDS = true;
-			search.setBackgroundResource(R.drawable.search_orange);
+			searchIcon.setBackgroundResource(R.drawable.search_orange);
 			for (int i = 0; i < mNewsTriggers.size(); i ++) {
 				mNewsTriggers.get(i).setChecked(false);
 			}
@@ -526,7 +560,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		anyWordsEdt.setText(anyWords);
 		noneWordsEdt.setText(noneWords);
 		if (Constant.DEFINEWORDS) {
-			search.setBackgroundResource(R.drawable.search_orange);
+			searchIcon.setBackgroundResource(R.drawable.search_orange);
 			thePastLayout.setVisibility(View.VISIBLE);
 		}
 	}

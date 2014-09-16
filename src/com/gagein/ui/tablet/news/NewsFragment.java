@@ -46,7 +46,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	private Context mContext;
 	private long companyId = APIHttpMetadata.GETALL;
 	private List<Update> updates = new ArrayList<Update>();
-	private NewsAdapter newsAdapter;
+	public NewsAdapter newsAdapter;
 	private DataPage dataPage;
 	private final int FRESHOK = 0;
 	private Boolean haveMoreNews = false;
@@ -72,6 +72,19 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement onFilterClickListener");
 		}
+	}
+	
+	public void haveReadStory(Intent intent) {
+		
+		long newsId = intent.getLongExtra(Constant.NEWSID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			if (updates.get(i).newsId == newsId) {
+				updates.get(i).hasBeenRead = true;
+				
+			}
+		}
+		
 	}
 
 	@Override

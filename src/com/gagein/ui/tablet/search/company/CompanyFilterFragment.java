@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gagein.R;
-import com.gagein.http.APIHttp;
 import com.gagein.ui.BaseFragment;
 
 public class CompanyFilterFragment extends BaseFragment {
@@ -147,8 +146,6 @@ public class CompanyFilterFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.activity_search_company_filter, container, false);
-		mContext = getActivity();
-		mApiHttp = new APIHttp(mContext);
 		
 		doInit();
 		return view;
@@ -157,6 +154,7 @@ public class CompanyFilterFragment extends BaseFragment {
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setTitle(R.string.company_filters);
 		setLeftButton(R.string.cancel);
 		setRightButton(R.string.u_search);
