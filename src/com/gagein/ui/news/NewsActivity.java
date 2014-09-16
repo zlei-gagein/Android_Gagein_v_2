@@ -309,7 +309,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 		return null;
 	}
 	
-	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
+	private void getNews(long aNewsID, final byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
 		if (showDialog) showLoadingDialog();
 		mApiHttp.getCompanyUpdates(getAgentsId(), getGroupsId(), companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
 			@Override
@@ -341,10 +341,15 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 					
 					if (updates != null) {
 						listview.setPullLoadEnable(false);
-						updates.clear();
+						//updates.clear();
 						if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
 					}
-					noNews.setVisibility(View.VISIBLE);
+					
+					if (APIHttpMetadata.kGGPageFlagFirstPage == aPageFlag) {
+						noNews.setVisibility(View.VISIBLE);
+					} else {
+						noNews.setVisibility(View.GONE);
+					}
 				}
 				firstSignUp.setVisibility(View.GONE);
 				dismissLoadingDialog();

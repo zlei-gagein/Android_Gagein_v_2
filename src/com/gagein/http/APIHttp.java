@@ -451,20 +451,50 @@ public class APIHttp {
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		
+		/*if (anAgentID.count > 0 && !(anAgentID.count == 1 && [anAgentID.firstObject integerValue] == 0)) {
+        [parameters setObjectIfNotNil:anAgentID forKey:@"agentid"];
+    }
+    
+    if (groupid > 0 || groupid == GROUP_ID_LINKED_COMPANIES) {
+        [parameters setObject:@(groupid) forKey:@"groupid"];
+    }
+    
+    if (fuckingType > 0) {
+        [parameters setObject:@(fuckingType) forKey:@"follow_link_type"];
+    }*/
+		// TODO : this parameter should be passed trough outside !!! 
+		params.put("follow_link_type", "1");
+		
 		if (null != agentIds && agentIds.size() > 0) {
-			String agentKey = "agentid";
-			String agentValue = stringForMultipleValuesToOneKey(agentIds, agentKey);
-			params.put(agentKey, agentValue);
+			
+			if (agentIds.size() > 1) {
+				String agentKey = "agentid";
+				String agentValue = stringForMultipleValuesToOneKey(agentIds, agentKey);
+				params.put(agentKey, agentValue);
+			} else if (agentIds.size() == 1) {
+				String value = agentIds.get(0);
+				if (Integer.parseInt(value) != 0) {
+					params.put("agentid", value);
+				}
+			}
+			
 		} else {
 			params.put("agentid", "-10");
 		}
 		
-		if (null != groupIds && groupIds.size() > 0) {
-			String groupKey = "groupid";
-			String groupValue = stringForMultipleValuesToOneKey(groupIds, groupKey);
-			params.put(groupKey, groupValue);
-		} else {
-			params.put("groupid", "-10");
+		if (null != groupIds) {
+			
+			if (groupIds.size() > 1) {
+				String groupKey = "groupid";
+				String groupValue = stringForMultipleValuesToOneKey(groupIds, groupKey);
+				params.put(groupKey, groupValue);
+			} else if (groupIds.size() == 1) {
+				String value = groupIds.get(0);
+				int valueInt = Integer.parseInt(value);
+				if (valueInt > 0 || valueInt == -20) {
+					params.put("groupid", value);
+				}
+			}	
 		}
 		
 		params.put("newsid", aNewsID + "");
