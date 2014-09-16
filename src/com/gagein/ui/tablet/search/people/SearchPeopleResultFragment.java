@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -529,15 +528,6 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setInfoDetailButton(newsTriggersList, employer, null);
 		
-		//EventSearchKeywords
-		if (null != queryInfo.getEventSearchKeywords()) {
-			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
-			if (!TextUtils.isEmpty(eventSearchKeywords)) {
-				String type = queryInfo.getEventSearchKeywords().getType();
-				setEventSearchKeywordsButton(eventSearchKeywords, type);
-			}
-		}
-		
 		//DateRange
 		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
 		setInfoDetailButton(dateRangeList, employer, null);
@@ -549,6 +539,15 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		//SavedCompanies
 		List<QueryInfoItem> savedCompanies = queryInfo.getSavedCompany();
 		setInfoDetailButton(savedCompanies, employer, null);
+		
+		//EventSearchKeywords
+		if (null != queryInfo.getEventSearchKeywords()) {
+			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
+			if (!TextUtils.isEmpty(eventSearchKeywords)) {
+				String type = queryInfo.getEventSearchKeywords().getType();
+				setEventSearchKeywordsButton(eventSearchKeywords, type);
+			}
+		}
 		
 		//LocationCode
 		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
@@ -649,6 +648,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			
 			@Override
 			public void onClick(View arg0) {
+				
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
 				Log.v("silen", "type = " + type);
@@ -657,6 +657,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				Constant.EXACTWORDS = "";
 				Constant.ANYWORDS = "";
 				Constant.NONEWORDS = "";
+				
+				Constant.COMPANY_SEARCH_KEYWORDS = "";
+				
+				List<FilterItem> peopleTypes = mFilters.getCompanyTypesFromPeople();
+				for (int i = 0; i < peopleTypes.size(); i ++) {
+					peopleTypes.get(i).setChecked(i == 2 ? true : false);
+				}
 				
 				PAGENUM = 1;
 				searchAdvancedPersons(false);

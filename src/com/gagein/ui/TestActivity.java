@@ -43,7 +43,7 @@ public class TestActivity extends BaseActivity implements OnItemClickListener{
 		// TODO Auto-generated method stub
 		super.initView();
 		
-		mStickyList = (StickyListHeadersListView) findViewById(R.id.list);
+//		mStickyList = (StickyListHeadersListView) findViewById(R.id.list);
 		headView = LayoutInflater.from(mContext).inflate(R.layout.header_company, null);
 	}
 	

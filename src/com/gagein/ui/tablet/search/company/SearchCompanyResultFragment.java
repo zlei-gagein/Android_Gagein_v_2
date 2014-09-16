@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -543,6 +542,17 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
+					
+					companyInfoLayout.removeView(view);
+					Constant.COMPANY_SEARCH_KEYWORDS = "";
+					
+					List<FilterItem> companyTypes = mFilters.getCompanyTypesFromCompany();
+					for (int i = 0; i < companyTypes.size(); i ++) {
+						companyTypes.get(i).setChecked(i == 2 ? true : false);
+					}
+					
+					PAGENUM = 1;
+					searchAdvancedCompanies(false);
 					
 				}
 				

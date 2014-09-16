@@ -144,6 +144,8 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			@Override
 			public void afterTextChanged(Editable s) {
 				
+				setSearchImageColor();
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
 					
@@ -156,7 +158,6 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 						allWordsEdt.setHint(R.string.search_keyword);
 					}
 					
-					setSearchImageColor();
 					
 				} else {
 					
@@ -203,12 +204,13 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			@Override
 			public void afterTextChanged(Editable s) {
 				
+				setSearchImageColor();
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){ 
 					
 					removeListView(exactPhraseListView);
 					
-					setSearchImageColor();
 					
 				} else {
 					scheduleSearchTask(character, 800, exactPhraseListView);
@@ -230,12 +232,13 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			@Override
 			public void afterTextChanged(Editable s) {
 				
+				setSearchImageColor();
+				
 				String character = s.toString().trim();
 				
 				if (TextUtils.isEmpty(character) || null == character){ 
 					
 					removeListView(anyWordsListView);
-					setSearchImageColor();
 					
 				} else {
 					
@@ -259,12 +262,13 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			@Override
 			public void afterTextChanged(Editable s) {
 				
+				setSearchImageColor();
+				
 				String character = s.toString().trim();
 				
 				if (TextUtils.isEmpty(character) || null == character){ 
 					
 					removeListView(noneWordsListView);
-					setSearchImageColor();
 					
 				} else {
 					

@@ -1312,8 +1312,8 @@ public class CommonUtil {
 						searchKeywords = searchKeywords + " " + "-" + word;
 					}
 					
-//					noneWords.replace(" ", " -");//TODO 如果遇到两个空格怎么办
-//					searchKeywords = searchKeywords + " " + "-" + noneWords;
+					noneWords.replace(" ", " -");//TODO 如果遇到两个空格怎么办
+					searchKeywords = searchKeywords + " " + "-" + noneWords;
 				}
 				Log.v("silen", "keyword = " + searchKeywords);
 				jsonObject.put("event_search_keywords", searchKeywords);

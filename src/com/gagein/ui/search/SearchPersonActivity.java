@@ -651,16 +651,26 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			
 			@Override
 			public void onClick(View arg0) {
+				
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
+				Log.v("silen", "type = " + type);
 				Constant.DEFINEWORDS = false;
 				Constant.ALLWORDS = "";
 				Constant.EXACTWORDS = "";
 				Constant.ANYWORDS = "";
 				Constant.NONEWORDS = "";
 				
+				Constant.COMPANY_SEARCH_KEYWORDS = "";
+				
+				List<FilterItem> peopleTypes = mFilters.getCompanyTypesFromPeople();
+				for (int i = 0; i < peopleTypes.size(); i ++) {
+					peopleTypes.get(i).setChecked(i == 2 ? true : false);
+				}
+				
 				PAGENUM = 1;
 				searchAdvancedPersons(false);
+				
 			}
 		});
 		
