@@ -652,11 +652,10 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
 				Log.v("silen", "type = " + type);
-				Constant.DEFINEWORDS = false;
-				Constant.ALLWORDS = "";
-				Constant.EXACTWORDS = "";
-				Constant.ANYWORDS = "";
-				Constant.NONEWORDS = "";
+				Constant.ALLWORDS_FOR_TRIGGERS = "";
+//				Constant.EXACTWORDS = "";
+//				Constant.ANYWORDS = "";
+//				Constant.NONEWORDS = "";
 				
 				Constant.COMPANY_SEARCH_KEYWORDS = "";
 				

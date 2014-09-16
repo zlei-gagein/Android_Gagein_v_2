@@ -284,12 +284,11 @@ public abstract class Constant {
 	public static List<Company> CURRENT_PENDING_COMPANY = new ArrayList<Company>();
 	
 	public static Boolean REVERSE = false;
-	public static Boolean DEFINEWORDS = false;
 	public static String COMPANY_SEARCH_KEYWORDS = "";
-	public static String ALLWORDS = "";
-	public static String EXACTWORDS = "";
-	public static String ANYWORDS = "";
-	public static String NONEWORDS = "";
+	public static String ALLWORDS_FOR_TRIGGERS = "";
+//	public static String EXACTWORDS = "";
+//	public static String ANYWORDS = "";
+//	public static String NONEWORDS = "";
 	
 	public static int CURRENT_CATEGORY_TYPE_IN_SETTINGS = 0;
 	

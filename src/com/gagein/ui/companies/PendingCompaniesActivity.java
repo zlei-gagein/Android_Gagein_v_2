@@ -153,7 +153,7 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 		}
 		
 		final Company company = pendingCompanies.get(position - 1);
-		final PendingCompanyDialog dialog = new PendingCompanyDialog(mContext);
+		final PendingCompanyDialog dialog = new PendingCompanyDialog(mContext, company.name);
 		dialog.showDialog(new OnClickListener() {
 			
 			@Override
@@ -173,7 +173,7 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 		if (null == nameWebsite) return;
 		
 		final String name = mCompany.name;
-		final String website = mCompany.website;
+		final String website = dialog.getNameAndWebsite().get(1);
 		
 		
 		final APIHttp mApiHttp = new APIHttp(mContext);

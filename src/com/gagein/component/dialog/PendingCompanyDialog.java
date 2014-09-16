@@ -36,7 +36,7 @@ public class PendingCompanyDialog implements OnClickListener {
 	 * @param mContext
 	 * @param enable true ? enable : closer
 	 */
-	public PendingCompanyDialog(final Context mContext) {
+	public PendingCompanyDialog(final Context mContext, String name) {
 		this.mContext = mContext;
 		layout = R.layout.dialog_pending_company;
 		dialog = new Dialog(mContext, R.style.dialog);
@@ -47,6 +47,7 @@ public class PendingCompanyDialog implements OnClickListener {
 		cancel = (Button) view.findViewById(R.id.cancel);
 		save = (Button) view.findViewById(R.id.save);
 		dialog.setContentView(view);
+		nameEdt.setText(name);
 		
 		
 		nameEdt.addTextChangedListener(new TextWatcher() {

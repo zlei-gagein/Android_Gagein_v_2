@@ -62,9 +62,9 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	private EditText anyWordsEdt;
 	private EditText noneWordsEdt;
 	private ListView allWordsListView;
-	private ListView exactPhraseListView;
-	private ListView anyWordsListView;
-	private ListView noneWordsListView;
+//	private ListView exactPhraseListView;
+//	private ListView anyWordsListView;
+//	private ListView noneWordsListView;
 	private int checkedSystemAgentPosition;
 	private TimerTask timerTask;
 	private Timer timer;
@@ -124,9 +124,9 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		searchIcon = (ImageView) view.findViewById(R.id.search);
 		
 		allWordsListView = (ListView) view.findViewById(R.id.allWordsListView);
-		exactPhraseListView = (ListView) view.findViewById(R.id.exactPhraseListView);
-		anyWordsListView = (ListView) view.findViewById(R.id.anyWordsListView);
-		noneWordsListView = (ListView) view.findViewById(R.id.noneWordsListView);
+//		exactPhraseListView = (ListView) view.findViewById(R.id.exactPhraseListView);
+//		anyWordsListView = (ListView) view.findViewById(R.id.anyWordsListView);
+//		noneWordsListView = (ListView) view.findViewById(R.id.noneWordsListView);
 		
 		thePastLayout = (LinearLayout) view.findViewById(R.id.thePastLayout);
 		difineLayout = (LinearLayout) view.findViewById(R.id.difineLayout);
@@ -139,10 +139,10 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		Constant.ALLWORDS = allWordsEdt.getText().toString().trim();
-		Constant.EXACTWORDS = exactPhraseEdt.getText().toString().trim();
-		Constant.ANYWORDS = anyWordsEdt.getText().toString().trim();
-		Constant.NONEWORDS = noneWordsEdt.getText().toString().trim();
+		Constant.ALLWORDS_FOR_TRIGGERS = allWordsEdt.getText().toString().trim();
+//		Constant.EXACTWORDS = exactPhraseEdt.getText().toString().trim();
+//		Constant.ANYWORDS = anyWordsEdt.getText().toString().trim();
+//		Constant.NONEWORDS = noneWordsEdt.getText().toString().trim();
 	}
 	
 	@Override
@@ -151,10 +151,10 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
 		mDateRanks = mFilters.getDateRanges();
-		allWords = Constant.ALLWORDS;
-		exactWords = Constant.EXACTWORDS;
-		anyWords = Constant.ANYWORDS;
-		noneWords = Constant.NONEWORDS;
+		allWords = Constant.ALLWORDS_FOR_TRIGGERS;
+//		exactWords = Constant.EXACTWORDS;
+//		anyWords = Constant.ANYWORDS;
+//		noneWords = Constant.NONEWORDS;
 		
 		searchAdapter = new SearchAgentAdapter(mContext, agents);
 		systemAgentAdapter = new FilterAdapter(mContext, mNewsTriggers);
@@ -213,15 +213,20 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 				
 				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
 					
+					setSearchImageColor();
+					
 					CommonUtil.hideSoftKeyBoard(mContext, getActivity());
 					
 					allWordsEdt.setText(textView.getText().toString());
 					
+					allWordsEdt.clearFocus();
+					
 					cancelSearchTask();
+					
 					
 					if (TextUtils.isEmpty(textView.getText().toString())) return false;
 					
-					
+					difineLayout.setVisibility(View.VISIBLE);
 //					scheduleSearchTask(textView.getText().toString(), 0, allWordsListView);
 					
 					return true;
@@ -230,92 +235,48 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			}
 		});
 		
-		exactPhraseEdt.addTextChangedListener(new TextWatcher() {
+		exactPhraseEdt.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
-			public void afterTextChanged(Editable s) {
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				String character = s.toString().trim();
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					//TODO
+					onSearchFromNewsTriggers.onSearchFromNewsTriggers();
+				}
 				
-				if (TextUtils.isEmpty(character) || null == character){ 
-					
-					cancelSearchTask();
-					removeListView(exactPhraseListView);
-					
-					setSearchImageColor();
-					
-				} else {
-					scheduleSearchTask(character, 800, exactPhraseListView);
-				};
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
+				return false;
+				
 			}
 		});
 		
-		anyWordsEdt.addTextChangedListener(new TextWatcher() {
+		anyWordsEdt.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
-			public void afterTextChanged(Editable s) {
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				String character = s.toString().trim();
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					//TODO
+					onSearchFromNewsTriggers.onSearchFromNewsTriggers();
+				}
 				
-				if (TextUtils.isEmpty(character) || null == character){ 
-					
-					cancelSearchTask();
-					removeListView(anyWordsListView);
-					setSearchImageColor();
-					
-				} else {
-					
-					scheduleSearchTask(character, 800, anyWordsListView);
-					
-				};
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
+				return false;
+				
 			}
 		});
 		
-		noneWordsEdt.addTextChangedListener(new TextWatcher() {
+		noneWordsEdt.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
-			public void afterTextChanged(Editable s) {
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				String character = s.toString().trim();
+				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+					//TODO
+					onSearchFromNewsTriggers.onSearchFromNewsTriggers();
+				}
 				
-				if (TextUtils.isEmpty(character) || null == character){ 
-					
-					cancelSearchTask();
-					removeListView(noneWordsListView);
-					setSearchImageColor();
-					
-				} else {
-					
-					scheduleSearchTask(character, 800, noneWordsListView);
-					
-				};
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
+				return false;
+				
 			}
 		});
 		
@@ -348,13 +309,14 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		if (!changed) {
 			if (view == allWordsEdt) {
 				removeListView(allWordsListView);
-			} else if (view == exactPhraseEdt) {
-				removeListView(exactPhraseListView);
-			} else if (view == anyWordsEdt) {
-				removeListView(anyWordsListView);
-			} else if (view == noneWordsEdt) {
-				removeListView(noneWordsListView);
 			}
+//			else if (view == exactPhraseEdt) {
+//				removeListView(exactPhraseListView);
+//			} else if (view == anyWordsEdt) {
+//				removeListView(anyWordsListView);
+//			} else if (view == noneWordsEdt) {
+//				removeListView(noneWordsListView);
+//			}
 		}
 	}
 	
@@ -440,9 +402,9 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		dataRankListView.setOnItemClickListener(this);
 		
 		allWordsListView.setOnItemClickListener(this);
-		exactPhraseListView.setOnItemClickListener(this);
-		anyWordsListView.setOnItemClickListener(this);
-		noneWordsListView.setOnItemClickListener(this);
+//		exactPhraseListView.setOnItemClickListener(this);
+//		anyWordsListView.setOnItemClickListener(this);
+//		noneWordsListView.setOnItemClickListener(this);
 	}
 	
 	@Override
@@ -500,7 +462,6 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			
 			setPastDateShow();//set past date show or hide
 			
-			Constant.DEFINEWORDS = false;
 			searchIcon.setBackgroundResource(R.drawable.search_gray);
 			
 		} else if (parentView == dataRankListView) {
@@ -523,24 +484,24 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			if (parentView == allWordsListView) {
 				allWordsEdt.setText(name);
 				removeListView(allWordsListView);
-				Constant.ALLWORDS = name;
-			} else if (parentView == exactPhraseListView) {
-				exactPhraseEdt.setText(name);
-				removeListView(exactPhraseListView);
-				Constant.EXACTWORDS = name;
-			} else if (parentView == anyWordsListView) {
-				anyWordsEdt.setText(name);
-				removeListView(anyWordsListView);
-				Constant.ANYWORDS = name;
-			} else if (parentView == noneWordsListView) {
-				noneWordsEdt.setText(name);
-				removeListView(noneWordsListView);
-				Constant.NONEWORDS = name;
+				Constant.ALLWORDS_FOR_TRIGGERS = name;
 			}
+//			else if (parentView == exactPhraseListView) {
+//				exactPhraseEdt.setText(name);
+//				removeListView(exactPhraseListView);
+//				Constant.EXACTWORDS = name;
+//			} else if (parentView == anyWordsListView) {
+//				anyWordsEdt.setText(name);
+//				removeListView(anyWordsListView);
+//				Constant.ANYWORDS = name;
+//			} else if (parentView == noneWordsListView) {
+//				noneWordsEdt.setText(name);
+//				removeListView(noneWordsListView);
+//				Constant.NONEWORDS = name;
+//			}
 			for (int i = 0; i < mNewsTriggers.size(); i ++) {
 				mNewsTriggers.get(i).setChecked(false);
 			}
-			Constant.DEFINEWORDS = true;
 			searchIcon.setBackgroundResource(R.drawable.search_orange);
 			for (int i = 0; i < mNewsTriggers.size(); i ++) {
 				mNewsTriggers.get(i).setChecked(false);
@@ -593,7 +554,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		exactPhraseEdt.setText(exactWords);
 		anyWordsEdt.setText(anyWords);
 		noneWordsEdt.setText(noneWords);
-		if (Constant.DEFINEWORDS) {
+		if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
 			searchIcon.setBackgroundResource(R.drawable.search_orange);
 			thePastLayout.setVisibility(View.VISIBLE);
 		}

@@ -982,11 +982,10 @@ public class CommonUtil {
 	
 	public static void resetFilters() {//TODO
 		
-		Constant.DEFINEWORDS = false;
-		Constant.ALLWORDS = "";
-		Constant.EXACTWORDS = "";
-		Constant.ANYWORDS = "";
-		Constant.NONEWORDS = "";
+		Constant.ALLWORDS_FOR_TRIGGERS = "";
+//		Constant.EXACTWORDS = "";
+//		Constant.ANYWORDS = "";
+//		Constant.NONEWORDS = "";
 		
 		Filters mFilters = Constant.MFILTERS;
 		
@@ -1292,29 +1291,27 @@ public class CommonUtil {
 			List<FilterItem> mNewsTriggers;
 			String dateRange = "";
 			mDateRanges = mFilters.getDateRanges();
-			if (Constant.DEFINEWORDS) {
-				String searchKeywords = "";
-				if (!TextUtils.isEmpty(Constant.ALLWORDS)) {
-					searchKeywords = Constant.ALLWORDS;
-				} 
-				if (!TextUtils.isEmpty(Constant.EXACTWORDS)) {
-					searchKeywords = searchKeywords + " " + "\"" + Constant.EXACTWORDS + "\"";
-				} 
-				if (!TextUtils.isEmpty(Constant.ANYWORDS)) {
-					searchKeywords = searchKeywords + " " + "(" + Constant.ANYWORDS + ")";
-				} 
-				
-				if (!TextUtils.isEmpty(Constant.NONEWORDS.trim())) {
-					String noneWords = Constant.NONEWORDS.trim();
-					String[] result = noneWords.split("\\s+");
-					for (int i = 0; i < result.length; i++) {
-						String word = result[i];
-						searchKeywords = searchKeywords + " " + "-" + word;
-					}
-					
-					noneWords.replace(" ", " -");//TODO 如果遇到两个空格怎么办
-					searchKeywords = searchKeywords + " " + "-" + noneWords;
-				}
+			if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
+				String searchKeywords;
+				searchKeywords = Constant.ALLWORDS_FOR_TRIGGERS;
+//				if (!TextUtils.isEmpty(Constant.EXACTWORDS)) {
+//					searchKeywords = searchKeywords + " " + "\"" + Constant.EXACTWORDS + "\"";
+//				} 
+//				if (!TextUtils.isEmpty(Constant.ANYWORDS)) {
+//					searchKeywords = searchKeywords + " " + "(" + Constant.ANYWORDS + ")";
+//				} 
+//				
+//				if (!TextUtils.isEmpty(Constant.NONEWORDS.trim())) {
+//					String noneWords = Constant.NONEWORDS.trim();
+//					String[] result = noneWords.split("\\s+");
+//					for (int i = 0; i < result.length; i++) {
+//						String word = result[i];
+//						searchKeywords = searchKeywords + " " + "-" + word;
+//					}
+//					
+//					noneWords.replace(" ", " -");//TODO 如果遇到两个空格怎么办
+//					searchKeywords = searchKeywords + " " + "-" + noneWords;
+//				}
 				Log.v("silen", "keyword = " + searchKeywords);
 				jsonObject.put("event_search_keywords", searchKeywords);
 				haveSelectCondition = true;
