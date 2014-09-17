@@ -120,26 +120,8 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 		}
 		Constant.CURRENT_PENDING_COMPANY = currentPendingCompanies;
 		
-//		if (null != companiesFragment) companiesFragment.setPendingNum();
 	}
 	
-	@Override
-	public void onBackPressed() {
-		if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        CommonUtil.showShortToast(this.getResources().getString(R.string.press_again_exit));
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-            	doubleBackToExitPressedOnce=false;   
-            }
-        }, 2000);
-	}
-
 	@Override
 	public void onFilterClickListener() {
 		if (null == filterFragment) {

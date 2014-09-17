@@ -119,6 +119,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private Boolean haveProcessed = false;
 	private Boolean haveProvisionDate;
 	private Boolean isProcessed;
+	private Boolean haveGotPeople = false;;
+	private Boolean haveGotCompetitors = false;;
 	private long provisionDate;
 	private String provisionDateStr;
 	private SearchCompanyAdapter searchCompanyAdapter;
@@ -486,6 +488,9 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							haveGotCompetitors = true;
+							
 							dpCompetitors = parser.parseGetSimilarCompanies();
 							competitorFacet = dpCompetitors.facet;
 							if (competitorFacet != null) {
@@ -513,11 +518,16 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 								noCompetitors.setVisibility(View.GONE);
 							}
 							
+							setFilterAndSortByVisible(isNoCompetitor);
+							
 							competitorList.setPullLoadEnable(dpCompetitors.hasMore);
 							
 							if (!loadMore) setCompetitors();
 							
 						} else {
+							
+							isNoCompetitor = true;
+							setFilterAndSortByVisible(isNoCompetitor);
 							alertMessageForParser(parser);
 						}
 						dismissLoadingDialog();
@@ -542,6 +552,9 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							haveGotPeople = true;
+							
 							personFacetItems = new ArrayList<FacetItem>();
 							
 							dpPersons = parser.parseGetCompanyPeople();
@@ -616,8 +629,15 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 								noPeople.setVisibility(View.GONE);
 							}
 							
+							setFilterAndSortByVisible(isNoPeople);
+							
 						} else {
+							
+							isNoPeople = true;
+							setFilterAndSortByVisible(isNoPeople);
+							
 							alertMessageForParser(parser);
+							
 						}
 						
 						personList.setPullLoadEnable(dpPersons.hasMore);
@@ -631,6 +651,16 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 				showConnectionError();
 			}
 		});
+	}
+	
+	private void setFilterAndSortByVisible(Boolean noData) {
+		if (noData) {
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
+		} else {
+			setFilterVisible(View.VISIBLE);
+			setSortByVisible(View.VISIBLE);
+		}
 	}
 	
 	public void getSecFilings() {
@@ -1078,31 +1108,36 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			setAllListViewGone();
 			setListViewVisible(personList);
-			setFilterVisible(View.VISIBLE);
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
 			
 			typeChecked = typePeople;
-			setSortByVisible(View.VISIBLE);
 			setCategoryButtonDefault();
 			setSelectedButton(peopleBtn);
 			
 			if (persons.size() == 0 && !isNoPeople) getPersons(false, orderBy, 0,0,0);
 			setNoDatasGone();
+			
 			if (isNoPeople) noPeople.setVisibility(View.VISIBLE);
+			
+			if (haveGotPeople) setFilterAndSortByVisible(isNoPeople);
 			
 		} else if (v == competitorsBtn) {
 			
 			setAllListViewGone();
 			setListViewVisible(competitorList);
-			setFilterVisible(View.VISIBLE);
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
 			
 			typeChecked = typeCompetitors;
-			setSortByVisible(View.VISIBLE);
 			setCategoryButtonDefault();
 			setSelectedButton(competitorsBtn);
 			
 			if (competitors.size() == 0 && !isNoCompetitor) getCompetitors(false);
 			setNoDatasGone();
 			if (isNoCompetitor) noCompetitors.setVisibility(View.VISIBLE);
+			
+			if (haveGotCompetitors) setFilterAndSortByVisible(isNoCompetitor);
 			
 		} else if (v == shareGagein) {
 			

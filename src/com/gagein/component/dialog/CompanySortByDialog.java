@@ -84,7 +84,6 @@ public class CompanySortByDialog implements OnItemClickListener{
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
 		CommonUtil.setDialogWith(dialog);
-		dialog.setCancelable(false);
 		dialog.show();
 		
 	}
