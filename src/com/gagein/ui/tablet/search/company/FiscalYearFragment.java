@@ -78,6 +78,11 @@ public class FiscalYearFragment extends BaseFragment implements OnItemClickListe
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mFiscalYearEndMonths = mFilters.getFiscalYearEndMonths();
 		
@@ -85,6 +90,7 @@ public class FiscalYearFragment extends BaseFragment implements OnItemClickListe
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override

@@ -77,6 +77,13 @@ public class FunctionalRoleFragment extends BaseFragment implements OnItemClickL
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mFunctionalRoles = mFilters.getFunctionalRoles();
 		
@@ -84,6 +91,7 @@ public class FunctionalRoleFragment extends BaseFragment implements OnItemClickL
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override

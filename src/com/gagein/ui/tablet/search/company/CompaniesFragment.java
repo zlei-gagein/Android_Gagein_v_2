@@ -136,6 +136,12 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		companyTypes = mFilters.getCompanyTypesFromCompany();
 		
@@ -146,10 +152,18 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		adapter.notifyDataSetInvalidated();
 		
 		for (int i = 0; i < companyTypes.size(); i ++) {
+			
+			Log.v("silen", "companyTypes.Key = " + companyTypes.get(i).getKey());
+			Log.v("silen", "companyTypes.Value = " + companyTypes.get(i).getValue());
+			Log.v("silen", "companyTypes.getChecked = " + companyTypes.get(i).getChecked());
+			
 			if (companyTypes.get(i).getValue().equalsIgnoreCase("Specific Companies")) {
 				if (companyTypes.get(i).getChecked()) {
 					savedSearchLayout.setVisibility(View.VISIBLE);
 					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
+				} else {
+					savedSearchLayout.setVisibility(View.GONE);
+					edit.setText("");
 				}
 			}
 		}

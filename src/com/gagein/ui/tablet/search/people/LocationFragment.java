@@ -116,6 +116,12 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+
+	}
+	
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mLocations = mFilters.getLocations();
 		
@@ -170,7 +176,6 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 				return false;
 			}
 		});
-
 	}
 	
 	/**schedule search*/

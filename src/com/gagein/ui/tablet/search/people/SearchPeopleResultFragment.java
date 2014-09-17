@@ -69,9 +69,14 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	private OnHideLeftLayout onHideLeftLayout;
 	private LinearLayout wholeLayout;
 	private TextView rankText;
+	private OnUpdateFilterStatusForPeople onUpdateFilterStatusForPeople;
 	
 	public interface OnHideLeftLayout {
 		public void onHideLeftLayout();
+	}
+	
+	public interface OnUpdateFilterStatusForPeople {
+		public void onUpdateFilterStatusForPeople();
 	}
 	
 	@Override
@@ -81,6 +86,11 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			onHideLeftLayout = (OnHideLeftLayout) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement OnHideLeftLayout");
+		}
+		try {
+			onUpdateFilterStatusForPeople = (OnUpdateFilterStatusForPeople) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement OnUpdateFilterStatusForPeople");
 		}
 	}
 	
@@ -228,6 +238,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		employerInfoLayout.removeAllViews();
 		setPersonalInfoLayout();
 		setEmployerInfoLayout();
+		
+		onUpdateFilterStatusForPeople.onUpdateFilterStatusForPeople();
 		
 		DataPage dataPage = parser.parseGetSearchPeople();
 		if (dataPage.items != null) {

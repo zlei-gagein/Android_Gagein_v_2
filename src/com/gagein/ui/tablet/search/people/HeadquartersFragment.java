@@ -116,6 +116,13 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mHeadquarters = mFilters.getHeadquarters();
 		
@@ -169,7 +176,7 @@ public class HeadquartersFragment extends BaseFragment implements OnItemClickLis
 				return false;
 			}
 		});
-
+		
 	}
 	
 	private void setSearchLocation() {

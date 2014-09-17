@@ -78,6 +78,12 @@ public class JobLevelFragment extends BaseFragment implements OnItemClickListene
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mJobLevels = mFilters.getJobLevel();
 		
@@ -85,6 +91,7 @@ public class JobLevelFragment extends BaseFragment implements OnItemClickListene
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override

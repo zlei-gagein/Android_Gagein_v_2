@@ -143,6 +143,13 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
 		mDateRanks = mFilters.getDateRanges();
@@ -275,6 +282,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		exactPhraseEdt.setOnFocusChangeListener(this);
 		anyWordsEdt.setOnFocusChangeListener(this);
 		noneWordsEdt.setOnFocusChangeListener(this);
+		
 	}
 	
 	private void packageAllWords() {

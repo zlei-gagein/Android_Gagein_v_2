@@ -85,6 +85,12 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mIndustries = mFilters.getIndustries();
 		

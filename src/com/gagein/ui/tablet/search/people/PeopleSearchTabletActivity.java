@@ -61,6 +61,7 @@ import com.gagein.ui.tablet.search.people.RankFragment.OnSearchFromRank;
 import com.gagein.ui.tablet.search.people.RevenueSizeFragment.OnRevenueSizeFinish;
 import com.gagein.ui.tablet.search.people.RevenueSizeFragment.OnSearchFromRevenueSize;
 import com.gagein.ui.tablet.search.people.SearchPeopleResultFragment.OnHideLeftLayout;
+import com.gagein.ui.tablet.search.people.SearchPeopleResultFragment.OnUpdateFilterStatusForPeople;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -72,7 +73,7 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
  	OnLocationFinish, OnCompaniesFinish , OnMileStoneFinish, OnRankFinish, OnFiscalYearFinish, OnSearchFromFiscalYear, OnSearchFromHeadquarters
  	, OnSearchFromIndustry, OnSearchFromMileStone, OnSearchFromOwnership, OnSearchFromRevenueSize, OnSearchFromEmployeeSize, OnSearchFromNewsTriggers
  	, OnSearchFromRank, OnSearchFromCompanies, OnSearchFromFunctionalRole, OnSearchFromJobLevel, OnSearchFromJobTitle, OnSearchFromLocation
- 	, OnHideLeftLayout, OnStartSearchFromPeople, OnCanleTask{
+ 	, OnHideLeftLayout, OnStartSearchFromPeople, OnCanleTask, OnUpdateFilterStatusForPeople{
 	
 	
 	private FragmentTransaction transaction;
@@ -1121,6 +1122,69 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 		if (timerTask != null) {
 			timerTask.cancel();
 		}
+	}
+
+	@Override
+	public void onUpdateFilterStatusForPeople() {
+		// TODO Auto-generated method stub
+		
+		if (null != jobTitleFragment) {
+			jobTitleFragment.setInitialData();
+		}
+		
+		if (null != jobLevelFragment) {
+			jobLevelFragment.setInitialData();
+		}
+		
+		if (null != locationFragment) {
+			locationFragment.setInitialData();
+		}
+		
+		if (null != functionalRoleFragment) {
+			functionalRoleFragment.setInitialData();
+		}
+		
+		if (null != newsTriggersFragment) {
+			newsTriggersFragment.setInitialData();
+		}
+		
+		if (null != companiesFragment) {
+			companiesFragment.setInitialData();
+		}
+		
+		if (null != headquartersFragment) {
+			headquartersFragment.setInitialData();
+		}
+		
+		if (null != industryFragment) {
+			industryFragment.setInitialData();
+		}
+		
+		if (null != employeeSizeFragment) {
+			employeeSizeFragment.setInitialData();
+		}
+		
+		if (null != revenueSizeFragment) {
+			revenueSizeFragment.setInitialData();
+		}
+		
+		if (null != ownershipFragment) {
+			ownershipFragment.setInitialData();
+		}
+		
+		if (null != mileStoneFragment) {
+			mileStoneFragment.setInitialData();
+		}
+		
+		if (null != rankFragment) {
+			rankFragment.setInitialData();
+		}
+		
+		if (null != fiscalYearFragment) {
+			fiscalYearFragment.setInitialData();
+		}
+		
+		
 	}
 	
 //	@Override

@@ -78,6 +78,11 @@ public class RankFragment extends BaseFragment implements OnItemClickListener{
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mRanks = mFilters.getRanks();
 		

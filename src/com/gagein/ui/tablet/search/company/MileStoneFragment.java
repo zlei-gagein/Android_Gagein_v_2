@@ -86,6 +86,10 @@ public class MileStoneFragment extends BaseFragment implements OnItemClickListen
 	@Override
 	protected void initData() {
 		super.initData();
+		setInitialData();
+	}
+	
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mMilestones = mFilters.getMileStones();
 		mDateRanks = mFilters.getMileStoneDateRange();

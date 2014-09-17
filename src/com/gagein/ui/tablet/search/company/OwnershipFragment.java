@@ -78,6 +78,12 @@ public class OwnershipFragment extends BaseFragment implements OnItemClickListen
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mOwnerships = mFilters.getOwnerships();
 		
@@ -85,6 +91,7 @@ public class OwnershipFragment extends BaseFragment implements OnItemClickListen
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override

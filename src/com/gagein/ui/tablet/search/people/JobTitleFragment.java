@@ -119,6 +119,13 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mJobTitles = mFilters.getJobTitles();
 		
@@ -127,6 +134,7 @@ public class JobTitleFragment extends BaseFragment implements OnItemClickListene
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override

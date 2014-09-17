@@ -151,6 +151,12 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		companyTypes = mFilters.getCompanyTypesFromPeople();
 		
@@ -165,6 +171,9 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				if (companyTypes.get(i).getChecked()) {
 					specificLayout.setVisibility(View.VISIBLE);
 					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
+				} else {
+					specificLayout.setVisibility(View.GONE);
+					edit.setText("");
 				}
 			}
 		}
@@ -174,6 +183,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			getSavedCompany(false);
 			
 		}
+		
 	}
 	
 	private void setSavedCompany() {

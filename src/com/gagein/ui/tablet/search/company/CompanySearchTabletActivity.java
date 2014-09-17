@@ -51,6 +51,7 @@ import com.gagein.ui.tablet.search.company.RankFragment.OnSearchFromRank;
 import com.gagein.ui.tablet.search.company.RevenueSizeFragment.OnRevenueSizeFinish;
 import com.gagein.ui.tablet.search.company.RevenueSizeFragment.OnSearchFromRevenueSize;
 import com.gagein.ui.tablet.search.company.SearchCompanyResultFragment.OnHideLeftLayout;
+import com.gagein.ui.tablet.search.company.SearchCompanyResultFragment.OnUpdateFilterStatusForCompany;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -61,7 +62,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
  	, OnRankFinish, OnStartFiscalYear, OnFiscalYearFinish, OnCompanyEmptyViewFinish, OnSearchFromRank, OnSearchFromNewsTriggers, 
  	OnSearchFromEmployeeSize, OnSearchFromFiscalYear, OnSearchFromHeadquarters, OnSearchFromIndustry, OnSearchFromMileStone, 
  	OnSearchFromOwnership, OnSearchFromRevenueSize, OnHideLeftLayout, OnStartSearchFromCompany, OnStartCompanies, OnCompaniesFinish, 
- 	OnSearchFromCompanies, OnCanleTask{
+ 	OnSearchFromCompanies, OnCanleTask, OnUpdateFilterStatusForCompany{
 	
 	private FragmentTransaction transaction;
 	private LinearLayout leftLayout;
@@ -867,6 +868,51 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 		if (timerTask != null) {
 			timerTask.cancel();
 		}
+	}
+
+	@Override
+	public void onUpdateFilterStatusForCompany() {
+		
+		if (null != newsTriggersFragment) {
+			newsTriggersFragment.setInitialData();
+		}
+		
+		if (null != companiesFragment) {
+			companiesFragment.setInitialData();
+		}
+		
+		if (null != headquartersFragment) {
+			headquartersFragment.setInitialData();
+		}
+		
+		if (null != industryFragment) {
+			industryFragment.setInitialData();
+		}
+		
+		if (null != employeeSizeFragment) {
+			employeeSizeFragment.setInitialData();
+		}
+		
+		if (null != revenueSizeFragment) {
+			revenueSizeFragment.setInitialData();
+		}
+		
+		if (null != ownershipFragment) {
+			ownershipFragment.setInitialData();
+		}
+		
+		if (null != mileStoneFragment) {
+			mileStoneFragment.setInitialData();
+		}
+		
+		if (null != rankFragment) {
+			rankFragment.setInitialData();
+		}
+		
+		if (null != fiscalYearFragment) {
+			fiscalYearFragment.setInitialData();
+		}
+		
 	}
 	
 //	@Override

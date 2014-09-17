@@ -78,6 +78,10 @@ public class RevenueSizeFragment extends BaseFragment implements OnItemClickList
 	protected void initData() {
 		super.initData();
 		
+		setInitialData();
+	}
+	
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mSalesVolumes = mFilters.getSalesVolumeFromBuz();
 		

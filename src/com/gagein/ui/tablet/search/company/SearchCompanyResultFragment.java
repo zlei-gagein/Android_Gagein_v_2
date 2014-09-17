@@ -62,20 +62,32 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	private Filters mFilters;
 	private List<FilterItem> sortByList;
 	private String type = "buz";
-	private OnHideLeftLayout onHideLeftLayout;
 	private LinearLayout wholeLayout;
+	private OnHideLeftLayout onHideLeftLayout;
+	private OnUpdateFilterStatusForCompany onUpdateFilterStatusForCompany;
 	
 	public interface OnHideLeftLayout {
 		public void onHideLeftLayout();
 	}
 	
+	public interface OnUpdateFilterStatusForCompany {
+		public void onUpdateFilterStatusForCompany();
+	}
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
 		try {
 			onHideLeftLayout = (OnHideLeftLayout) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + "must implement OnHideLeftLayout");
+			throw new ClassCastException(activity.toString() + "must implement onUpdateFilterStatusForCompany");
+		}
+		
+		try {
+			onUpdateFilterStatusForCompany = (OnUpdateFilterStatusForCompany) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement OnUpdateFilterStatus");
 		}
 	}
 	
@@ -230,6 +242,8 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		companyInfoLayout.removeAllViews();
 		
 		setQueryInfoLayout();
+		
+		onUpdateFilterStatusForCompany.onUpdateFilterStatusForCompany();
 		
 		DataPage dataPage = parser.parseGetSimilarCompanies();
 		if (dataPage == null) {

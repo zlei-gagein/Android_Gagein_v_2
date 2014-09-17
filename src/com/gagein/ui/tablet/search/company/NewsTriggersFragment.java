@@ -139,6 +139,13 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	//TODO
+	public void setInitialData() {
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
 		mDateRanks = mFilters.getDateRanges();

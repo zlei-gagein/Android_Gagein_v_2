@@ -77,6 +77,13 @@ public class EmployeeSizeFragment extends BaseFragment implements OnItemClickLis
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		setInitialData();
+		
+	}
+	
+	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mEmployeeSizes = mFilters.getEmployeeSizeFromBuz();//TODO
 		
@@ -84,6 +91,7 @@ public class EmployeeSizeFragment extends BaseFragment implements OnItemClickLis
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
+		
 	}
 	
 	@Override
