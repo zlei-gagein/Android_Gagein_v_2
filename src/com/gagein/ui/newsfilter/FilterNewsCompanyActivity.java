@@ -60,7 +60,7 @@ public class FilterNewsCompanyActivity extends BaseActivity {
 			
 		} else if (v == news || v == newsBtn) {
 			
-			startActivitySimple(FilterNewsActivity.class);
+			startActivitySimple(CompanyFilterNewsTriggersActivity.class);
 			
 		}
 	}

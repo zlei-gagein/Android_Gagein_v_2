@@ -235,6 +235,12 @@
          
          <activity
             android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.newsfilter.CompanyFilterNewsTriggersActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
             android:name="com.gagein.ui.newsfilter.FilterRelevanceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
