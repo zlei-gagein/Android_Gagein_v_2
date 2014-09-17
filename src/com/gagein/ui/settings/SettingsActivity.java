@@ -92,6 +92,7 @@ public class SettingsActivity extends BaseActivity {
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == myAccountBtn) {
 			
 			startActivitySimple(MyAccountActivity.class);

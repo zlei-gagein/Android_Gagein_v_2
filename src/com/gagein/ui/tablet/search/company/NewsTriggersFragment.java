@@ -68,9 +68,6 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	private List<Agent> agents = new ArrayList<Agent>();
 	private SearchAgentAdapter searchAdapter;
 	private String allWords = "";
-	private String exactWords = "";
-	private String anyWords = "";
-	private String noneWords = "";
 	private ImageView searchIcon;
 	private ListView currentListView;
 	private OnNewsTriggersFinish onNewsTriggersFinish;
@@ -144,10 +141,21 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		
 	}
 	
-	//TODO
 	public void setInitialData() {
+		
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
+		
+		Boolean allChecked = true;
+		for (int i = 0; i < mNewsTriggers.size() ; i++) {
+			if (i == 0) continue;
+			if (!mNewsTriggers.get(i).getChecked()) {
+				allChecked = false;
+				break;
+			}
+		}
+		if (allChecked) mNewsTriggers.get(0).setChecked(true);
+		
 		mDateRanks = mFilters.getDateRanges();
 		allWords = Constant.ALLWORDS_FOR_TRIGGERS;
 		
@@ -170,10 +178,14 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				
+				setSearchImageColor();
+				
 				String character = s.toString().trim();
 				if (TextUtils.isEmpty(character) || null == character){
 					
 					cancelSearchTask();
+					
 					removeListView(allWordsListView);
 					
 					if (difineLayout.getVisibility() == View.VISIBLE) {
@@ -182,11 +194,10 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 						allWordsEdt.setHint(R.string.search_keyword);
 					}
 					
-					setSearchImageColor();
 					
 				} else {
 					
-					scheduleSearchTask(character, 800, allWordsListView);
+					scheduleSearchTask(character, 1000, allWordsListView);
 					
 				};
 			}
@@ -430,26 +441,58 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 	
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View view, int position, long arg3) {
+		
 		if (parentView == systemAgentsListView) {
-			Boolean checked = mNewsTriggers.get(position).getChecked();
+			Boolean selected = mNewsTriggers.get(position).getChecked();
 			
 			if (position == 0) {
 				
-				for (int i = 0; i < mNewsTriggers.size(); i ++) {
-					mNewsTriggers.get(i).setChecked(checked ? false : true);
+				if (selected) {
+					for (int i = 0; i < mNewsTriggers.size(); i ++) {
+						mNewsTriggers.get(i).setChecked(false);
+					}
+				} else {
+					for (int i = 0; i < mNewsTriggers.size(); i ++) {
+						mNewsTriggers.get(i).setChecked(true);
+					}
 				}
 				
-				systemAgentAdapter.notifyDataSetChanged();
 				
 			} else {
+				//circle 
 				
-				Boolean isAllSelected = true;
-				for (int i = 0; i < mNewsTriggers.size(); i ++) {
-					if (i == 0) continue;
-					if (!mNewsTriggers.get(i).getChecked()) isAllSelected = false;
+				if (selected) {
+					mNewsTriggers.get(position).setChecked(false);
+					mNewsTriggers.get(0).setChecked(false);
+				} else {
+					mNewsTriggers.get(position).setChecked(true);
+					
+					Boolean allChecked = true;
+					for (int i = 0; i < mNewsTriggers.size(); i ++) {
+						if (i == 0) continue;
+						if (!mNewsTriggers.get(i).getChecked()) {
+							allChecked = false;
+						}
+					}
+					if (allChecked) {
+						mNewsTriggers.get(0).setChecked(true);
+					}
 				}
 				
-				if (!isAllSelected) {
+				Boolean haveSelected= false;
+				for (int i = 0; i < mNewsTriggers.size(); i ++) {
+					if (i == 0) continue;
+					if (mNewsTriggers.get(i).getChecked()) {
+						haveSelected = true;
+						break;
+					}
+				}
+				
+				if (!TextUtils.isEmpty(allWordsEdt.getText().toString())) {
+					haveSelected = true;
+				}
+				
+				if (!haveSelected) {
 					for (int i = 0; i < mDateRanks.size(); i ++) {
 						if (i == 3) {
 							mDateRanks.get(i).setChecked(true);
@@ -460,27 +503,9 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 					dataRangesAdapter.notifyDataSetChanged();
 				}
 				
-				mNewsTriggers.get(position).setChecked(!checked);
-				
-				Boolean allChecked = true;
-				for (int i = 0; i < mNewsTriggers.size(); i ++) {
-					if (i == 0) {
-						continue;
-					} else {
-						if (!mNewsTriggers.get(i).getChecked()) {
-							allChecked = false;
-							mNewsTriggers.get(0).setChecked(false);
-						}
-					}
-				}
-				
-				if (allChecked) {
-					mNewsTriggers.get(0).setChecked(true);
-				}
-				
-				systemAgentAdapter.notifyDataSetChanged();//refresh listview state
 			}
 			
+			systemAgentAdapter.notifyDataSetChanged();//refresh listview state
 			setPastDateShow();//set past date show or hide
 			
 			searchIcon.setBackgroundResource(R.drawable.search_gray);
@@ -507,7 +532,6 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 				removeListView(allWordsListView);
 				Constant.ALLWORDS_FOR_TRIGGERS = name;
 			}
-
 			for (int i = 0; i < mNewsTriggers.size(); i ++) {
 				mNewsTriggers.get(i).setChecked(false);
 			}
@@ -532,8 +556,6 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			thePastLayout.setVisibility(View.VISIBLE);
 			difineLayout.setVisibility(View.VISIBLE);
 			
-			packageAllWords();
-			return;
 		}
 		
 		onSearchFromNewsTriggers.onSearchFromNewsTriggers();
@@ -549,27 +571,42 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		}
 	}
 	
+	private void setAllWordsEmpty() {
+		allWordsEdt.setText("");
+		Constant.ALLWORDS_FOR_TRIGGERS = "";
+		searchIcon.setBackgroundResource(R.drawable.search_gray);
+	}
+	
+	private void setAllWords() {
+		allWordsEdt.setText(Constant.ALLWORDS_FOR_TRIGGERS);
+		cancelSearchTask();
+		searchIcon.setBackgroundResource(R.drawable.search_orange);
+		thePastLayout.setVisibility(View.VISIBLE);
+	}
+	
 	private void setPastDateShow() {
-		Boolean haveChecked = false;
+		
+		Boolean haveSelecked = false;
 		for (int i = 0; i < mNewsTriggers.size(); i ++) {
 			if (mNewsTriggers.get(i).getChecked()) {
-				if (i != 0) {
-					haveChecked = true;
-					thePastLayout.setVisibility(View.VISIBLE);
-					break;
-				}
+				haveSelecked = true;
+				break;
 			}
 		}
-		if (!haveChecked) thePastLayout.setVisibility(View.GONE);
 		
-		allWordsEdt.setText(allWords);
-		exactPhraseEdt.setText(exactWords);
-		anyWordsEdt.setText(anyWords);
-		noneWordsEdt.setText(noneWords);
-		if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
-			searchIcon.setBackgroundResource(R.drawable.search_orange);
+		if (!haveSelecked) {
+			
+			if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
+				setAllWords();
+			}
+			
+		} else {
+			
+			setAllWordsEmpty();
 			thePastLayout.setVisibility(View.VISIBLE);
+			
 		}
+		
 	}
 	
 	/**stop schedule search*/

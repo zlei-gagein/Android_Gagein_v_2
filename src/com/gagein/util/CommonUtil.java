@@ -993,11 +993,7 @@ public class CommonUtil {
 		if (mFilters == null) return;
 		List<FilterItem> newsTriggers = mFilters.getNewsTriggers();
 		for (int i = 0; i < newsTriggers.size(); i ++) {
-			if (i == 0) {
-				newsTriggers.get(i).setChecked(true);
-			} else {
-				newsTriggers.get(i).setChecked(false);
-			}
+			newsTriggers.get(i).setChecked(false);
 		}
 		
 		//DateRanges
