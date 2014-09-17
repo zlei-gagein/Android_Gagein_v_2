@@ -255,6 +255,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setPersons();
+		CommonUtil.setListViewHeight(listView);
 		PAGENUM ++;
 		
 		//set title
@@ -280,11 +281,14 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	@Override
 	protected void setOnClickListener() {
 		super.setOnClickListener();
+		
 		showDetailsTx.setOnClickListener(this);
 		sortByText.setOnClickListener(this);
 		rankText.setOnClickListener(this);
 		listView.setXListViewListener(this);
 		listView.setOnItemClickListener(this);
+		listView.setPullRefreshEnable(false);
+		
 	}
 	
 	@Override

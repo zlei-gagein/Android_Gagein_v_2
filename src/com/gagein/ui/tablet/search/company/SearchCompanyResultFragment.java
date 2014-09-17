@@ -269,6 +269,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setCompany();
+		CommonUtil.setListViewHeight(listView);
 		PAGENUM ++;
 		
 		//set title
@@ -477,6 +478,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		rankText.setOnClickListener(this);
 		listView.setOnItemClickListener(this);
 		listView.setXListViewListener(this);
+		listView.setPullRefreshEnable(false);
 		
 	}
 	

@@ -253,6 +253,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setPersons();
+		CommonUtil.setListViewHeight(listView);
 		PAGENUM ++;
 		
 		//set title
@@ -287,6 +288,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		rankText.setOnClickListener(this);
 		listView.setXListViewListener(this);
 		listView.setOnItemClickListener(this);
+		listView.setPullRefreshEnable(false);
 		
 	}
 	

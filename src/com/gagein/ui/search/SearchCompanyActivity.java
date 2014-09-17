@@ -278,6 +278,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setCompany();
+		CommonUtil.setListViewHeight(listView);
 		PAGENUM ++;
 		
 		//set title
@@ -508,6 +509,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		rankText.setOnClickListener(this);
 		listView.setOnItemClickListener(this);
 		listView.setXListViewListener(this);
+		listView.setPullRefreshEnable(false);
 	}
 	
 	@Override
