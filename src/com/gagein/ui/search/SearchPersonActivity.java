@@ -342,6 +342,24 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 					
 					@Override
 					public void onClick(View arg0) {
+						
+						
+						//判断是否有选中条件 TODO
+						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
+						if (conditions.size() <= 1) {
+							showDialog("You have to enter in search criteria! Try again.");
+							return;
+						} else if (conditions.size() == 2) {
+							QueryInfoItem condition1 = conditions.get(0);
+							QueryInfoItem condition2 = conditions.get(1);
+							if (condition1.getType().equalsIgnoreCase("search_date_range")
+									|| condition2.getType().equalsIgnoreCase("search_date_range")) {
+								showDialog("You have to enter in search criteria! Try again.");
+								return;
+							}
+						}
+						
+						
 						if (type.equalsIgnoreCase(employer)) {
 							employerInfoLayout.removeView(view);
 						} else if (type.equalsIgnoreCase(personal)) {
@@ -355,8 +373,27 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
 							deleteFilters(id, newsTriggerList);
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
-							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
+							
+							List<FilterItem> companiesList = mFilters.getCompanyTypesFromPeople();
 							deleteFilters(id, companiesList);
+							
+							///如果company条件删光了，则选中all company
+							boolean hasSelectAnything = false;
+							FilterItem allItem = null;
+							for (int i = 0; i < companiesList.size(); i ++) {
+								FilterItem theItem = companiesList.get(i);
+								if (theItem.getChecked()) {
+									hasSelectAnything = true;
+								}
+								
+								if (theItem.getKey().equalsIgnoreCase("0")) {
+									allItem = theItem;
+								}
+							}
+							if (!hasSelectAnything && allItem != null) {
+								allItem.setChecked(true);
+							}
+							
 						} else if (queryType.equalsIgnoreCase("rank")) {
 							List<FilterItem> rankList = mFilters.getRanks();
 							deleteFilters(id, rankList);
