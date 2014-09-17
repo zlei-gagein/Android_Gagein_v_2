@@ -193,7 +193,7 @@
          
          <activity
             android:configChanges="orientation|keyboardHidden|screenSize" 
-            android:name="com.gagein.ui.company.CompanyGroupsActivity"
+            android:name="com.gagein.ui.newsfilter.GroupsFilterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
          

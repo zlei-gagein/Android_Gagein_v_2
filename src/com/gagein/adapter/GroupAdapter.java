@@ -28,6 +28,8 @@ import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Group;
 import com.gagein.ui.companies.CompaniesActivity;
+import com.gagein.ui.tablet.companies.CompaniesFragment;
+import com.gagein.ui.tablet.companies.CompaniesTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
@@ -110,9 +112,11 @@ public class GroupAdapter extends BaseAdapter {
 //					if (Long.parseLong(group.getMogid()) < 0 && group.getCount() <= 0) return;
 //				}
 				Intent intent = new Intent();
-				intent.setClass(mContext, CompaniesActivity.class);
+				intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompaniesTabletActivity.class : CompaniesActivity.class);
 				intent.putExtra(Constant.GROUP, group);
 				mContext.startActivity(intent);
+				
+				Constant.currentGroup = group;
 			}
 		});
 		

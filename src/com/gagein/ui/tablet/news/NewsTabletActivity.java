@@ -16,9 +16,12 @@ import com.gagein.ui.tablet.news.FilterNewsFragment.OnFilterNewsLeftBtnClickList
 import com.gagein.ui.tablet.news.FilterNewsFragment.OnRefreshNewsFilterFromNewsListener;
 import com.gagein.ui.tablet.news.FilterRelevanceFragment.OnFilterRelevanceLeftBtnClickListener;
 import com.gagein.ui.tablet.news.FilterRelevanceFragment.RefreshNewsFilterFromRelevance;
+import com.gagein.ui.tablet.news.GroupsFilterFragment.OnChangeGroupsFilterListener;
+import com.gagein.ui.tablet.news.GroupsFilterFragment.OnFinishGroupsListener;
 import com.gagein.ui.tablet.news.NewsFilterFragment.CloseLeftLayoutListener;
 import com.gagein.ui.tablet.news.NewsFilterFragment.NewsBtnClickListener;
 import com.gagein.ui.tablet.news.NewsFilterFragment.OnNewsFilterLeftBtnClickListener;
+import com.gagein.ui.tablet.news.NewsFilterFragment.OnStartGroupsListener;
 import com.gagein.ui.tablet.news.NewsFilterFragment.RelevanceBtnClickListener;
 import com.gagein.ui.tablet.news.NewsFragment.OnFilterClickListener;
 import com.gagein.util.CommonUtil;
@@ -26,13 +29,15 @@ import com.gagein.util.Constant;
 
 public class NewsTabletActivity extends BaseFragmentActivity implements OnFilterClickListener, OnNewsFilterLeftBtnClickListener, 
 	NewsBtnClickListener, OnFilterNewsLeftBtnClickListener, RelevanceBtnClickListener, OnFilterRelevanceLeftBtnClickListener, 
-	OnRefreshNewsFilterFromNewsListener, RefreshNewsFilterFromRelevance, CloseLeftLayoutListener{
+	OnRefreshNewsFilterFromNewsListener, RefreshNewsFilterFromRelevance, CloseLeftLayoutListener, OnStartGroupsListener,
+	OnFinishGroupsListener, OnChangeGroupsFilterListener{
 	
 	protected boolean doubleBackToExitPressedOnce = false;
 	private NewsFilterFragment newsFilterFragment;
 	private NewsFragment newsFragment;
 	private FilterNewsFragment filterNewsFragment;
 	private FilterRelevanceFragment filterRelevanceFragment;
+	private GroupsFilterFragment groupsFilterFragment;
 	private FragmentTransaction transaction;
 	private LinearLayout leftLayout;
 	
@@ -188,6 +193,9 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		if (null != filterRelevanceFragment) {
 			transaction.hide(filterRelevanceFragment);
 		}
+		if (null != groupsFilterFragment) {
+			transaction.hide(groupsFilterFragment);
+		}
 		transaction.commit();
 	}
 
@@ -204,6 +212,9 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		}
 		if (null != filterRelevanceFragment) {
 			transaction.hide(filterRelevanceFragment);
+		}
+		if (null != groupsFilterFragment) {
+			transaction.hide(groupsFilterFragment);
 		}
 		transaction.commit();
 	}
@@ -222,6 +233,9 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		if (null != newsFilterFragment) {
 			transaction.hide(newsFilterFragment);
 		}
+		if (null != groupsFilterFragment) {
+			transaction.hide(groupsFilterFragment);
+		}
 		transaction.commit();
 	}
 
@@ -238,6 +252,9 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 		}
 		if (null != filterRelevanceFragment) {
 			transaction.hide(filterRelevanceFragment);
+		}
+		if (null != groupsFilterFragment) {
+			transaction.hide(groupsFilterFragment);
 		}
 		transaction.commit();
 	}
@@ -269,5 +286,60 @@ public class NewsTabletActivity extends BaseFragmentActivity implements OnFilter
 	@Override
 	public void closeLeftLayoutListener() {
 		setLeftLayoutVisible(View.GONE);
+	}
+
+	@Override
+	public void onStartGroupsListener() {
+		
+		transaction = getSupportFragmentManager().beginTransaction();
+		
+		if (null == groupsFilterFragment) {
+			groupsFilterFragment = new GroupsFilterFragment();
+			transaction.add(R.id.leftLayout, groupsFilterFragment);
+		}
+		
+		transaction.show(groupsFilterFragment);
+		
+		if (null != newsFilterFragment) {
+			transaction.hide(newsFilterFragment);
+		}
+		if (null != filterNewsFragment) {
+			transaction.hide(filterNewsFragment);
+		}
+		if (null != filterRelevanceFragment) {
+			transaction.hide(filterRelevanceFragment);
+		}
+		transaction.commit();
+	}
+
+	@Override
+	public void onFinishGroupsListener() {
+		
+		transaction = getSupportFragmentManager().beginTransaction();
+		if (null == newsFilterFragment) {
+			newsFilterFragment = new NewsFilterFragment();
+			transaction.add(R.id.leftLayout, newsFilterFragment);
+		}
+		transaction.show(newsFilterFragment);
+		
+		if (null != filterNewsFragment) {
+			transaction.hide(filterNewsFragment);
+		}
+		if (null != filterRelevanceFragment) {
+			transaction.hide(filterRelevanceFragment);
+		}
+		if (null != groupsFilterFragment) {
+			transaction.hide(groupsFilterFragment);
+		}
+		transaction.commit();
+	}
+
+	@Override
+	public void onChangeGroupsFilterListener() {
+		
+		if (null == newsFragment) {
+			newsFragment = new NewsFragment();
+		}
+		newsFragment.refreshNews(false);
 	}
 }

@@ -19,11 +19,12 @@ import com.gagein.ui.main.BaseFragmentActivity;
 import com.gagein.ui.tablet.companies.CompaniesFragment.OnFilterClickListener;
 import com.gagein.ui.tablet.companies.FilterFragment.OnFilterCancle;
 import com.gagein.ui.tablet.companies.FilterFragment.OnFilterDone;
+import com.gagein.ui.tablet.companies.FilterFragment.OnRefreshCompaniesForFilter;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class CompaniesTabletActivity extends BaseFragmentActivity implements OnFilterClickListener, 
-	OnFilterCancle, OnFilterDone{
+	OnFilterCancle, OnFilterDone, OnRefreshCompaniesForFilter{
 	
 	protected boolean doubleBackToExitPressedOnce = false;
 	private LinearLayout leftLayout;
@@ -166,5 +167,16 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 		companiesFragment.nextPage = ""; 
 		companiesFragment.getCompaniesOfGroup(true, false);
 		setLeftLayoutVisible(View.GONE);
+	}
+
+	@Override
+	public void onRefreshCompaniesForFilter() {
+		
+		if (null == companiesFragment) {
+			companiesFragment = new CompaniesFragment();
+		}
+		
+		companiesFragment.nextPage = ""; 
+		companiesFragment.getCompaniesOfGroup(true, false);
 	}
 }

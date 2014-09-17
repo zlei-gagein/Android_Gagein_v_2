@@ -30,6 +30,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
+import com.gagein.model.Group;
 import com.gagein.model.Update;
 import com.gagein.ui.bookmark.BookMarksActivity;
 import com.gagein.ui.companies.PendingCompaniesActivity;
@@ -306,7 +307,15 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	
 	private ArrayList<String> getGroupsId() {
 		
-		return null;
+		ArrayList<String> groupsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.selectedGroupFilter.size() ; i++) {
+			Group group = Constant.selectedGroupFilter.get(i);
+			if (group.selected && !group.getMogid().equalsIgnoreCase("-10")) {
+				groupsId.add(group.getMogid());
+			}
+		}
+		
+		return groupsId;
 	}
 	
 	private void getNews(long aNewsID, final byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
@@ -338,6 +347,9 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 					}
 					
 				} else {
+					
+					updates.clear();
+					newsAdapter.notifyDataSetChanged();
 					
 					if (updates != null) {
 						listview.setPullLoadEnable(false);

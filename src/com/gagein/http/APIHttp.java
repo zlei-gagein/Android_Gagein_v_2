@@ -1677,7 +1677,9 @@ public class APIHttp {
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		if (!groupId.equalsIgnoreCase("0")) params.put("groupid", groupId + "");
-		if (Long.parseLong(industryId) > 0 || Long.parseLong(industryId) == -1) params.put("industryid", industryId + "");
+		if (Long.parseLong(industryId) > 0 || Long.parseLong(industryId) == -1) {
+			params.put("industryid", industryId + "");
+		}
 		
 		params.put("followed_company_type", followedCompanyType + "");
 		params.put("follow_link_type", followLinkType + "");

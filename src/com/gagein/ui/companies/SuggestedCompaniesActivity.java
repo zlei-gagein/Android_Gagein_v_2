@@ -31,7 +31,7 @@ import com.gagein.util.Constant;
 
 public class SuggestedCompaniesActivity extends BaseActivity implements OnItemClickListener{
 	private ListView listView;
-	private List<Company> suggestedCompanies;
+	private List<Company> suggestedCompanies = new ArrayList<Company>();
 	private SuggestedCompanyAdapter adapter;
 	private Group group;
 	
@@ -92,7 +92,6 @@ public class SuggestedCompaniesActivity extends BaseActivity implements OnItemCl
 		
 		group = (Group) getIntent().getSerializableExtra(Constant.GROUP);
 		
-		suggestedCompanies = new ArrayList<Company>();
 		getSuggestedCompanies();
 		
 	}

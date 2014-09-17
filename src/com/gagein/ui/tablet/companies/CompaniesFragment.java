@@ -68,7 +68,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private List<Long> companyIds;
 	private Facet facet;
 	private List<FacetItemIndustry> industryData = new ArrayList<FacetItemIndustry>();
-	private int requestCode = 1;
 	private LinearLayout noFollowedCompaniesLayout;
 	private LinearLayout bottomLayoutIsNotSystem;
 	private RelativeLayout bottomLayoutLinkedCompanies;
@@ -88,6 +87,8 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private TextView noCompaniesTitle;
 	private TextView noCompaniesPt;
 	public String nextPage = "";
+	private Boolean haveGotSuggestedCompanies = false;
+	private List<Company> suggestedCompanies = new ArrayList<Company>();
 	private OnFilterClickListener filterListener;
 	
 	public interface OnFilterClickListener {
@@ -152,6 +153,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	protected void initData() {
 		super.initData();
 		
+		group = Constant.currentGroup;
 		groupId = group.getMogid();
 		groupName = group.getName();
 		isSystemGroup = group.getIsSsystem();
@@ -160,6 +162,8 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		setTitle(groupName);
 		
 		getCompaniesOfGroup(true, false);
+		
+		if (isFollowedCompanies()) getSuggestedCompanies();
 	}
 	
 	@Override
@@ -203,6 +207,9 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 							if (obj instanceof Company) {
 								
 								Company company = (Company)obj;
+								Boolean selectedAll = (Boolean) selectAllBtn.getTag(R.id.tag_select);
+								company.select = selectedAll ? true : false;
+								
 								if (company.orgID != 0) {
 									companies.add(company);
 								}
@@ -251,6 +258,41 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			}
 		});
 	}
+	
+	private void getSuggestedCompanies() {
+		
+		mApiHttp.getRecommendedCompanies(APIHttpMetadata.GETALL, false, new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				
+				dismissLoadingDialog();
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					
+					haveGotSuggestedCompanies = true;
+					
+					DataPage page = parser.parseGetRecommendedCompanies();
+					
+					suggestedCompanies.clear();
+					if (page != null && page.items != null) {
+						for (Object obj : page.items) {
+							suggestedCompanies.add((Company)obj);
+						}
+					}
+					
+					if (suggestedCompanies.size() == 0) return;
+					
+				}
+			}
+			
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+			}
+		});
+	};
 	
 	private void setNoCompaniesPromt() {
 		
@@ -307,7 +349,18 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					bottomLayout.setVisibility(View.GONE);
 					bottomLayoutLinkedCompanies.setVisibility(View.GONE);
 				} else {
-					bottomBtn.setText(R.string.suggested_companies);
+					if (isFollowedCompanies()) { 
+						
+						if (suggestedCompanies.size() == 0) {
+							
+							bottomBtn.setText("");
+							
+						} else {
+							
+							bottomBtn.setText(R.string.suggested_companies);
+						}
+					
+					}
 					importBtn.setText(R.string.u_import);
 				}
 			} else {
@@ -329,6 +382,10 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				bottomLayoutIsNotSystem.setVisibility(View.VISIBLE);
 			}
 		}
+	}
+	
+	private boolean isFollowedCompanies() {
+		return groupId.equalsIgnoreCase("-10");
 	}
 	
 	@Override
@@ -360,9 +417,15 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				return;
 			}
 			
+			Constant.industriesItem = industryData;
 			filterListener.onFilterClickListener();
 			
 		} else if (v == rightBtn) {
+			
+			if (isFollowedCompanies() && !haveGotSuggestedCompanies) {
+				getSuggestedCompanies();
+				return;
+			}
 			
 			edit = !edit;
 			selectAllBtn.setTag(R.id.tag_select, false);
@@ -408,9 +471,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			
 			getCompaniesOfGroup(true, false);
 			
-		} else if (v == leftImageBtn) {
-			//TODO
-//			finish();
 		} else if (v == importBtn) {
 			
 			if (selected) {//add to
@@ -497,6 +557,9 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	}
 
 	private void startToSuggestedCompanyActivity() {
+		
+		if (suggestedCompanies.size() == 0) return;
+		
 		Intent intent = new Intent();
 		intent.setClass(mContext, SuggestedCompaniesActivity.class);
 		intent.putExtra(Constant.GROUP, group);
@@ -611,12 +674,19 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		importBtn.setVisibility(isSystemGroup ? View.VISIBLE : View.GONE);
 		bottomBtn.setVisibility(isSystemGroup ? View.VISIBLE : View.GONE);
 		addCompaniesBtn.setVisibility(!isSystemGroup ? View.VISIBLE : View.GONE);
-		bottomBtn.setText(mContext.getResources().getString(R.string.suggested_companies));
-	}
-	
-	private void setBottomLayoutStatusForLinkedCompanies() {
-		bottomLayout.setVisibility(edit ? View.VISIBLE : View.GONE);
-		bottomLayoutLinkedCompanies.setVisibility(edit ? View.VISIBLE : View.GONE);
+		
+		if (isFollowedCompanies()) { 
+			
+			if (suggestedCompanies.size() == 0) {
+				
+				bottomBtn.setText("");
+				
+			} else {
+				
+				bottomBtn.setText(R.string.suggested_companies);
+			}
+		
+		}
 	}
 	
 	private void setLeftButtonVisible() {
@@ -768,14 +838,12 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 
 	@Override
 	public void onRefresh() {
-		// TODO Auto-generated method stub
 		nextPage = "";
 		getCompaniesOfGroup(true, false);
 	}
 
 	@Override
 	public void onLoadMore() {
-		// TODO Auto-generated method stub
 		getCompaniesOfGroup(false, true);
 	}
 }

@@ -82,6 +82,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	private TextView noCompaniesTitle;
 	private TextView noCompaniesPt;
 	private String nextPage = "";
+	private Boolean haveGotSuggestedCompanies = false;
+	private List<Company> suggestedCompanies = new ArrayList<Company>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +201,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		setTitle(groupName);
 		
 		getCompaniesOfGroup(true, false);
+		
+		if (isFollowedCompanies()) getSuggestedCompanies();
 	}
 	
 	@Override
@@ -234,6 +238,8 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 							if (obj instanceof Company) {
 								
 								Company company = (Company)obj;
+								Boolean selectedAll = (Boolean) selectAllBtn.getTag(R.id.tag_select);
+								company.select = selectedAll ? true : false;
 								if (company.orgID != 0) {
 									companies.add(company);
 								}
@@ -337,7 +343,18 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 					bottomLayout.setVisibility(View.GONE);
 					bottomLayoutLinkedCompanies.setVisibility(View.GONE);
 				} else {
-					bottomBtn.setText(R.string.suggested_companies);
+					if (isFollowedCompanies()) { 
+						
+						if (suggestedCompanies.size() == 0) {
+							
+							bottomBtn.setText("");
+							
+						} else {
+							
+							bottomBtn.setText(R.string.suggested_companies);
+						}
+					
+					}
 					importBtn.setText(R.string.u_import);
 				}
 			} else {
@@ -359,6 +376,10 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 				bottomLayoutIsNotSystem.setVisibility(View.VISIBLE);
 			}
 		}
+	}
+
+	private boolean isFollowedCompanies() {
+		return groupId.equalsIgnoreCase("-10");
 	}
 	
 	@Override
@@ -409,6 +430,11 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			startActivityForResult(intent, requestCode);
 			
 		} else if (v == rightBtn) {
+			
+			if (isFollowedCompanies() && !haveGotSuggestedCompanies) {
+				getSuggestedCompanies();
+				return;
+			}
 			
 			edit = !edit;
 			selectAllBtn.setTag(R.id.tag_select, false);
@@ -545,6 +571,9 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	}
 
 	private void startToSuggestedCompanyActivity() {
+		
+		if (suggestedCompanies.size() == 0) return;
+		
 		Intent intent = new Intent();
 		intent.setClass(mContext, SuggestedCompaniesActivity.class);
 		intent.putExtra(Constant.GROUP, group);
@@ -628,6 +657,41 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		});
 		
 	}
+	
+	private void getSuggestedCompanies() {
+		
+		mApiHttp.getRecommendedCompanies(APIHttpMetadata.GETALL, false, new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				
+				dismissLoadingDialog();
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					
+					haveGotSuggestedCompanies = true;
+					
+					DataPage page = parser.parseGetRecommendedCompanies();
+					
+					suggestedCompanies.clear();
+					if (page != null && page.items != null) {
+						for (Object obj : page.items) {
+							suggestedCompanies.add((Company)obj);
+						}
+					}
+					
+					if (suggestedCompanies.size() == 0) return;
+					
+				}
+			}
+			
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+			}
+		});
+	};
 
 	/**
 	 * add companies to group
@@ -656,7 +720,19 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		importBtn.setVisibility(isSystemGroup ? View.VISIBLE : View.GONE);
 		bottomBtn.setVisibility(isSystemGroup ? View.VISIBLE : View.GONE);
 		addCompaniesBtn.setVisibility(!isSystemGroup ? View.VISIBLE : View.GONE);
-		bottomBtn.setText(mContext.getResources().getString(R.string.suggested_companies));
+		
+		if (isFollowedCompanies()) { 
+			
+			if (suggestedCompanies.size() == 0) {
+				
+				bottomBtn.setText("");
+				
+			} else {
+				
+				bottomBtn.setText(R.string.suggested_companies);
+			}
+		
+		}
 	}
 	
 	private void setLeftButtonVisible() {

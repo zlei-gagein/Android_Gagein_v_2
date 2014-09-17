@@ -34,6 +34,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.DataPage;
+import com.gagein.model.Group;
 import com.gagein.model.Update;
 import com.gagein.ui.BaseFragment;
 import com.gagein.ui.bookmark.BookMarksActivity;
@@ -190,8 +191,15 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	}
 	
 	private ArrayList<String> getGroupsId() {
+		ArrayList<String> groupsId = new ArrayList<String>();
+		for (int i = 0; i < Constant.selectedGroupFilter.size() ; i++) {
+			Group group = Constant.selectedGroupFilter.get(i);
+			if (group.selected && !group.getMogid().equalsIgnoreCase("-10")) {
+				groupsId.add(group.getMogid());
+			}
+		}
 		
-		return null;
+		return groupsId;
 	}
 	
 	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {

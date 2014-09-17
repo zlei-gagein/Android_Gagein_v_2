@@ -28,6 +28,7 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	private List<Boolean> checkedList;
 	private OnFilterCancle onFilterCancle;
 	private OnFilterDone onFilterDone;
+	private OnRefreshCompaniesForFilter onRefreshCompaniesForFilter;
 	
 	public interface OnFilterCancle {
 		public void onFilterCancle();
@@ -35,6 +36,9 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	
 	public interface OnFilterDone {
 		public void onFilterDone();
+	}
+	public interface OnRefreshCompaniesForFilter {
+		public void onRefreshCompaniesForFilter();
 	}
 	
 	@Override
@@ -50,6 +54,11 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 			onFilterDone = (OnFilterDone) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement OnFilterDone");
+		}
+		try {
+			onRefreshCompaniesForFilter = (OnRefreshCompaniesForFilter) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onRefreshCompaniesForFilter");
 		}
 		
 	}
@@ -72,7 +81,6 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 		
 		setTitle(R.string.companies_filters);
 		setLeftButton(R.string.cancel);
-		setRightButton(R.string.done);
 		
 		listView = (ListView) view.findViewById(R.id.listView);
 		
@@ -120,17 +128,8 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 			
 			onFilterCancle.onFilterCancle();
 			
-		} else if (v == rightBtn) {
-			
-			for (int i= 0; i < checkedList.size(); i ++) {
-				if (checkedList.get(i) == true) {
-					Constant.FILTER_INDUSTRY_NAME = industryData.get(i).item_name;
-					Constant.INDUSTRYID = industryData.get(i).filter_param_value;
-				}
-			}
-			onFilterDone.onFilterDone();
-			
 		}
+		
 	}
 
 	@Override
@@ -143,7 +142,17 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 				checkedList.set(i, false);
 			}
 		}
+		
 		adapter.notifyDataSetChanged();
+		
+		for (int i= 0; i < checkedList.size(); i ++) {
+			if (checkedList.get(i) == true) {
+				Constant.FILTER_INDUSTRY_NAME = industryData.get(i).item_name;
+				Constant.INDUSTRYID = industryData.get(i).filter_param_value;
+			}
+		}
+		
+		onRefreshCompaniesForFilter.onRefreshCompaniesForFilter();
 		
 	}
 

@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 
 import com.gagein.R;
 import com.gagein.ui.company.CompanyActivity;
-import com.gagein.ui.company.CompanyGroupsActivity;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.news.NewsActivity;
 import com.gagein.util.Constant;
@@ -86,7 +85,7 @@ public class FilterActivity extends BaseActivity {
 			}
 		} else if (v == companyGroups || v == companyGroupsBtn) {//TODO
 			
-			startActivitySimple(CompanyGroupsActivity.class);
+			startActivitySimple(GroupsFilterActivity.class);
 			
 		} else if (v == news || v == newsBtn) {
 			

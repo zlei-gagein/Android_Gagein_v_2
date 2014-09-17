@@ -17,12 +17,18 @@ import com.gagein.ui.BaseFragment;
 public class NewsFilterFragment extends BaseFragment implements OnClickListener {
 	
 	private Button newsBtn;
+	private Button companyGroupsBtn;
 	private RelativeLayout news;
+	private RelativeLayout companyGroups;
 	private Context mContext;
 	private OnNewsFilterLeftBtnClickListener newsFilterLeftBtnListener;
 	private NewsBtnClickListener newsBtnListener;
 	private CloseLeftLayoutListener closeLeftLayoutListener;
+	private OnStartGroupsListener onStartGroupsListener;
 	
+	public interface OnStartGroupsListener {
+		public void onStartGroupsListener();
+	}
 	
 	public interface OnNewsFilterLeftBtnClickListener {
 		public void onNewsFilterLeftbtnClickListener();
@@ -58,6 +64,11 @@ public class NewsFilterFragment extends BaseFragment implements OnClickListener 
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement CloseLeftLayoutListener");
 		}
+		try {
+			onStartGroupsListener = (OnStartGroupsListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onStartGroupsListener");
+		}
 	}
 
 	@Override
@@ -75,7 +86,9 @@ public class NewsFilterFragment extends BaseFragment implements OnClickListener 
 		super.initView();
 		
 		newsBtn = (Button) view.findViewById(R.id.newsBtn);
+		companyGroupsBtn = (Button) view.findViewById(R.id.companyGroupsBtn);
 		news = (RelativeLayout) view.findViewById(R.id.news);
+		companyGroups = (RelativeLayout) view.findViewById(R.id.companyGroups);
 		
 		setRightButton(R.string.done);
 		setTitle(R.string.filters);
@@ -86,6 +99,8 @@ public class NewsFilterFragment extends BaseFragment implements OnClickListener 
 		super.setOnClickListener();
 		newsBtn.setOnClickListener(this);
 		news.setOnClickListener(this);
+		companyGroupsBtn.setOnClickListener(this);
+		companyGroups.setOnClickListener(this);
 	}
 	
 	@Override
@@ -97,6 +112,8 @@ public class NewsFilterFragment extends BaseFragment implements OnClickListener 
 			closeLeftLayoutListener.closeLeftLayoutListener();
 		} else if (v == news || v == newsBtn) {
 			newsBtnListener.onNewsBtnListener();
+		} else if (v == companyGroups || v == companyGroupsBtn) {
+			onStartGroupsListener.onStartGroupsListener();
 		}
 	}
 
