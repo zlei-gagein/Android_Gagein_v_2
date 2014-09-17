@@ -10,9 +10,11 @@ import com.gagein.model.Company;
 import com.gagein.model.Contact;
 import com.gagein.model.Facet;
 import com.gagein.model.FacetItemIndustry;
+import com.gagein.model.Group;
 import com.gagein.model.Happening;
 import com.gagein.model.SavedSearch;
 import com.gagein.model.Update;
+import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 
 /**
@@ -63,6 +65,10 @@ public abstract class Constant {
 	public static List<Agent> locationNewsTriggers = new ArrayList<Agent>();
 	
 	public static List<Agent> locationNewsTriggersForCompany = new ArrayList<Agent>();
+	
+	public static List<Group> locationGroupsFilter = new ArrayList<Group>();
+	
+	public static List<FilterItem> locationSelecedNewsTriggers = new ArrayList<FilterItem>();
 	
 	public static List<SavedSearch> locationSavedSearchs = new ArrayList<SavedSearch>();
 	

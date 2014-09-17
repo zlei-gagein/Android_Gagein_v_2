@@ -23,6 +23,8 @@ public class Group extends DataModel implements Serializable{
 	
 	private int followLinkType;
 	
+	public Boolean selected = false;
+	
 	public int getFollowLinkType() {
 		return followLinkType;
 	}

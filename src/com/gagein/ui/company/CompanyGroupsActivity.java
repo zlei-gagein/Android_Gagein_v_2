@@ -125,14 +125,22 @@ public class CompanyGroupsActivity extends BaseActivity implements OnItemClickLi
 			
 		} else if (v == rightBtn) {
 			
-			
+			//TODO
 			
 		}
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		
+		if (groups.get(position).selected) return;
+		
+		for (int i = 0; i < groups.size(); i ++) {
+			groups.get(i).selected = false;
+		}
+		
+		groups.get(position).selected = true;
+		adapter.notifyDataSetChanged();
 		
 	}
 }

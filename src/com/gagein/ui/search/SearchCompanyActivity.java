@@ -323,14 +323,15 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 						}
 						
 						companyInfoLayout.removeView(view);
-						//TODO 数据删除
+						
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
 						Log.v("silen", "delete = queryType = " + queryType);
 						
-						if (queryType.equalsIgnoreCase("mer|_for_id")) {
+						if (queryType.equalsIgnoreCase("mer_for_id")) {
 							
-							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers(); 
+							List<FilterItem> newsTriggerList = mFilters.getNewsTriggers();
+							deleteFilters(id, newsTriggerList);
 							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							
@@ -473,13 +474,9 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			
 			@Override
 			public void onClick(View arg0) {
+				
 				companyInfoLayout.removeView(view);
-				//TODO 数据删除
-				Log.v("silen", "type = " + type);
 				Constant.ALLWORDS_FOR_TRIGGERS = "";
-//				Constant.EXACTWORDS = "";
-//				Constant.ANYWORDS = "";
-//				Constant.NONEWORDS = "";
 				
 				PAGENUM = 1;
 				searchAdvancedCompanies(false);
@@ -545,7 +542,6 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		//TODO
 		if (requestCode == this.requestCode && resultCode == RESULT_OK) {
 			setSortBy();
 			PAGENUM = 1;
@@ -594,7 +590,6 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
 					
 					companyInfoLayout.removeView(view);
 					Constant.COMPANY_SEARCH_KEYWORDS = "";

@@ -37,7 +37,6 @@ import com.gagein.model.filter.Filters;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
-import com.gagein.util.Log;
 
 public class NewsTriggersActivity extends BaseActivity implements OnItemClickListener, OnFocusChangeListener{
 	
@@ -60,7 +59,6 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 	private Timer timer;
 	private List<Agent> agents = new ArrayList<Agent>();
 	private SearchAgentAdapter searchAdapter;
-	private String allWords = "";
 	private ImageView searchIcon;
 	private ListView currentListView;
 	
@@ -118,7 +116,6 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		if (allChecked) mNewsTriggers.get(0).setChecked(true);
 		
 		mDateRanks = mFilters.getDateRanges();
-		allWords = Constant.ALLWORDS_FOR_TRIGGERS;
 		
 		searchAdapter = new SearchAgentAdapter(mContext, agents);
 		systemAgentAdapter = new FilterAdapter(mContext, mNewsTriggers);

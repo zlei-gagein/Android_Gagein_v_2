@@ -653,8 +653,10 @@ public class APIParser {
 		JSONArray FiscalYearEndMonths = options.optJSONArray("fiscal_year_end_months");
 		filters.setFiscalYearEndMonths(setFilterItem(FiscalYearEndMonths, true));
 		
-		JSONArray NewsTriggers = options.optJSONArray("system_agents");
-		filters.setNewsTriggers(setFilterItem(NewsTriggers, true));
+		//TODO
+//		JSONArray NewsTriggers = options.optJSONArray("system_agents");
+//		filters.setNewsTriggers(setFilterItem(NewsTriggers, true));
+		filters.setNewsTriggers(Constant.locationSelecedNewsTriggers);
 		
 		JSONArray Ranks = options.optJSONArray("list_rank");
 		filters.setRanks(setFilterItem(Ranks, true));

@@ -56,11 +56,7 @@ public class FilterGroupsAdapter extends BaseAdapter {
 		
 		final Group group = groups.get(position);
 		viewHolder.name.setText(group.getName());
-//		viewHolder.button.setBackgroundResource(group.getchecked ? R.drawable.button_select : R.drawable.button_unselect);
-//		if (agent.checked) {
-//		} else {
-//			viewHolder.button.setBackgroundResource(R.drawable.button_unselect);
-//		}
+		viewHolder.button.setBackgroundResource(group.selected ? R.drawable.button_select : R.drawable.button_unselect);
 		return convertView;
 	}
 	
