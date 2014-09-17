@@ -337,6 +337,23 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany(); 
 							deleteFilters(id, companiesList);
 							
+							///如果company条件删光了，则选中all company
+							boolean hasSelectAnything = false;
+							FilterItem allItem = null;
+							for (int i = 0; i < companiesList.size(); i ++) {
+								FilterItem theItem = companiesList.get(i);
+								if (theItem.getChecked()) {
+									hasSelectAnything = true;
+								}
+								
+								if (theItem.getKey().equalsIgnoreCase("0")) {
+									allItem = theItem;
+								}
+							}
+							if (!hasSelectAnything && allItem != null) {
+								allItem.setChecked(true);
+							}
+							
 						} else if (queryType.equalsIgnoreCase("rank")) {
 							
 							List<FilterItem> rankList = mFilters.getRanks();
