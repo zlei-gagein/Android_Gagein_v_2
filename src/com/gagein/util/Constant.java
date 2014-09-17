@@ -64,9 +64,9 @@ public abstract class Constant {
 	
 	public static List<Agent> locationNewsTriggers = new ArrayList<Agent>();
 	
-	public static List<Agent> locationNewsTriggersForCompany = new ArrayList<Agent>();
+	public static List<Group> selectedGroupFilter = new ArrayList<Group>();
 	
-	public static List<Group> locationGroupsFilter = new ArrayList<Group>();
+	public static List<Agent> locationNewsTriggersForCompany = new ArrayList<Agent>();
 	
 	public static List<FilterItem> locationSelecedNewsTriggers = new ArrayList<FilterItem>();
 	
@@ -284,6 +284,8 @@ public abstract class Constant {
 	public static Map<Long, Happening> mHappeningMap = new HashMap<Long, Happening>();
 	
 	public static List<FacetItemIndustry> currentCompetitorIndustries = new ArrayList<FacetItemIndustry>();
+	
+	public static Group currentGroup;
 	
 	public static List<String> COMPETITOR_FILTER_PARAM_VALUE = new ArrayList<String>();
 	

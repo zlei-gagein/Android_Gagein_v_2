@@ -200,7 +200,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		Constant.MFILTERS = null;
 		Constant.locationNewsTriggers.clear();
 		Constant.locationNewsTriggersForCompany.clear();
-		Constant.locationGroupsFilter.clear();
+		Constant.selectedGroupFilter.clear();
 		Constant.locationSavedSearchs.clear();
 	}
 
