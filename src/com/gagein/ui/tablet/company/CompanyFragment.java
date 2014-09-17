@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,9 +78,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private ImageView companyLog;
 	private ImageView followImage;
 	private TextView companyName;
-	private TextView industries;
-	private TextView website;
-	private TextView address;
+	private TextView websiteAndAddress;
 	private List<Update> updates = new ArrayList<Update>();
 	private int employeesPageNumber = Constant.PAGE_NUMBER_START;
 	private byte orderBy;
@@ -125,6 +122,8 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private Boolean haveProcessed = false;
 	private Boolean haveProvisionDate;
 	private Boolean isProcessed;
+	private Boolean haveGotPeople = false;;
+	private Boolean haveGotCompetitors = false;
 	private long provisionDate;
 	private TextView provisionPt;
 	private RelativeLayout provisionBottomLayout;
@@ -206,9 +205,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		companyLog = (ImageView) view.findViewById(R.id.companyLog);
 		followImage = (ImageView) view.findViewById(R.id.followImage);
 		companyName = (TextView) view.findViewById(R.id.companyName);
-		industries = (TextView) view.findViewById(R.id.industries);
-		website = (TextView) view.findViewById(R.id.website);
-		address = (TextView) view.findViewById(R.id.address);
+		websiteAndAddress = (TextView) view.findViewById(R.id.websiteAndAddress);
 		noCompetitors = (LinearLayout) view.findViewById(R.id.noCompetitors);
 		noPeople = (LinearLayout) view.findViewById(R.id.noPeople);
 		sortByLayout = (RelativeLayout) view.findViewById(R.id.sortByLayout);
@@ -326,15 +323,8 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		int deviceWidth = CommonUtil.getDeviceWidth((Activity)mContext);
 		companyName.setMaxWidth(deviceWidth - companyLogWith - followImageWith - 80);
 		companyName.setText(mCompany.orgName);
-		if (TextUtils.isEmpty(mCompany.industries)) {
-			industries.setVisibility(View.GONE);
-		} else {
-			industries.setVisibility(View.VISIBLE);
-			industries.setText(mCompany.industries);
-		}
 		
-		website.setText(CommonUtil.removeWebsite3W(mCompany.website));
-		address.setText(mCompany.address());
+		websiteAndAddress.setText(CommonUtil.removeWebsite3W(mCompany.website) + "  " + mCompany.address());
 		
 		setFollowImage();
 	}
@@ -448,6 +438,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 						
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							haveGotCompetitors = true;
+							
 							dpCompetitors = parser.parseGetSimilarCompanies();
 							competitorFacet = dpCompetitors.facet;
 							if (competitorFacet != null) {
@@ -476,10 +469,15 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 								noCompetitors.setVisibility(View.GONE);
 							}
 							
+							setFilterAndSortByVisible(isNoCompetitor);
 							competitorList.setPullLoadEnable(dpCompetitors.hasMore);
 							
 							if (!loadMore) setCompetitors();
+							
 						} else {
+							
+							isNoCompetitor = true;
+							setFilterAndSortByVisible(isNoCompetitor);
 							alertMessageForParser(parser);
 						}
 						dismissLoadingDialog();
@@ -515,6 +513,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 						
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
+							
+							haveGotPeople = true;
+							
 							personFacetItems = new ArrayList<FacetItem>();
 							
 							dpPersons = parser.parseGetCompanyPeople();
@@ -583,10 +584,19 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 								personList.setPullLoadEnable(false);
 								dismissLoadingDialog();
 								return;
+							} else {
+								isNoPeople = false;
+								noPeople.setVisibility(View.GONE);
 							}
 							
+							setFilterAndSortByVisible(isNoPeople);
+							
 						} else {
+							
+							isNoPeople = true;
+							setFilterAndSortByVisible(isNoPeople);
 							alertMessageForParser(parser);
+							
 						}
 						
 						personList.setPullLoadEnable(dpPersons.hasMore);
@@ -600,6 +610,16 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 				showConnectionError(mContext);
 			}
 		});
+	}
+	
+	private void setFilterAndSortByVisible(Boolean noData) {
+		if (noData) {
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
+		} else {
+			setFilterVisible(View.VISIBLE);
+			setSortByVisible(View.VISIBLE);
+		}
 	}
 	
 	private void getProvisionDateWithCompanyID() {
@@ -1039,31 +1059,37 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			
 			setAllListViewGone();
 			setListViewVisible(personList);
-			setFilterVisible(View.VISIBLE);
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
 			
 			typeChecked = typePeople;
-			setSortByVisible(View.VISIBLE);
 			setCategoryButtonDefault();
 			setSelectedButton(peopleBtn);
 			
 			if (persons.size() == 0 && !isNoPeople) getPersons(false, orderBy, 0,0,0);
 			setNoDatasGone();
+			
 			if (isNoPeople) noPeople.setVisibility(View.VISIBLE);
+			
+			if (haveGotPeople) setFilterAndSortByVisible(isNoPeople);
 			
 		} else if (v == competitorsBtn) {
 			
 			setAllListViewGone();
 			setListViewVisible(competitorList);
-			setFilterVisible(View.VISIBLE);
+			setFilterVisible(View.GONE);
+			setSortByVisible(View.GONE);
 			
 			typeChecked = typeCompetitors;
-			setSortByVisible(View.VISIBLE);
 			setCategoryButtonDefault();
 			setSelectedButton(competitorsBtn);
 			
 			if (competitors.size() == 0 && !isNoCompetitor) getCompetitors(false, true);
 			setNoDatasGone();
+			
 			if (isNoCompetitor) noCompetitors.setVisibility(View.VISIBLE);
+			if (haveGotCompetitors) setFilterAndSortByVisible(isNoCompetitor);
+			
 		}
 	}
 	

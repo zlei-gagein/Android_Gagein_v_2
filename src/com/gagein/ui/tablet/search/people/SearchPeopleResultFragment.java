@@ -219,18 +219,21 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		});
 	}
 	
+	private void setSavedStatus(JSONObject jsonObject) {
+		
+		String savedId = jsonObject.optString("mss_search_name");
+		rightBtn.setText(TextUtils.isEmpty(savedId) ? R.string.u_save : R.string.Saved);
+		
+	}
+	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
+		
 		if (!loadMore) seachedPersons.clear();
 		
+		//根据mssid来判断是否saved
+		setSavedStatus(parser.data());
+		
 		//将API返回数据同步到本地的filter options
-//		Constant.MFILTERS.getHeadquarters().clear();
-//		Constant.MFILTERS.getJobTitles().clear();
-//		Constant.MFILTERS.getLocations().clear();
-//		Constant.REVERSE = false;
-//		CommonUtil.resetFilters();
-//		CommonUtil.initConSortBy();
-		
-		
 		queryInfo = parser.parserQueryInfo(false);
 		
 		//set query info layout

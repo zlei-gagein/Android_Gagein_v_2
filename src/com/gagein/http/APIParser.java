@@ -868,11 +868,14 @@ public class APIParser {
 			//根据返回的queryInfo 设置News Triggers
 			for (int i = 0; i < newsTriggersArray.length(); i ++) {
 				newsTriggerList.get(0).setChecked(false);
-				String id = newsTriggersArray.optJSONObject(i).optString("id");
-				for (int j = 0 ; j < newsTriggerList.size(); j ++) {
-					String key = newsTriggerList.get(j).getKey();
-					if (id.equalsIgnoreCase(key)) {
-						newsTriggerList.get(j).setChecked(true);
+				if (null != newsTriggersArray.optJSONObject(i)) {
+					
+					String id = newsTriggersArray.optJSONObject(i).optString("id");
+					for (int j = 0 ; j < newsTriggerList.size(); j ++) {
+						String key = newsTriggerList.get(j).getKey();
+						if (id.equalsIgnoreCase(key)) {
+							newsTriggerList.get(j).setChecked(true);
+						}
 					}
 				}
 			}
@@ -1203,13 +1206,18 @@ public class APIParser {
 			String key = filterItems.get(i).getKey();
 			for (int j = 0; j < jsonArray.length(); j ++) {
 				JSONObject jObject = jsonArray.optJSONObject(j);
-				String id = jObject.optString("id");
-				if (id.equalsIgnoreCase(key)) {
-					filterItems.get(i).setChecked(true);
-					if (TextUtils.isEmpty(companyQueryInfoStr)) {
-						companyQueryInfoStr = filterItems.get(i).getValue();
-					} else {
-						companyQueryInfoStr = companyQueryInfoStr + "," + filterItems.get(i).getValue();
+				if (null != jObject) {
+					
+					if (jObject.has("id") && !TextUtils.isEmpty(jObject.optString("id"))) {
+						String id = jObject.optString("id");
+						if (id.equalsIgnoreCase(key)) {
+							filterItems.get(i).setChecked(true);
+							if (TextUtils.isEmpty(companyQueryInfoStr)) {
+								companyQueryInfoStr = filterItems.get(i).getValue();
+							} else {
+								companyQueryInfoStr = companyQueryInfoStr + "," + filterItems.get(i).getValue();
+							}
+						}
 					}
 				}
 			}

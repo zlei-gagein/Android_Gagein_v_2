@@ -72,7 +72,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private ImageView companyLog;
 	private ImageView followImage;
 	private TextView companyName;
-	private TextView industries;
+	private TextView websiteAndAddress;
 	private List<Update> updates = new ArrayList<Update>();
 	private List<Person> persons = new ArrayList<Person>();
 	private List<Company> competitors = new ArrayList<Company>();
@@ -120,7 +120,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private Boolean haveProvisionDate;
 	private Boolean isProcessed;
 	private Boolean haveGotPeople = false;;
-	private Boolean haveGotCompetitors = false;;
+	private Boolean haveGotCompetitors = false;
 	private long provisionDate;
 	private String provisionDateStr;
 	private SearchCompanyAdapter searchCompanyAdapter;
@@ -248,7 +248,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		companyLog = (ImageView) findViewById(R.id.companyLog);
 		followImage = (ImageView) findViewById(R.id.followImage);
 		companyName = (TextView) findViewById(R.id.companyName);
-		industries = (TextView) findViewById(R.id.industries);
+		websiteAndAddress = (TextView) findViewById(R.id.websiteAndAddress);
 		noCompetitors = (LinearLayout) findViewById(R.id.noCompetitors);
 		noPeople = (LinearLayout) findViewById(R.id.noPeople);
 		sortByLayout = (RelativeLayout) findViewById(R.id.sortByLayout);
@@ -307,12 +307,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		int deviceWidth = CommonUtil.getDeviceWidth((Activity)mContext);
 		companyName.setMaxWidth(deviceWidth - companyLogWith - followImageWith - 80);
 		companyName.setText(mCompany.orgName);
-		if (TextUtils.isEmpty(mCompany.industries)) {
-			industries.setVisibility(View.GONE);
-		} else {
-			industries.setVisibility(View.VISIBLE);
-			industries.setText(mCompany.industries);
-		}
+
+		websiteAndAddress.setText(CommonUtil.removeWebsite3W(mCompany.website) + "  " + mCompany.address());
 		
 		setFollowImage();
 		

@@ -231,9 +231,19 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		
 	}
 	
+	private void setSavedStatus(JSONObject jsonObject) {
+		
+		String savedId = jsonObject.optString("mss_search_name");
+		rightBtn.setText(TextUtils.isEmpty(savedId) ? R.string.u_save : R.string.Saved);
+		
+	}
+	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
 		
 		if (!loadMore) seachedCompanies.clear();
+		
+		//根据mssid来判断是否saved
+		setSavedStatus(parser.data());
 		
 		//将API返回数据同步到本地的filter options
 		queryInfo = parser.parserQueryInfo(true);
