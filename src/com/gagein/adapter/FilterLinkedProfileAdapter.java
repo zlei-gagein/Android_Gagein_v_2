@@ -1,6 +1,6 @@
 package com.gagein.adapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,24 +12,21 @@ import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.model.FacetItem;
-import com.gagein.util.Constant;
 
 public class FilterLinkedProfileAdapter extends BaseAdapter {
 	
 	private Context mContext;
-	private List<Boolean> checkedList;
-	private List<FacetItem> linkedProfiles;
+	private ArrayList<FacetItem> linkedProfiles;;
 	
-	public FilterLinkedProfileAdapter(Context mContext, List<Boolean> checkedList) {
+	public FilterLinkedProfileAdapter(Context mContext, ArrayList<FacetItem> linkedProfiles) {
 		super();
 		this.mContext = mContext;
-		this.checkedList = checkedList;
-		this.linkedProfiles = Constant.currentFacet.linkedProfiles;
+		this.linkedProfiles = linkedProfiles;
 	}
 
 	@Override
 	public int getCount() {
-		return checkedList.size();
+		return linkedProfiles.size();
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class FilterLinkedProfileAdapter extends BaseAdapter {
 		}
 		
 		viewHolder.name.setText(linkedProfiles.get(position).name);
-		if (checkedList.get(position)) {
+		if (linkedProfiles.get(position).selected) {
 			viewHolder.button.setBackgroundResource(R.drawable.button_select);
 		} else {
 			viewHolder.button.setBackgroundResource(R.drawable.button_unselect);

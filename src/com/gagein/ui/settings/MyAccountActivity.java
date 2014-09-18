@@ -171,6 +171,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			String email = emailEdt.getText().toString().trim();
 			String company = companyEdt.getText().toString().trim();
 			String jobTitle = jobTitleEdt.getText().toString().trim();
+			
 			if (!CommonUtil.isValidEmail(email)) {
 				showShortToast(stringFromResID(R.string.invalid_email_format));
 				return false;
@@ -279,111 +280,6 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 						showConnectionError();
 					}
 				});
-	}
-	
-	private void saveName(String name) {
-		showLoadingDialog();
-		mApiHttp.changeProfileName(name, "",
-				new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-
-						APIParser parser = new APIParser(jsonObject);
-						if (parser.isOK()) {
-//							profile.fullName() = name;
-						} else {
-							String msg = MessageCode.messageForCode(parser.messageCode());
-							if (msg != null && msg.length() > 0) {
-								CommonUtil.showDialog(msg);
-							}
-						}
-						dismissLoadingDialog();
-					}
-					
-				}, new Response.ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						showConnectionError();
-					}
-				});
-	}
-	
-	private void saveEmail(String email) {
-		showLoadingDialog();
-		mApiHttp.changeProfileEmail(email, new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-//					profile.email = email;
-				} else {
-					alertMessageForParser(parser);
-				}
-				dismissLoadingDialog();
-			}
-			
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
-	}
-	
-	private void saveCompany(String company) {
-		showLoadingDialog();
-		mApiHttp.changeProfileCompany(company, new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-						
-						APIParser parser = new APIParser(jsonObject);
-						if (parser.isOK()) {
-						} else {
-							alertMessageForParser(parser);
-						}
-						dismissLoadingDialog();
-					}
-					
-				}, new Response.ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						showConnectionError();
-					}
-				});
-	}
-	
-	private void saveJobTitle(String jobTitle) {
-		showLoadingDialog();
-		mApiHttp.changeProfileJobTitle(jobTitle, new Listener<JSONObject>() {
-
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-				} else {
-					String msg = MessageCode.messageForCode(parser.messageCode());
-					if (msg != null && msg.length() > 0) {
-						CommonUtil.showDialog(msg);
-					}
-				}
-				CommonUtil.dissmissLoadingDialog();
-			}
-			
-		}, new Response.ErrorListener() {
-
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
 	}
 	
 	private void hideSoftKey() {

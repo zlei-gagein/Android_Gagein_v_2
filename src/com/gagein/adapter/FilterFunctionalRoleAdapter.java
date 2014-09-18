@@ -1,6 +1,6 @@
 package com.gagein.adapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,24 +12,21 @@ import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.model.FacetItem;
-import com.gagein.util.Constant;
 
 public class FilterFunctionalRoleAdapter extends BaseAdapter {
 	
 	private Context mContext;
-	private List<Boolean> checkedList;
-	private List<FacetItem> functionalRoles;
+	private ArrayList<FacetItem> functionalRoles;
 	
-	public FilterFunctionalRoleAdapter(Context mContext, List<Boolean> checkedList) {
+	public FilterFunctionalRoleAdapter(Context mContext, ArrayList<FacetItem> functionalRoles) {
 		super();
 		this.mContext = mContext;
-		this.checkedList = checkedList;
-		this.functionalRoles = Constant.currentFacet.functionalRoles;
+		this.functionalRoles = functionalRoles;
 	}
 
 	@Override
 	public int getCount() {
-		return checkedList.size();
+		return functionalRoles.size();
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class FilterFunctionalRoleAdapter extends BaseAdapter {
 		}
 		
 		viewHolder.name.setText(functionalRoles.get(position).name);
-		if (checkedList.get(position)) {
+		if (functionalRoles.get(position).selected) {
 			viewHolder.button.setBackgroundResource(R.drawable.button_select);
 		} else {
 			viewHolder.button.setBackgroundResource(R.drawable.button_unselect);

@@ -12,24 +12,21 @@ import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.model.FacetItem;
-import com.gagein.util.Constant;
 
 public class FilterJobLevelAdapter extends BaseAdapter {
 	
 	private Context mContext;
-	private List<Boolean> checkedList;
 	private List<FacetItem> jobLevels;
 	
-	public FilterJobLevelAdapter(Context mContext, List<Boolean> checkedList) {
+	public FilterJobLevelAdapter(Context mContext, List<FacetItem> jobLevels) {
 		super();
 		this.mContext = mContext;
-		this.checkedList = checkedList;
-		this.jobLevels = Constant.currentFacet.jobLevels;
+		this.jobLevels = jobLevels;
 	}
 
 	@Override
 	public int getCount() {
-		return checkedList.size();
+		return jobLevels.size();
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class FilterJobLevelAdapter extends BaseAdapter {
 		}
 		
 		viewHolder.name.setText(jobLevels.get(position).name);
-		if (checkedList.get(position)) {
+		if (jobLevels.get(position).selected) {
 			viewHolder.button.setBackgroundResource(R.drawable.button_select);
 		} else {
 			viewHolder.button.setBackgroundResource(R.drawable.button_unselect);

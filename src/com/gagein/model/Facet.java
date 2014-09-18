@@ -8,11 +8,11 @@ import org.json.JSONObject;
 
 public class Facet extends DataModel {
 
-	public List<FacetItem> jobLevels = new ArrayList<FacetItem>();
-	public List<FacetItem> functionalRoles = new ArrayList<FacetItem>();
-	public List<FacetItem> linkedProfiles = new ArrayList<FacetItem>();
-	public List<FacetItemIndustry> industries = new ArrayList<FacetItemIndustry>();
-	public List<FacetItemIndustry> industryFacets = new ArrayList<FacetItemIndustry>();
+	public ArrayList<FacetItem> jobLevels = new ArrayList<FacetItem>();
+	public ArrayList<FacetItem> functionalRoles = new ArrayList<FacetItem>();
+	public ArrayList<FacetItem> linkedProfiles = new ArrayList<FacetItem>();
+	public ArrayList<FacetItemIndustry> industries = new ArrayList<FacetItemIndustry>();
+	public ArrayList<FacetItemIndustry> industryFacets = new ArrayList<FacetItemIndustry>();
 	private int length;
 	
 	@Override
@@ -29,6 +29,7 @@ public class Facet extends DataModel {
 				FacetItem item = new FacetItem();
 				item.id = 0;
 				item.name = "All";
+				item.selected = true;
 				jobLevels.add(item);
 			} else {
 				JSONObject jobLevelObj = jobLevelsData.optJSONObject(i-1);
@@ -47,6 +48,7 @@ public class Facet extends DataModel {
 				FacetItem item = new FacetItem();
 				item.id = 0;
 				item.name = "All";
+				item.selected = true;
 				functionalRoles.add(item);
 			} else {
 				JSONObject roleObj = rolesData.optJSONObject(i-1);
@@ -65,6 +67,7 @@ public class Facet extends DataModel {
 				FacetItem item = new FacetItem();
 				item.id = 0;
 				item.name = "All";
+				item.selected = true;
 				linkedProfiles.add(item);
 			} else {
 				JSONObject profileObj = profilesData.optJSONObject(i-1);

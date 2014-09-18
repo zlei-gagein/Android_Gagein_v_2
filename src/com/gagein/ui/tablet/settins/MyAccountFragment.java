@@ -3,6 +3,7 @@ package com.gagein.ui.tablet.settins;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	private LinearLayout clearJobTitle;
 	private LinearLayout layout;
 	private UserProfile profile;
+	private UserProfile temporaryProfile;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,30 +150,67 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
+		
 		if (actionId == EditorInfo.IME_ACTION_DONE) {
 			String name = nameEdt.getText().toString().trim();
 			String email = emailEdt.getText().toString().trim();
 			String company = companyEdt.getText().toString().trim();
 			String jobTitle = jobTitleEdt.getText().toString().trim();
+			
 			if (!CommonUtil.isValidEmail(email)) {
-				CommonUtil.showShortToast(mContext.getResources().getString(R.string.invalid_email_format));
+				showShortToast(stringFromResID(R.string.invalid_email_format));
 				return false;
 			}
-			if (v == nameEdt) {
+			
+			boolean canSave = false;
+			if (v == nameEdt && !TextUtils.isEmpty(name)) {
 				clearName.setVisibility(View.GONE);
 				nameEdt.clearFocus();
-			} else if (v == emailEdt) {
+				canSave = true;
+			} else if (v == emailEdt && !TextUtils.isEmpty(email)) {
 				clearEmail.setVisibility(View.GONE);
 				emailEdt.clearFocus();
-			} else if (v == companyEdt) {
+				canSave = true;
+			} else if (v == companyEdt && !TextUtils.isEmpty(company)) {
 				clearCompany.setVisibility(View.GONE);
 				companyEdt.clearFocus();
-			} else if (v == jobTitleEdt) {
+				canSave = true;
+			} else if (v == jobTitleEdt && !TextUtils.isEmpty(jobTitle)) {
 				clearJobTitle.setVisibility(View.GONE);
 				jobTitleEdt.clearFocus();
+				canSave = true;
 			}
-			hideSoftKey();
-			saveProfile(name, email, company, jobTitle);
+			
+			// 468494# setting-my account,name, company, job title为空的时候不允许保存
+			if (canSave) {
+				hideSoftKey();
+				
+				String firstName = null;
+				String lastName = null;
+				if (!TextUtils.isEmpty(name)) {
+					int index = name.indexOf(" ");
+					if (index > 0) {
+						firstName = name.substring(0, index);
+						lastName = name.substring(index).trim();
+					} else {
+						firstName = name;
+					}
+				}
+				
+				if (TextUtils.isEmpty(firstName)) {
+					firstName = profile.firstName;
+				}
+				
+				if (TextUtils.isEmpty(lastName)) {
+					lastName = profile.lastName;
+				}
+				
+				saveProfile(firstName, lastName
+						, TextUtils.isEmpty(email) ? profile.email : email
+								, TextUtils.isEmpty(company) ? profile.orgName : company
+										, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
+			}
+			
 			return true;
 		}
 
@@ -192,9 +231,16 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		}
 	}
 	
-	private void saveProfile(String name, String email, String company, String jobTitle) {
-		showLoadingDialog(getActivity());
-		mApiHttp.changeProfile(name, email, company, jobTitle,
+	private void saveProfile(String firstName, String lastName, String email, String company, String jobTitle) {
+		showLoadingDialog(mContext);
+		temporaryProfile = new UserProfile();
+		temporaryProfile.firstName = firstName;
+		temporaryProfile.lastName = lastName;
+		temporaryProfile.email = email;
+		temporaryProfile.orgName = company;
+		temporaryProfile.orgTitle = jobTitle;
+		
+		mApiHttp.changeProfile(firstName, lastName, email, company, jobTitle,
 				new Listener<JSONObject>() {
 
 			@Override
@@ -203,7 +249,20 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
 //							profile.fullName() = name;
-							showShortToast(getActivity().getResources().getString(R.string.Saved));
+							showShortToast(mContext.getResources().getString(R.string.Saved));
+							
+							profile.firstName = temporaryProfile.firstName;
+							profile.lastName = temporaryProfile.lastName;
+							profile.email = temporaryProfile.email;
+							profile.orgName = temporaryProfile.orgName;
+							profile.orgTitle = temporaryProfile.orgTitle;
+							
+							String nameStr = TextUtils.isEmpty(temporaryProfile.lastName) ? temporaryProfile.firstName : temporaryProfile.firstName + " " + temporaryProfile.lastName;
+							nameEdt.setText(nameStr);
+							emailEdt.setText(temporaryProfile.email);
+							companyEdt.setText(temporaryProfile.orgName);
+							jobTitleEdt.setText(temporaryProfile.orgTitle);
+							
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
 							if (msg != null && msg.length() > 0) {
@@ -217,7 +276,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						showConnectionError(getActivity());
+						showConnectionError(mContext);
 					}
 				});
 	}
