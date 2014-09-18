@@ -229,8 +229,7 @@ public class APIHttp {
 	 * @param aIncludeCompetitors
 	 * @param callback
 	 */
-	private void getHappenings(byte aAPIHappeningType, long aTypeID,
-			long aEventID, byte aPageFlag, long aPageTime,
+	private void getHappenings(byte aAPIHappeningType, long aTypeID, long aEventID, byte aPageFlag, long aPageTime,
 			Boolean aIncludeCompetitors, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "member/me/event/tracker";
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -280,20 +279,27 @@ public class APIHttp {
 	 * @param aFunctionalAreaID
 	 * @param aJobLevelID
 	 */
-	public void getCompanyPeople(long aCompanyID, int aPageNumber,
-			byte aOrderBy, long aFunctionalAreaID, long aJobLevelID, long aLinkedProfile,
+	public void getCompanyPeople(long aCompanyID, int aPageNumber, byte aOrderBy, ArrayList<String> aFunctionalAreaID, 
+			ArrayList<String> aJobLevelID, ArrayList<String> aLinkedProfile,
 			Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "company/" + aCompanyID + "/contacts";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		params.put("page", aPageNumber + "");
-		params.put("profile_type", aLinkedProfile + "");
 		params.put("no_proxy", "true");
-		if (aFunctionalAreaID > 0)
-			params.put("functional_areaid", aFunctionalAreaID + "");
-		if (aJobLevelID > 0)
-			params.put("job_levelid", aJobLevelID + "");
-
+		
+		String functionalKey = "functional_areaid";
+		String functionalValue = stringForMultipleValuesToOneKey(aFunctionalAreaID, functionalKey);
+		params.put(functionalKey, functionalValue);
+		
+		String jobLevelKey = "job_levelid";
+		String jobLevelValue = stringForMultipleValuesToOneKey(aJobLevelID, jobLevelKey);
+		params.put(jobLevelKey, jobLevelValue);
+		
+		String linkedProfileKey = "profile_type";
+		String linkedProfileValue = stringForMultipleValuesToOneKey(aLinkedProfile, linkedProfileKey);
+		params.put(linkedProfileKey, linkedProfileValue);
+		
 		// sort
 		String orderByStr = null;
 		switch (aOrderBy) {

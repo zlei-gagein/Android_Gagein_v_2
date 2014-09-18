@@ -1,7 +1,6 @@
 package com.gagein.ui.newsfilter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +19,8 @@ public class FilterLinkedProfileActivity extends BaseActivity implements OnItemC
 	
 	private FilterLinkedProfileAdapter adapter;
 	private ListView listView;
-	private List<Boolean> checkedList;
 	private Facet mFacet;
-	private List<FacetItem> linkedProfiles;
+	private ArrayList<FacetItem> linkedProfiles;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +49,6 @@ public class FilterLinkedProfileActivity extends BaseActivity implements OnItemC
 		if (null == mFacet) return;
 		linkedProfiles = mFacet.linkedProfiles;
 		if (null == linkedProfiles) return;
-		checkedList = new ArrayList<Boolean>();
-		for (int i = 0; i < linkedProfiles.size(); i ++) {
-			checkedList.add(false);
-		}
-		
-		if (Constant.LINKED_PROFILE_ID == 0) {
-			checkedList.set(0, true);
-		} else {
-			for (int i = 0; i < linkedProfiles.size(); i ++) {
-				if (Constant.LINKED_PROFILE_ID == linkedProfiles.get(i).id) {
-					checkedList.set(i, true);
-				}
-			}
-		}
 		
 		setData();
 	}
@@ -82,36 +66,68 @@ public class FilterLinkedProfileActivity extends BaseActivity implements OnItemC
 		if (v == leftImageBtn) {
 			finish();
 		} else if (v == rightBtn) {
-			finish();
-			for (int i= 0; i < checkedList.size(); i ++) {
-				if (checkedList.get(i) == true) {
-					Constant.LINKED_PROFILE_ID = linkedProfiles.get(i).id;
-					Constant.LINKED_PROFILE_NAME = linkedProfiles.get(i).name;
+			for (int i= 0; i < linkedProfiles.size(); i ++) {
+				if (linkedProfiles.get(i).selected) {
+					Constant.currentLinkedProfileForCompanyPeopleFilter = linkedProfiles;
 				}
 			}
+			finish();
 		}
 	}
 	
 	@Override
 	protected void setData() {
 		super.setData();
-		adapter = new FilterLinkedProfileAdapter(mContext, checkedList);
+		adapter = new FilterLinkedProfileAdapter(mContext, linkedProfiles);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == arg2) {
-				checkedList.set(i, true);
+		Boolean checked = linkedProfiles.get(position).selected;
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < linkedProfiles.size(); i ++) {
+				if (i == 0) continue;
+				if (linkedProfiles.get(i).selected) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				linkedProfiles.get(position).selected = true;
+				
+				for (int i = 0; i < linkedProfiles.size(); i ++) {
+					if (i != 0) linkedProfiles.get(i).selected = false;
+				}
+			}
+		} else {
+			
+			//circle 
+			linkedProfiles.get(position).selected = !checked;
+			Boolean haveChecked = false;
+			for (int i = 0; i < linkedProfiles.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (linkedProfiles.get(i).selected) {
+						haveChecked = true;
+						linkedProfiles.get(0).selected = false;
+					}
+				}
+			}
+			if (!haveChecked) {
+				linkedProfiles.get(0).selected = true;
 			}
 		}
-		adapter.notifyDataSetChanged();
+		
+		adapter.notifyDataSetChanged();//refresh listview state
+		
 	}
 
 }

@@ -79,7 +79,7 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 			
 		} else if (actionName.equals(Constant.BROADCAST_REFRESH_COMPANY_PEOPLE)) {
 			
-			companyFragment.getPersons(false, Constant.PEOPLE_SORT_BY, Constant.JOB_LEVEL_ID, Constant.FUNCTIONAL_ROLE_ID, Constant.LINKED_PROFILE_ID);
+			companyFragment.getPersons(false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_FILTER_REFRESH_COMPETITORS)) {
 			
@@ -122,12 +122,9 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 	protected void onDestroy() {
 		super.onDestroy();
 		Constant.PEOPLE_SORT_BY = 0;
-		Constant.JOB_LEVEL_ID = 0;
-		Constant.FUNCTIONAL_ROLE_ID = 0;
-		Constant.LINKED_PROFILE_ID = 0;
-		Constant.JOB_LEVEL_NAME = "";
-		Constant.FUNCTIONAL_ROLE_NAME = "";
-		Constant.LINKED_PROFILE_NAME = "";
+		Constant.currentJobLevelForCompanyPeopleFilter.clear();
+		Constant.currentFunctionRoleForCompanyPeopleFilter.clear();
+		Constant.currentLinkedProfileForCompanyPeopleFilter.clear();
 		
 		Constant.COMPETITOR_SORT_BY = "noe";
 		Constant.COMPETITOR_FILTER_PARAM_VALUE.clear();

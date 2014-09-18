@@ -17,6 +17,7 @@ public class FacetItem extends DataModel implements Serializable{
 	public int count = 0;
 	
 	public int type;
+	public Boolean selected = false;
 
 	
 	@Override

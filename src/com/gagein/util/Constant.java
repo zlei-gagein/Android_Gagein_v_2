@@ -9,6 +9,7 @@ import com.gagein.model.Agent;
 import com.gagein.model.Company;
 import com.gagein.model.Contact;
 import com.gagein.model.Facet;
+import com.gagein.model.FacetItem;
 import com.gagein.model.FacetItemIndustry;
 import com.gagein.model.Group;
 import com.gagein.model.Happening;
@@ -248,16 +249,14 @@ public abstract class Constant {
 	public static String NOTHING = "";
 	
 	public static byte PEOPLE_SORT_BY = 0;
-	public static long JOB_LEVEL_ID = 0;
-	public static long FUNCTIONAL_ROLE_ID = 0;
-	public static long LINKED_PROFILE_ID = 0;
+	
+	public static ArrayList<FacetItem> currentJobLevelForCompanyPeopleFilter = new ArrayList<FacetItem>();
+	public static ArrayList<FacetItem> currentFunctionRoleForCompanyPeopleFilter = new ArrayList<FacetItem>();
+	public static ArrayList<FacetItem> currentLinkedProfileForCompanyPeopleFilter = new ArrayList<FacetItem>();
+	
+	
 	public static long INDUSTRY = 0;
 	public static String COMPETITOR_SORT_BY = "noe";
-	
-	public static String JOB_LEVEL_NAME = "All Job Levels";
-	public static String FUNCTIONAL_ROLE_NAME = "All Functional Roles";
-	public static String LINKED_PROFILE_NAME = "All Linked Profiles";
-	public static String INDUSTRY_NAME = "All Industries";
 	
 	public static String FILTER_INDUSTRY_NAME = "";
 	

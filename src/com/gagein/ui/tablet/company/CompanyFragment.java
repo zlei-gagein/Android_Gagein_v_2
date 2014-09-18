@@ -494,7 +494,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	
 	public void refreshPeopleForFilter() {
 		employeesPageNumber = Constant.PAGE_NUMBER_START;
-		getPersons(false, Constant.PEOPLE_SORT_BY, Constant.FUNCTIONAL_ROLE_ID, Constant.JOB_LEVEL_ID, Constant.LINKED_PROFILE_ID);
+		getPersons(false);
 	}
 	
 	public void refreshCompetitorsForFilter() {
@@ -503,10 +503,27 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		getCompetitors(false, true);
 	}
 	
-	public void getPersons(final Boolean loadMore, byte orderBy, final long selectedFunctionRoleID, final long selectedJobLevelID, long selectedLinkedProfileID) {
+	private ArrayList<String> getFilterIds(ArrayList<FacetItem> currentFilters) {
+		
+		ArrayList<String> filterIds = new ArrayList<String>();
+		
+		ArrayList<FacetItem> filters = currentFilters;
+		for (int i = 0; i < filters.size(); i++) {
+			if (filters.get(i).selected && filters.get(i).id != 0) {
+				filterIds.add(filters.get(i).id + "");
+			}
+		}
+		
+		return filterIds;
+		
+	}
+	
+	public void getPersons(final Boolean loadMore) {
 		if (!loadMore) showLoadingDialog(mContext);
-		mApiHttp.getCompanyPeople(mCompanyId, employeesPageNumber, orderBy,
-				selectedFunctionRoleID, selectedJobLevelID, selectedLinkedProfileID, new Listener<JSONObject>() {
+		mApiHttp.getCompanyPeople(mCompanyId, employeesPageNumber, Constant.PEOPLE_SORT_BY,
+				getFilterIds(Constant.currentJobLevelForCompanyPeopleFilter), 
+				getFilterIds(Constant.currentFunctionRoleForCompanyPeopleFilter), 
+				getFilterIds(Constant.currentLinkedProfileForCompanyPeopleFilter), new Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject jsonObject) {
@@ -537,9 +554,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 										item = jobLevels.get(i);
 										item.type = FacetItem.TYPE_JOB_LEVEL;
 										personFacetItems.add(item);
-										if (item.id == selectedJobLevelID) {
-//											hasSelecteID = true;
-										}
+//										if (item.id == selectedJobLevelID) {
+////											hasSelecteID = true;
+//										}
 									}
 
 								}
@@ -560,9 +577,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 										item.type = FacetItem.TYPE_FUNCTIONAL_ROLE;
 										personFacetItems.add(item);
 										
-										if (item.id == selectedFunctionRoleID) {
-//											hasSelecteID = true;
-										}
+//										if (item.id == selectedFunctionRoleID) {
+////											hasSelecteID = true;
+//										}
 									}
 								}
 							}
@@ -1066,7 +1083,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			setCategoryButtonDefault();
 			setSelectedButton(peopleBtn);
 			
-			if (persons.size() == 0 && !isNoPeople) getPersons(false, orderBy, 0,0,0);
+			if (persons.size() == 0 && !isNoPeople) getPersons(false);
 			setNoDatasGone();
 			
 			if (isNoPeople) noPeople.setVisibility(View.VISIBLE);
@@ -1095,7 +1112,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	
 	public void getPeopleBySortBy() {
 		setSortByButton();
-		getPersons(false, Constant.PEOPLE_SORT_BY, Constant.JOB_LEVEL_ID, Constant.FUNCTIONAL_ROLE_ID, Constant.LINKED_PROFILE_ID);
+		getPersons(false);
 	}
 	
 	public void getCompetitorsBySortBy() {
@@ -1220,7 +1237,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			getNews(true, aNewsID, APIHttpMetadata.kGGPageFlagMoveDown, aPageTime, false);
 		} else if (typeChecked == typePeople) {
 			employeesPageNumber++;
-			getPersons(true, Constant.PEOPLE_SORT_BY, Constant.JOB_LEVEL_ID, Constant.FUNCTIONAL_ROLE_ID, Constant.LINKED_PROFILE_ID);
+			getPersons(true);
 		} else if (typeChecked == typeCompetitors) {
 			competitorsPageNumber ++;
 			getCompetitors(true, false);

@@ -1,7 +1,6 @@
 package com.gagein.ui.tablet.company;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,9 +23,8 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 
 	private FilterJobLevelAdapter adapter;
 	private ListView listView;
-	private List<Boolean> checkedList;
 	private Facet mFacet;
-	private List<FacetItem> jobLevels;
+	private ArrayList<FacetItem> jobLevels;
 	private OnClosedJoblevel onClosedJoblevel;
 	
 	public interface OnClosedJoblevel {
@@ -60,7 +58,6 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 		
 		setTitle(R.string.job_level);
 		setLeftImageButton(R.drawable.back_arrow);
-		setRightButton(R.string.done);
 		
 		listView = (ListView) view.findViewById(R.id.listView);
 	}
@@ -73,20 +70,6 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 		if (null == mFacet) return;
 		jobLevels = mFacet.jobLevels;
 		if (null == jobLevels) return;
-		checkedList = new ArrayList<Boolean>();
-		for (int i = 0; i < jobLevels.size(); i ++) {
-			checkedList.add(false);
-		}
-		
-		if (Constant.JOB_LEVEL_ID == 0) {
-			checkedList.set(0, true);
-		} else {
-			for (int i = 0; i < jobLevels.size(); i ++) {
-				if (Constant.JOB_LEVEL_ID == jobLevels.get(i).id) {
-					checkedList.set(i, true);
-				}
-			}
-		}
 		
 		setData();
 	}
@@ -101,23 +84,18 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == leftImageBtn) {
+			
 			onClosedJoblevel.onClosedJoblevel();
-		} else if (v == rightBtn) {
-			for (int i= 0; i < checkedList.size(); i ++) {
-				if (checkedList.get(i) == true) {
-					Constant.JOB_LEVEL_ID = jobLevels.get(i).id;
-					Constant.JOB_LEVEL_NAME = jobLevels.get(i).name;
-				}
-			}
-			onClosedJoblevel.onClosedJoblevel();
+			
 		}
 	}
 	
 	@Override
 	protected void setData() {
 		super.setData();
-		adapter = new FilterJobLevelAdapter(mContext, checkedList);
+		adapter = new FilterJobLevelAdapter(mContext, jobLevels);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
@@ -126,14 +104,53 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == position) {
-				checkedList.set(i, true);
+		Boolean checked = jobLevels.get(position).selected;
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < jobLevels.size(); i ++) {
+				if (i == 0) continue;
+				if (jobLevels.get(i).selected) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				jobLevels.get(position).selected = true;
+				
+				for (int i = 0; i < jobLevels.size(); i ++) {
+					if (i != 0) jobLevels.get(i).selected = false;
+				}
+			}
+		} else {
+			
+			//circle 
+			jobLevels.get(position).selected = !checked;
+			Boolean haveChecked = false;
+			for (int i = 0; i < jobLevels.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (jobLevels.get(i).selected) {
+						haveChecked = true;
+						jobLevels.get(0).selected = false;
+					}
+				}
+			}
+			if (!haveChecked) {
+				jobLevels.get(0).selected = true;
 			}
 		}
-		adapter.notifyDataSetChanged();
+		
+		adapter.notifyDataSetChanged();//refresh listview state
+		
+		for (int i= 0; i < jobLevels.size(); i ++) {
+			if (jobLevels.get(i).selected) {
+				Constant.currentJobLevelForCompanyPeopleFilter = jobLevels;
+			}
+		}
+		
 	}
 	
 }

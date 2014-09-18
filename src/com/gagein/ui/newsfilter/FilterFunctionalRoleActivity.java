@@ -1,7 +1,6 @@
 package com.gagein.ui.newsfilter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +19,8 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 	
 	private FilterFunctionalRoleAdapter adapter;
 	private ListView listView;
-	private List<Boolean> checkedList;
 	private Facet mFacet;
-	private List<FacetItem> functionalRoles;
+	private ArrayList<FacetItem> functionalRoles;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +48,7 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 		mFacet = Constant.currentFacet;
 		if (null == mFacet) return;
 		functionalRoles = mFacet.functionalRoles;
-		checkedList = new ArrayList<Boolean>();
 		if (null == functionalRoles) return;
-		for (int i = 0; i < functionalRoles.size(); i ++) {
-			checkedList.add(false);
-		}
-		
-		if (Constant.FUNCTIONAL_ROLE_ID == 0) {
-			checkedList.set(0, true);
-		} else {
-			for (int i = 0; i < functionalRoles.size(); i ++) {
-				if (Constant.FUNCTIONAL_ROLE_ID == functionalRoles.get(i).id) {
-					checkedList.set(i, true);
-				}
-			}
-		}
 		
 		setData();
 	}
@@ -83,10 +67,9 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 			finish();
 		} else if (v == rightBtn) {
 			finish();
-			for (int i= 0; i < checkedList.size(); i ++) {
-				if (checkedList.get(i) == true) {
-					Constant.FUNCTIONAL_ROLE_ID = functionalRoles.get(i).id;
-					Constant.FUNCTIONAL_ROLE_NAME = functionalRoles.get(i).name;
+			for (int i= 0; i < functionalRoles.size(); i ++) {
+				if (functionalRoles.get(i).selected) {
+					Constant.currentFunctionRoleForCompanyPeopleFilter = functionalRoles;
 				}
 			}
 		}
@@ -95,23 +78,56 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 	@Override
 	protected void setData() {
 		super.setData();
-		adapter = new FilterFunctionalRoleAdapter(mContext, checkedList);
+		adapter = new FilterFunctionalRoleAdapter(mContext, functionalRoles);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == arg2) {
-				checkedList.set(i, true);
+		Boolean checked = functionalRoles.get(position).selected;
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < functionalRoles.size(); i ++) {
+				if (i == 0) continue;
+				if (functionalRoles.get(i).selected) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				functionalRoles.get(position).selected = true;
+				
+				for (int i = 0; i < functionalRoles.size(); i ++) {
+					if (i != 0) functionalRoles.get(i).selected = false;
+				}
+			}
+		} else {
+			
+			//circle 
+			functionalRoles.get(position).selected = !checked;
+			Boolean haveChecked = false;
+			for (int i = 0; i < functionalRoles.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (functionalRoles.get(i).selected) {
+						haveChecked = true;
+						functionalRoles.get(0).selected = false;
+					}
+				}
+			}
+			if (!haveChecked) {
+				functionalRoles.get(0).selected = true;
 			}
 		}
-		adapter.notifyDataSetChanged();
+		
+		adapter.notifyDataSetChanged();//refresh listview state
+		
 	}
 
 }

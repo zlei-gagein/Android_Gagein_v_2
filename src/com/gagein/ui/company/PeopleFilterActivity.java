@@ -11,7 +11,6 @@ import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.newsfilter.FilterFunctionalRoleActivity;
 import com.gagein.ui.newsfilter.FilterJobLevelActivity;
 import com.gagein.ui.newsfilter.FilterLinkedProfileActivity;
-import com.gagein.util.Constant;
 
 public class PeopleFilterActivity extends BaseActivity {
 	
@@ -55,34 +54,6 @@ public class PeopleFilterActivity extends BaseActivity {
 	@Override
 	protected void initData() {
 		super.initData();
-		
-		setJobLevel();
-		setFunctionalRole();
-		setLinkedProfile();
-	}
-	
-	private void setJobLevel() {
-		if (Constant.JOB_LEVEL_ID == 0) {
-			jobLevelBtn.setText(mContext.getResources().getString(R.string.all));
-		} else {
-			jobLevelBtn.setText(Constant.JOB_LEVEL_NAME);
-		}
-	}
-	
-	private void setFunctionalRole() {
-		if (Constant.FUNCTIONAL_ROLE_ID == 0) {
-			functionalRoleBtn.setText(mContext.getResources().getString(R.string.all));
-		} else {
-			functionalRoleBtn.setText(Constant.FUNCTIONAL_ROLE_NAME);
-		}
-	}
-	
-	private void setLinkedProfile() {
-		if (Constant.LINKED_PROFILE_ID == 0) {
-			linkedProfileBtn.setText(mContext.getResources().getString(R.string.all));
-		} else {
-			linkedProfileBtn.setText(Constant.LINKED_PROFILE_NAME);
-		}
 	}
 	
 	@Override
@@ -99,17 +70,27 @@ public class PeopleFilterActivity extends BaseActivity {
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
+		
 		if (v == rightBtn) {
+			
 			Intent intent = new Intent(PeopleFilterActivity.this, CompanyActivity.class);
 			setResult(RESULT_OK, intent);
 			finish();
+			
 		} else if (v == jobLevel || v == jobLevelBtn) {
+			
 			startActivitySimple(FilterJobLevelActivity.class);
+			
 		} else if (v == functionalRole || v == functionalRoleBtn) {
+			
 			startActivitySimple(FilterFunctionalRoleActivity.class);
+			
 		} else if (v == linkedProfile || v == linkedProfileBtn) {
+			
 			startActivitySimple(FilterLinkedProfileActivity.class);
+			
 		}
+		
 	}
 	
 }
