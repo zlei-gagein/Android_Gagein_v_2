@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +29,7 @@ import com.gagein.model.Group;
 import com.gagein.ui.companies.AddToGroupActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class ImportCompanyAdapter extends BaseAdapter{
 	
@@ -97,9 +99,12 @@ public class ImportCompanyAdapter extends BaseAdapter{
 				others = " & " + (nameList.size() - 1) + " others";
 			}
 			
-			viewHolder.contactName.setText(contactName);
 			viewHolder.others.setText(others);
-//			CommonUtil.setViewWidth(viewHolder.others);
+			viewHolder.contactName.setText(contactName);
+			if (!TextUtils.isEmpty(others)) {
+				Log.v("silen", "!TextUtils.isEmpty(others)");
+				CommonUtil.setContactNameViewWidth(viewHolder.contactName);
+			}
 			
 		}
 		

@@ -1,10 +1,11 @@
 package com.gagein.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
-public class Contact {
+public class Contact implements Comparable<Contact> {
 	
 	private String name;
 	
@@ -24,6 +25,21 @@ public class Contact {
 
 	public void setEmails(List<String> emails) {
 		this.emails = emails;
+	}
+	
+	public static class Comparators {
+		public static Comparator<Contact> NAME = new Comparator<Contact>() {
+			
+			@Override
+			public int compare(Contact lhs, Contact rhs) {
+				return lhs.name.trim().toUpperCase().compareTo(rhs.name.trim().toUpperCase());
+			}
+		};
+	}
+
+	@Override
+	public int compareTo(Contact another) {
+		return Comparators.NAME.compare(this, another);
 	}
 	
 }

@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -965,12 +966,20 @@ public class CommonUtil {
 	     view.setLayoutParams(params);
 	}
 	
+	public static void setContactNameViewWidth(View view) {
+		if (null == view) return;
+		int width = getViewWith(view);
+		if (width < 300) return;
+		ViewGroup.LayoutParams params = view.getLayoutParams();
+		params.width = 250; 
+		view.setLayoutParams(params);
+	}
+	
 	public static void setFilterMaxWith(TextView textView) {
+		
 		ViewGroup.LayoutParams params = textView.getLayoutParams();
 		int viewWith = getViewWith(textView);
 		int screenWith = GageinApplication.getContext().getResources().getDisplayMetrics().widthPixels;
-		Log.v("silen", "viewWith = " + viewWith);
-		Log.v("silen", "screenWith = " + screenWith);
 		if (viewWith > screenWith - 300) {
 			params.width = screenWith - 200;
 		} else {
@@ -978,14 +987,12 @@ public class CommonUtil {
 		}
 		
 		textView.setLayoutParams(params);
+		
 	}
 	
 	public static void resetFilters() {//TODO
 		
 		Constant.ALLWORDS_FOR_TRIGGERS = "";
-//		Constant.EXACTWORDS = "";
-//		Constant.ANYWORDS = "";
-//		Constant.NONEWORDS = "";
 		
 		Filters mFilters = Constant.MFILTERS;
 		
@@ -1668,6 +1675,8 @@ public class CommonUtil {
             
             contacts.add(contact);
         }
+        
+        Collections.sort(contacts);
         
         Constant.contacts = contacts;
         

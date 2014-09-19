@@ -1759,5 +1759,19 @@ public class APIHttp {
 		addBasicParams(params);
 		connectURL(Method.GET, listener, errorListener, url, params);
 	}
+	
+	public void shareReferalResult( Listener<JSONObject> listener, ErrorListener errorListener) {
+		String url = apiRootPath + "member/me/share/referral_result";
+		HashMap<String, String> params = new HashMap<String, String>();
+		addBasicParams(params);
+		connectURL(Method.GET, listener, errorListener, url, params);
+	}
+	
+	
 }
+
+
+
+
+
 

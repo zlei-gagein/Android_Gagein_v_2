@@ -115,4 +115,17 @@ public class APIHttpMetadata {
 	public static final String kCompetitorOrderByEmployeeSize  = "noe";
 	public static final String kCompetitorOrderByName  = "buzname";
 	public static final String KCOMPETITORORDERBYRELEVANCE  = "relevance";
+	
+	//plan stype
+	public static final String kGGPlanTypeProfessional = "101";
+	public static final String kGGPlanTypeBusiness = "201";
+	public static final String kGGPlanTypeSF = "301";
+	
 }
+
+
+
+
+
+
+

@@ -20,11 +20,13 @@
             android:orientation="vertical" >
             
             <LinearLayout
+                android:id="@+id/shareLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp" >
+                android:paddingRight="15dp"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -58,7 +60,6 @@
                 android:scrollbars="none" >
 
                 <LinearLayout
-                    android:id="@+id/shareLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -194,14 +195,15 @@
                 android:background="@color/silver" />
 
             <LinearLayout
+                android:id="@+id/referalResultLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:orientation="horizontal" 
+                android:visibility="gone"
                 android:weightSum="3">
 
                 <LinearLayout
-                    android:id="@+id/signUpLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
 	                android:paddingLeft="5dp"
@@ -210,29 +212,26 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/signUpNum"
+                        android:id="@+id/freeMonthLeft"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="10"
                         android:gravity="center"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/resultFrom"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_marginTop="2dp"
-                        android:text="Free Month Left"
+                        android:text="Free Month\nLeft"
                         android:textColor="@color/text_weak"
                         android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/creditLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -241,29 +240,26 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/creditNum"
+                        android:id="@+id/freeMonthTotal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:gravity="center"
-                        android:text="22"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/each"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:text="Free Month Total"
+                        android:text="Free Month\nTotal"
                         android:textColor="@color/text_weak"
                         android:textSize="12sp" />
                 </LinearLayout>
                 
                 <LinearLayout
-                    android:id="@+id/credidtLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -272,12 +268,12 @@
                     android:orientation="vertical" >
 
                     <TextView
+                        android:id="@+id/coworkerCount"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:gravity="center"
-                        android:text="230"
                         android:textColor="@color/text_dark"
                         android:textSize="16sp" />
 
@@ -286,7 +282,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:text="Coworker on Gagein"
+                        android:text="Coworker\non Gagein"
                         android:textColor="@color/text_weak"
                         android:textSize="12sp" />
                 </LinearLayout>

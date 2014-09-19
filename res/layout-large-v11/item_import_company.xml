@@ -80,9 +80,8 @@
                 android:layout_alignParentLeft="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:maxLength="16"
                 android:textColor="@color/text_weak"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
             
             <TextView
                 android:id="@+id/others"
@@ -92,7 +91,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/text_weak"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
             
         </RelativeLayout>
     </RelativeLayout>
