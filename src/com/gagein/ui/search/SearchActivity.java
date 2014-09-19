@@ -407,7 +407,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						companyAdapter.notifyDataSetInvalidated();
 					}
 					
-					Log.v("silen", "companies.size == " + searchCompanies.size());
 					if (searchCompanies.size() == 0) {
 						
 						companyList.setVisibility(View.GONE);
