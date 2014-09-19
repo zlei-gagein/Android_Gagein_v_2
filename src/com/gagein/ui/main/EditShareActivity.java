@@ -1,10 +1,15 @@
 package com.gagein.ui.main;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -41,6 +46,7 @@ public class EditShareActivity extends BaseActivity {
 	private EditText edtContent;
 	private TextView lblTxtCount;
 	private int textLimitation;
+	private int setSelection = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +183,7 @@ public class EditShareActivity extends BaseActivity {
 	protected void initView() {
 		super.initView();
 		setTitle(CommonUtil.nameFromSnType(snType));
-		setRightButton(R.string.share);//TODO
+		setRightButton(R.string.share);
 		
 		edtContent = (EditText) findViewById(R.id.editor);
 		lblTxtCount = (TextView) findViewById(R.id.lblTxtCount);
@@ -191,10 +197,10 @@ public class EditShareActivity extends BaseActivity {
 		if (shareType == SHARE_UPDATE && update != null) {
 			String message = update.headline;
 			edtContent.setText(message);
-			edtContent.setSelection(message.length());
+			setEidtSelectionPosition();
 		} else if (shareType == SHARE_HAPPENING && happening != null) {
 			edtContent.setText(happening.messageStr);
-			edtContent.setSelection(happening.messageStr.length());
+			setEidtSelectionPosition();
 		}
 		
 		InputFilter[] fArray = new InputFilter[1];
@@ -203,6 +209,31 @@ public class EditShareActivity extends BaseActivity {
 		
 		lblTxtCount.setText(edtContent.getText().toString().length() + "/" + textLimitation);
 		
+	}
+	
+	@SuppressLint("HandlerLeak")
+	Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			
+			edtContent.setSelection(edtContent.getText().length());
+			
+		}
+		
+	};
+	
+	private void setEidtSelectionPosition() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+		    @Override
+		    public void run() {
+		    	Message message = new Message();
+		    	message.what = setSelection;
+		    	handler.sendMessage(message);
+		    }
+		}, 20);
 	}
 
 	@Override

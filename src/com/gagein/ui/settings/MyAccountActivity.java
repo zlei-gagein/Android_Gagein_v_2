@@ -1,8 +1,14 @@
 package com.gagein.ui.settings;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,6 +42,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	private LinearLayout layout;
 	private UserProfile profile;
 	private UserProfile temporaryProfile;
+	private int setSelection = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,22 +153,47 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			clearJobTitle.setVisibility(View.GONE);
 		}
 	}
+	
+	@SuppressLint("HandlerLeak")
+	Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			
+			nameEdt.setSelection(nameEdt.getText().length());
+			emailEdt.setSelection(emailEdt.getText().length());
+			companyEdt.setSelection(companyEdt.getText().length());
+			jobTitleEdt.setSelection(jobTitleEdt.getText().length());
+			
+		}
+		
+	};
 
 	@Override
 	public void onFocusChange(View view, boolean changed) {
 		if (view == nameEdt) {
 			clearName.setVisibility(changed ? View.VISIBLE : View.GONE);
-			nameEdt.setSelection(nameEdt.getText().length());
 		} else if (view == emailEdt) {
 			clearEmail.setVisibility(changed ? View.VISIBLE : View.GONE);
-			emailEdt.setSelection(emailEdt.getText().length());
 		} else if (view == companyEdt) {
 			clearCompany.setVisibility(changed ? View.VISIBLE : View.GONE);
-			companyEdt.setSelection(companyEdt.getText().length());
 		} else if (view == jobTitleEdt) {
 			clearJobTitle.setVisibility(changed ? View.VISIBLE : View.GONE);
-			jobTitleEdt.setSelection(jobTitleEdt.getText().length());
 		}
+		setEditSelectionPosition();
+	}
+	
+	private void setEditSelectionPosition() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+		    @Override
+		    public void run() {
+		    	Message message = new Message();
+		    	message.what = setSelection;
+		    	handler.sendMessage(message);
+		    }
+		}, 20);
 	}
 
 	@Override

@@ -103,6 +103,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		listview = (XListView) view.findViewById(R.id.listview);
 		noNews = (LinearLayout) view.findViewById(R.id.noNews);
 		firstSignUp = (LinearLayout) view.findViewById(R.id.firstSignUp);
@@ -112,6 +113,8 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		setRightImageButton(R.drawable.bookmarks);
 		setLeftButton(R.string.filters);
 		setTitle(R.string.u_news);
+		
+		listview.setPullLoadEnable(false);
 	}
 	
 	public void setTopBtnVisible(int visible) {
@@ -202,7 +205,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		return groupsId;
 	}
 	
-	private void getNews(long aNewsID, byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
+	private void getNews(long aNewsID, final byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
 		
 		if (showDialog) showLoadingDialog(mContext);
 		
@@ -232,15 +235,20 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 						noNews.setVisibility(View.GONE);
 					}
 				} else {
+					updates.clear();
+					if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
+					
 					if (updates != null) {
 						listview.setPullLoadEnable(false);
-						updates.clear();
+						//updates.clear();
 						if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
 					}
-//					String msg = jsonObject.optString("msg");
-//					if (msg.equalsIgnoreCase("error")) {
-//					}
-					noNews.setVisibility(View.VISIBLE);
+					
+					if (APIHttpMetadata.kGGPageFlagFirstPage == aPageFlag) {
+						noNews.setVisibility(View.VISIBLE);
+					} else {
+						noNews.setVisibility(View.GONE);
+					}
 				}
 				firstSignUp.setVisibility(View.GONE);
 				dismissLoadingDialog();

@@ -422,6 +422,7 @@ public class ShareDialog implements OnClickListener{
 	
 	/** share the app */
 	private void shareWithSnType(final int aSnType) {
+		
 		if (CommonUtil.hasLinkedSnType(aSnType)) {
 
 			RuntimeData.updateForShare = mUpdate;

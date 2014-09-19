@@ -1,8 +1,14 @@
 package com.gagein.ui.tablet.settins;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +46,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	private LinearLayout layout;
 	private UserProfile profile;
 	private UserProfile temporaryProfile;
+	private int setSelection = 1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -216,12 +223,27 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 
 		return false;
 	}
+	
+	@SuppressLint("HandlerLeak")
+	Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			
+			nameEdt.setSelection(nameEdt.getText().length());
+			emailEdt.setSelection(emailEdt.getText().length());
+			companyEdt.setSelection(companyEdt.getText().length());
+			jobTitleEdt.setSelection(jobTitleEdt.getText().length());
+			
+		}
+		
+	};
 
 	@Override
 	public void onFocusChange(View view, boolean changed) {
 		if (view == nameEdt) {
 			clearName.setVisibility(changed ? View.VISIBLE : View.GONE);
-			nameEdt.setSelection(nameEdt.getText().length());
 		} else if (view == emailEdt) {
 			clearEmail.setVisibility(changed ? View.VISIBLE : View.GONE);
 		} else if (view == companyEdt) {
@@ -229,6 +251,19 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		} else if (view == jobTitleEdt) {
 			clearJobTitle.setVisibility(changed ? View.VISIBLE : View.GONE);
 		}
+		setEditSelectionPosition();
+	}
+
+	private void setEditSelectionPosition() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+		    @Override
+		    public void run() {
+		    	Message message = new Message();
+		    	message.what = setSelection;
+		    	handler.sendMessage(message);
+		    }
+		}, 20);
 	}
 	
 	private void saveProfile(String firstName, String lastName, String email, String company, String jobTitle) {

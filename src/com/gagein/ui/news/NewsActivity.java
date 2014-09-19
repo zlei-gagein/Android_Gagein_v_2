@@ -164,6 +164,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 		firstSignUp = (LinearLayout) findViewById(R.id.firstSignUp);
 		pendingLayout = (LinearLayout) findViewById(R.id.pendingLayout);
 		pending = (Button) findViewById(R.id.pending);
+		listview.setPullLoadEnable(false);
 	}
 	
 	@Override
@@ -349,7 +350,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 				} else {
 					
 					updates.clear();
-					newsAdapter.notifyDataSetChanged();
+					if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
 					
 					if (updates != null) {
 						listview.setPullLoadEnable(false);

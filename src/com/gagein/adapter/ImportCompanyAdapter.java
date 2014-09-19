@@ -75,6 +75,7 @@ public class ImportCompanyAdapter extends BaseAdapter{
 			viewHolder.name = (TextView) convertView.findViewById(R.id.name);
 			viewHolder.website = (TextView) convertView.findViewById(R.id.website);
 			if (CommonUtil.isTablet(mContext)) viewHolder.contactName = (TextView) convertView.findViewById(R.id.contactName);
+			if (CommonUtil.isTablet(mContext)) viewHolder.others = (TextView) convertView.findViewById(R.id.others);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -88,14 +89,18 @@ public class ImportCompanyAdapter extends BaseAdapter{
 		if (CommonUtil.isTablet(mContext)) {
 			List<String> nameList = mCompany.getNameList();
 			String contactName = "";
+			String others = "";
 			if (nameList.size() == 1) {
 				contactName = nameList.get(0);
-			} else if (nameList.size() == 2) {
-				contactName = nameList.get(0) + " & " + nameList.get(1);
-			} else if (nameList.size() > 2) {
-				contactName = nameList.get(0) + " & " + (nameList.size() - 1) + " others";
+			} else if (nameList.size() >= 2) {
+				contactName = nameList.get(0);
+				others = " & " + (nameList.size() - 1) + " others";
 			}
+			
 			viewHolder.contactName.setText(contactName);
+			viewHolder.others.setText(others);
+//			CommonUtil.setViewWidth(viewHolder.others);
+			
 		}
 		
 		final ImageView button = viewHolder.button;
@@ -225,6 +230,7 @@ public class ImportCompanyAdapter extends BaseAdapter{
 		public TextView name;
 		public TextView website;
 		public TextView contactName;
+		public TextView others;
 	}
 
 }
