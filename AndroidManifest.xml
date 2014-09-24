@@ -163,6 +163,18 @@
          
          <activity
             android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.scores.ScoresActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.scores.ScoresSortActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
             android:name="com.gagein.ui.companies.CompaniesActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
