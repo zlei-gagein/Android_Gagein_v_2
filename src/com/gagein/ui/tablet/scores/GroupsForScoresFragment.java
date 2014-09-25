@@ -1,13 +1,15 @@
-package com.gagein.ui.scores;
+package com.gagein.ui.tablet.scores;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -20,22 +22,47 @@ import com.gagein.adapter.FilterGroupsAdapter;
 import com.gagein.http.APIParser;
 import com.gagein.model.DataPage;
 import com.gagein.model.Group;
-import com.gagein.ui.main.BaseActivity;
+import com.gagein.ui.BaseFragment;
 import com.gagein.util.Constant;
 
-public class GroupsForScoresActivity extends BaseActivity implements OnItemClickListener{
+public class GroupsForScoresFragment extends BaseFragment implements OnItemClickListener{
 	
 	private ListView listView;
 	private List<Group> groups = new ArrayList<Group>();
 	private FilterGroupsAdapter adapter;
-	private int resultCode = 11;
-
+	private OnFinishGroupsListener onFinishGroupsListener;
+	private OnChangeGroupsFilterListener onChangeGroupsFilterListener;
+	
+	public interface OnFinishGroupsListener {
+		public void onFinishGroupsListener();
+	}
+	
+	public interface OnChangeGroupsFilterListener {
+		public void onChangeGroupsFilterListener();
+	}
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_companygroups);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			onFinishGroupsListener = (OnFinishGroupsListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement OnFinishGroupsListener");
+		}
+		try {
+			onChangeGroupsFilterListener = (OnChangeGroupsFilterListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement OnChangeGroupsFilterListener");
+		}
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		view = inflater.inflate(R.layout.activity_companygroups, container, false);
 		
 		doInit();
+		return view;
 	}
 	
 	@Override
@@ -45,8 +72,7 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 		setTitle(R.string.u_groups);
 		setRightButton(R.string.done);
 		
-		listView = (ListView) findViewById(R.id.listView);
-		
+		listView = (ListView) view.findViewById(R.id.listView);
 	}
 	
 	@Override
@@ -67,8 +93,6 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 	}
 	
 	public void getAllCompanyGroups(Boolean showDialog) {
-		
-		if (showDialog) showLoadingDialog();
 		
 		mApiHttp.getAllCompanyGroups(new Listener<JSONObject>() {
 			
@@ -126,7 +150,6 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
 			}
 		});
 
@@ -147,18 +170,8 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 		
 		if (v == rightBtn) {
 			
-			Constant.GroupsForScores.clear();
-			for (int i = 0; i < groups.size(); i++) {
-				if (groups.get(i).selected) {
-					Constant.GroupsForScores.add(groups.get(i));
-				}
-			}
+			onFinishGroupsListener.onFinishGroupsListener();
 			
-			Intent intent = new Intent();
-			intent.setClass(this, ScoresActivity.class);
-			setResult(resultCode, intent);
-			
-			finish();
 		}
 	}
 
@@ -203,6 +216,14 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 		}
 		adapter.notifyDataSetChanged();
 		
+		Constant.GroupsForScores.clear();
+		for (int i = 0; i < groups.size(); i++) {
+			if (groups.get(i).selected) {
+				Constant.GroupsForScores.add(groups.get(i));
+			}
+		}
+		
+		onChangeGroupsFilterListener.onChangeGroupsFilterListener();
 		
 	}
 }

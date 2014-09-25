@@ -534,6 +534,12 @@
          
          <activity
             android:configChanges="orientation|keyboardHidden|screenSize" 
+            android:name="com.gagein.ui.tablet.scores.ScoresTabletActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+         
+         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize" 
             android:name="com.gagein.ui.tablet.search.company.CompanySearchTabletActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
