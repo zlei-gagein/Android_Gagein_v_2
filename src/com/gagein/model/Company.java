@@ -79,6 +79,13 @@ public class Company extends DataModel implements Serializable, Comparable<Compa
 	public String inc5000_rank;
 	public String global_rank;
 	public String russell_rank;
+	
+	public int fol_rank1;
+	public int fol_rank7;
+	public int fol_rank30;
+	public int fol_score1;
+	public int fol_score7;
+	public int fol_score30;
 
 	public DataPage competitors;
 	public DataPage emplorees;
@@ -145,6 +152,13 @@ public class Company extends DataModel implements Serializable, Comparable<Compa
 		this.inc5000_rank = aJSONObject.optString("inc5000_rank");
 		this.global_rank = aJSONObject.optString("global_rank");
 		this.russell_rank = aJSONObject.optString("russell_rank");
+		
+		this.fol_rank1 = aJSONObject.optInt("fol_rank1");
+		this.fol_rank7 = aJSONObject.optInt("fol_rank7");
+		this.fol_rank30 = aJSONObject.optInt("fol_rank30");
+		this.fol_score1 = aJSONObject.optInt("fol_score1");
+		this.fol_score7 = aJSONObject.optInt("fol_score7");
+		this.fol_score30 = aJSONObject.optInt("fol_score30");
 		
 		this.ownership = aJSONObject.optString("ownership");
 		this.revenueSize = aJSONObject.optString("revenue_size");

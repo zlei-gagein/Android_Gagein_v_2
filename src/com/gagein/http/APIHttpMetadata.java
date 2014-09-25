@@ -121,6 +121,12 @@ public class APIHttpMetadata {
 	public static final String kGGPlanTypeBusiness = "201";
 	public static final String kGGPlanTypeSF = "301";
 	
+	//scores sort
+	public static final String kGGScoreRank1 = "fol_rank1";
+	public static final String kGGScoreRank7 = "fol_rank7";
+	public static final String kGGScoreRank30 = "fol_rank30";
+	
+	
 }
 
 

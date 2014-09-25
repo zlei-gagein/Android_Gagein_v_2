@@ -140,7 +140,7 @@ public class SaveSearchDialog implements OnClickListener {
 						if (parser.isOK()) {//TODO send broadcast
 							
 							Intent intent = new Intent();
-							intent.setAction(Constant.BROADCAST_REFRESH_SEARCH);
+							intent.setAction(Constant.BROADCAST_SAVED_SEARCH);
 							mContext.sendBroadcast(intent);
 							CommonUtil.showShortToast(mContext.getResources().getString(R.string.Saved));
 							
@@ -168,7 +168,7 @@ public class SaveSearchDialog implements OnClickListener {
 						APIParser parser = new APIParser(jsonObject);
 						if (parser.isOK()) {
 							Intent intent = new Intent();
-							intent.setAction(Constant.BROADCAST_REFRESH_SEARCH);
+							intent.setAction(Constant.BROADCAST_SAVED_SEARCH);
 							mContext.sendBroadcast(intent);
 							CommonUtil.showShortToast(mContext.getResources().getString(R.string.Saved));
 							dismissDialog();
