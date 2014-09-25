@@ -135,6 +135,15 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private LinearLayout resourceParentLayout;
 	private SearchCompanyAdapter searchCompanyAdapter;
 	private final List<Company> parentsAndSubsidiaries = new ArrayList<Company>();
+	private RelativeLayout oneDayLayout;
+	private RelativeLayout oneWeekLayout;
+	private RelativeLayout oneMonthLayout;
+	private TextView folRankDay;
+	private TextView folRankWeek;
+	private TextView folRankMonth;
+	private TextView folScoreDay;
+	private TextView folScoreWeek;
+	private TextView folScoreMonth;
 	
 	public interface OnNewsFilterClickListener {
 		public void onNewsFilterClickListener();
@@ -226,6 +235,16 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		filterBtn = (TextView) view.findViewById(R.id.filter);
 		sortBy = (TextView) view.findViewById(R.id.sortBy);
 		
+		oneDayLayout = (RelativeLayout) view.findViewById(R.id.oneDayLayout);
+		oneWeekLayout = (RelativeLayout) view.findViewById(R.id.oneWeekLayout);
+		oneMonthLayout = (RelativeLayout) view.findViewById(R.id.oneMonthLayout);
+		folRankDay = (TextView) view.findViewById(R.id.folRankDay);
+		folRankWeek = (TextView) view.findViewById(R.id.folRankWeek);
+		folRankMonth = (TextView) view.findViewById(R.id.folRankMonth);
+		folScoreDay = (TextView) view.findViewById(R.id.folScoreDay);
+		folScoreWeek = (TextView) view.findViewById(R.id.folScoreWeek);
+		folScoreMonth = (TextView) view.findViewById(R.id.folScoreMonth);
+		
 		CommonUtil.setLayoutWith(wholeLayout, getActivity());
 		newsList.setPullLoadEnable(false);
 		aboutList.setPullLoadEnable(false);
@@ -250,9 +269,18 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	@Override
 	protected void setData() {
 		super.setData();
+		
 		setTitle(mCompany.orgName);
 		setFollowButton();
 		setHeadView();
+		setScore();
+		
+	}
+	
+	private void setScore() {
+		CommonUtil.setScoreLayout(oneDayLayout, mCompany.fol_rank1, mCompany.fol_score1, folRankDay, folScoreDay, mContext);
+		CommonUtil.setScoreLayout(oneWeekLayout, mCompany.fol_rank7, mCompany.fol_score7, folRankWeek, folScoreWeek, mContext);
+		CommonUtil.setScoreLayout(oneMonthLayout, mCompany.fol_rank30, mCompany.fol_score30, folRankMonth, folScoreMonth, mContext);
 	}
 	
 	public void refreshCompany(Intent intent, Boolean follow) {

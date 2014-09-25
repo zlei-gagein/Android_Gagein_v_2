@@ -164,14 +164,42 @@ public class GroupsFilterActivity extends BaseActivity implements OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		if (groups.get(position).selected) return;
+		Boolean checked = groups.get(position).selected;
 		
-		for (int i = 0; i < groups.size(); i ++) {
-			groups.get(i).selected = false;
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < groups.size(); i ++) {
+				if (i == 0) continue;
+				if (groups.get(i).selected) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
+			} else {
+				groups.get(position).selected = true;
+				for (int i = 0; i < groups.size(); i ++) {
+					if (i != 0) groups.get(i).selected = false;
+				}
+			}
+		} else {
+			groups.get(position).selected = (!checked);
+			Boolean haveChecked = false;
+			for (int i = 0; i < groups.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (groups.get(i).selected) {
+						haveChecked = true;
+						groups.get(0).selected = false;
+					}
+				}
+			}
+			if (!haveChecked) {
+				groups.get(0).selected = true;
+			}
 		}
-		
-		groups.get(position).selected = true;
-		
 		adapter.notifyDataSetChanged();
 		
 		

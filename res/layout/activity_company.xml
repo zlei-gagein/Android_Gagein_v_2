@@ -61,14 +61,6 @@
                         android:visibility="invisible" />
                 </RelativeLayout>
 
-<!--                 <TextView -->
-<!--                     android:id="@+id/industries" -->
-<!--                     android:layout_width="wrap_content" -->
-<!--                     android:layout_height="wrap_content" -->
-<!--                     android:layout_marginTop="8dp" -->
-<!--                     android:textColor="@color/text_weak" -->
-<!--                     android:textSize="14sp" /> -->
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,21 +72,159 @@
                         android:id="@+id/websiteAndAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
+                        android:singleLine="true"
                         android:textColor="@color/text_dark"
                         android:textSize="14sp" />
-
-<!--                     <TextView -->
-<!--                         android:id="@+id/address" -->
-<!--                         android:layout_width="wrap_content" -->
-<!--                         android:layout_height="wrap_content" -->
-<!--                         android:layout_marginLeft="5dp" -->
-<!--                         android:textColor="@color/text_weak" -->
-<!--                         android:textSize="14sp" /> -->
                 </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="3" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/oneDayLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/folRankDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/folScoreDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/one_day"
+                    android:textColor="@color/text_weak"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/oneWeekLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/folRankWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/folScoreWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/one_week"
+                    android:textColor="@color/text_weak"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/oneMonthLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/folRankMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/folScoreMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/one_month"
+                    android:textColor="@color/text_weak"
+                    android:textSize="14sp"
+                    />
             </LinearLayout>
         </LinearLayout>
 
@@ -311,36 +441,38 @@
                         android:id="@+id/provisionBottomLayout"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
                         android:layout_marginTop="20dp"
+                        android:gravity="center_horizontal"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:visibility="gone" >
 
-<!--                         <LinearLayout -->
-<!--                             android:id="@+id/followCompanyLayout" -->
-<!--                             android:layout_width="wrap_content" -->
-<!--                             android:layout_height="wrap_content" -->
-<!--                             android:orientation="horizontal" -->
-<!--                             android:visibility="gone" > -->
+                        <!-- <LinearLayout -->
+                        <!-- android:id="@+id/followCompanyLayout" -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:orientation="horizontal" -->
+                        <!-- android:visibility="gone" > -->
 
-<!--                             <TextView -->
-<!--                                 android:id="@+id/followCompany" -->
-<!--                                 android:layout_width="wrap_content" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:text="@string/follow_company" -->
-<!--                                 android:textColor="@color/yellow" -->
-<!--                                 android:textSize="20sp" /> -->
 
-<!--                             <TextView -->
-<!--                                 android:layout_width="wrap_content" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:layout_marginLeft="10dp" -->
-<!--                                 android:layout_marginRight="10dp" -->
-<!--                                 android:text="@string/or" -->
-<!--                                 android:textColor="@color/text_weak" -->
-<!--                                 android:textSize="20sp" /> -->
-<!--                         </LinearLayout> -->
+                        <!-- <TextView -->
+                        <!-- android:id="@+id/followCompany" -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:text="@string/follow_company" -->
+                        <!-- android:textColor="@color/yellow" -->
+                        <!-- android:textSize="20sp" /> -->
+
+
+                        <!-- <TextView -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:layout_marginLeft="10dp" -->
+                        <!-- android:layout_marginRight="10dp" -->
+                        <!-- android:text="@string/or" -->
+                        <!-- android:textColor="@color/text_weak" -->
+                        <!-- android:textSize="20sp" /> -->
+                        <!-- </LinearLayout> -->
 
                         <TextView
                             android:id="@+id/shareGagein"
