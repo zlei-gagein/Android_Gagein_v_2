@@ -116,11 +116,10 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 			}
 		}
 		
-		if (mFilters.getSavedCompanies().size() == 0) {
-			
-			getSavedCompany(false);
-			
-		}
+//		if (mFilters.getSavedCompanies().size() == 0) {
+//		}
+		
+		getSavedCompany(false);
 		
 	}
 	
@@ -228,6 +227,7 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
 						
 						if (mSavedSearchs.size() == 0) {
+							showShortToast("You have no saved searches");
 							getSavedCompany(false);
 							return;
 						}

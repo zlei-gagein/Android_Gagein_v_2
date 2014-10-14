@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/top" />
+    
+    <LinearLayout 
+        android:id="@+id/sortLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/u_show"
+            android:textColor="@color/text_weak"
+            android:textSize="16sp"
+            />
+        
+        <TextView 
+            android:id="@+id/sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/yellow"
+            android:textSize="16sp"
+            />
+        
+    </LinearLayout>
+    
+    <com.gagein.component.xlistview.XListView
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="45dp"
+        android:layout_below="@id/sortLayout"
+        android:divider="@color/silver"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"
+        android:listSelector="#00000000" />
+    
+    <LinearLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/sortLayout"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_companies"
+            android:textColor="@color/text_dark"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/no_companies_for_scores"
+            android:textColor="@color/text_weak"
+            android:textSize="18sp" />
+    </LinearLayout>
+    
+</RelativeLayout>

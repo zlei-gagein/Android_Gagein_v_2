@@ -2,6 +2,7 @@ package com.gagein.component.dialog;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;

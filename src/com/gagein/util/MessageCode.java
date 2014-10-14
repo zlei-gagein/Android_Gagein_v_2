@@ -23,6 +23,7 @@ public class MessageCode {
     public static final int BillingExceededQuota                = 20005;                   // user reaches the limitation of his plan
     public static final int BillingCantSaveAnyMoreUpdate        = 20006;           // user reaches the limitation for updates he can save
     public static final int BillingFreeCantFollowGradeC         = 20007;
+    public static final int MESSAGE_CODE_START_TRIAL            = 20009;
     
     // company
     public static final int CompanyAlreadyFollowed = 30001;          // company has already been followed

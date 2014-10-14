@@ -176,7 +176,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		} else if (num == 1) {
 			setTitle("1 company found");
 		} else {
-			setTitle(num + " companies found");
+			setTitle(CommonUtil.splitNumberByComma(num) + " companies found");
 		}
 	}
 	
@@ -195,9 +195,9 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 
 	private void setRank(String value) {
 		if (value.equalsIgnoreCase("Employee Size") || value.equalsIgnoreCase("Revenue Size")) {
-			rankText.setText(Constant.REVERSE ? " : Low-High" : " : High-Low");
+			rankText.setText(!Constant.REVERSE ?  " : High-Low" : " : Low-High");
 		} else if (value.equalsIgnoreCase("Name")) {
-			rankText.setText(Constant.REVERSE ? " : Z-A" : " : A-Z");
+			rankText.setText(!Constant.REVERSE ? " : Z-A" : " : A-Z");
 		} else if (value.equalsIgnoreCase("Search Relevance")) {
 			Constant.REVERSE = false;
 			rankText.setText("");
@@ -238,6 +238,10 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		
 	}
 	
+	public void setSaved() {
+		rightBtn.setText(R.string.Saved);
+	}
+	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
 		
 		if (!loadMore) seachedCompanies.clear();
@@ -269,7 +273,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setCompany();
-		CommonUtil.setListViewHeight(listView);
+		CommonUtil.setViewHeight(listView, listView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
 		PAGENUM ++;
 		
 		//set title
@@ -311,7 +315,24 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 				
 					@Override
 					public void onClick(View arg0) {
-						//判断是否有选中条件 TODO
+						
+						//判断是否有选中条件 
+						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
+						if (conditions.size() <= 1) {
+							showShortToast("You have to enter in search criteria! Try again.");
+							return;
+						} else if (conditions.size() == 2) {
+							QueryInfoItem condition1 = conditions.get(0);
+							QueryInfoItem condition2 = conditions.get(1);
+							if (condition1.getType().equalsIgnoreCase("search_date_range")
+									|| condition2.getType().equalsIgnoreCase("search_date_range")) {
+								showShortToast("You have to enter in search criteria! Try again.");
+								return;
+							}
+						}
+						
+						companyInfoLayout.removeView(view);
+						
 						//TODO 数据删除
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
@@ -493,6 +514,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 		} else if (v == rightBtn) {
 			
 			if (null == queryInfo) return;
+			if (rightBtn.getText().toString().equalsIgnoreCase("Saved")) return;
 			
  			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_COMPANY);

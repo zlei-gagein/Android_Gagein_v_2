@@ -167,7 +167,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		if (num == 0) {
 			setTitle("No people found");
 		} else {
-			setTitle(num + " people found");
+			setTitle(CommonUtil.splitNumberByComma(num) + " people found");
 		}
 	}
 	
@@ -185,9 +185,9 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	
 	private void setRank(String value) {
 		if (value.equalsIgnoreCase("Job Level") || value.equalsIgnoreCase("Company Name")) {
-			rankText.setText(Constant.REVERSE ? " : Low-High" : " : High-Low");
+			rankText.setText(!Constant.REVERSE ?  " : High-Low" : " : Low-High");
 		} else if (value.equalsIgnoreCase("Name")) {
-			rankText.setText(Constant.REVERSE ? " : Z-A" : " : A-Z");
+			rankText.setText(!Constant.REVERSE ? " : Z-A" : " : A-Z");
 		} else if (value.equalsIgnoreCase("Search Relevance")) {
 			Constant.REVERSE = false;
 			rankText.setText("");
@@ -226,6 +226,10 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		
 	}
 	
+	public void setSaved() {
+		rightBtn.setText(R.string.Saved);
+	}
+	
 	private void parserIsOk(final Boolean loadMore, APIParser parser) {
 		
 		if (!loadMore) seachedPersons.clear();
@@ -255,7 +259,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setPersons();
-		CommonUtil.setListViewHeight(listView);
+		CommonUtil.setViewHeight(listView, listView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
 		PAGENUM ++;
 		
 		//set title
@@ -301,6 +305,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			
 		} else if (v == rightBtn) {
 			
+			if (rightBtn.getText().toString().equalsIgnoreCase("Saved")) return;
+			
 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_PEOPLE);
 			
@@ -345,6 +351,22 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					
 					@Override
 					public void onClick(View arg0) {
+						
+						//判断是否有选中条件 
+						List<QueryInfoItem> conditions = queryInfo.allConditions(false);
+						if (conditions.size() <= 1) {
+							showShortToast("You have to enter in search criteria! Try again.");
+							return;
+						} else if (conditions.size() == 2) {
+							QueryInfoItem condition1 = conditions.get(0);
+							QueryInfoItem condition2 = conditions.get(1);
+							if (condition1.getType().equalsIgnoreCase("search_date_range")
+									|| condition2.getType().equalsIgnoreCase("search_date_range")) {
+								showShortToast("You have to enter in search criteria! Try again.");
+								return;
+							}
+						}
+						
 						if (type.equalsIgnoreCase(employer)) {
 							employerInfoLayout.removeView(view);
 						} else if (type.equalsIgnoreCase(personal)) {

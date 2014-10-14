@@ -36,15 +36,17 @@ public class NewGroupDialog implements OnClickListener {
 	private EditText nameEdt;
 	private Button cancel;
 	private Button save;
+	private int type;
 
 	/**
 	 * 
 	 * @param mContext
 	 * @param enable true ? enable : closer
 	 */
-	public NewGroupDialog(final Context mContext) {
+	public NewGroupDialog(final Context mContext, int type) {
 		
 		this.mContext = mContext;
+		this.type = type;
 		dialog = new Dialog(mContext, R.style.dialog);
 		inflater = LayoutInflater.from(mContext);
 		view = inflater.inflate(R.layout.dialog_new_group, null);
@@ -106,11 +108,12 @@ public class NewGroupDialog implements OnClickListener {
 					
 					if (parser.isOK()) {
 						
+						
 						String groupId = jsonObject.optString("mogid");
 						Intent intent = new Intent();
 						intent.putExtra(Constant.GROUPID, groupId);
 						intent.putExtra(Constant.GROUPNAME, groupName);
-						intent.setAction(Constant.BROADCAST_ADD_COMPANYGROUP);
+						intent.setAction((type == Constant.NEW_GROUP_AND_FOLLOW) ? Constant.BROADCAST_NEW_GROUP_AND_FOLLOW : Constant.BROADCAST_ADD_COMPANYGROUP);
 						mContext.sendBroadcast(intent);
 						
 					} else {//response status 

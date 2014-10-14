@@ -13,8 +13,6 @@
         android:gravity="center_horizontal"
         android:text="@string/pending_company"
         android:textColor="@color/text_dark"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:textStyle="bold"
         android:textSize="20sp" />
 
@@ -43,6 +41,7 @@
         android:padding="10dp"
         android:singleLine="true"
         android:ellipsize="end"
+        android:focusableInTouchMode="false"
         android:textColor="@color/text_dark"
         android:textColorHint="#D5D5D8"
         android:textSize="16sp" />
@@ -59,6 +58,8 @@
         android:padding="10dp"
         android:singleLine="true"
         android:ellipsize="end"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:textColor="@color/text_dark"
         android:textColorHint="#D5D5D8"
         android:textSize="16sp" />

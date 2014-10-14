@@ -1,10 +1,11 @@
 package com.gagein.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import android.text.TextUtils;
 
 public class Facet extends DataModel {
 
@@ -98,6 +99,12 @@ public class Facet extends DataModel {
 			item.parseData(industryObj);
 			industryFacets.add(item);
 		}
+		for (int i = 0; i < industryFacets.size(); i++) {
+			if (TextUtils.isEmpty(industryFacets.get(i).getFilter_param_value())) {
+				industryFacets.get(i).setSelected(true);
+			}
+		}
+		
 		
 	}
 }

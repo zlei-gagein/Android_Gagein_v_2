@@ -185,9 +185,40 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 			//if checked number greater than two, then hide children layout
 			setChildrenView(true);
 		} else if (adapterView == childrenListView) {
-			Industry children = mIndustries.get(checkedIndustryPosition).getChildrens().get(position);
-			Boolean checked = children.getChecked();
-			children.setChecked(!checked);
+			List<Industry> childrenIndustries = mIndustries.get(checkedIndustryPosition).getChildrens();
+			Boolean checked = childrenIndustries.get(position).getChecked();
+
+			if (position == 0 ) {
+				Boolean haveChecked = false;
+				for (int i = 0; i < childrenIndustries.size(); i ++) {
+					if (i == 0) continue;
+					if (childrenIndustries.get(i).getChecked()) {
+						haveChecked = true;
+						break;
+					}
+				}
+				if (!haveChecked) {
+					return;
+				} else {
+					childrenIndustries.get(position).setChecked(true);
+					for (int i = 0; i < childrenIndustries.size(); i ++) {
+						if (i != 0) childrenIndustries.get(i).setChecked(false);
+					}
+				}
+			} else {
+				childrenIndustries.get(position).setChecked(!checked);
+				Boolean haveChecked = false;
+				for (int i = 0; i < childrenIndustries.size(); i ++) {
+					if (i == 0) continue;
+					if (childrenIndustries.get(i).getChecked()) {
+						haveChecked = true;
+						break;
+					}
+				}
+				childrenIndustries.get(0).setChecked(haveChecked ? false : true);
+			}
+			
+			childrenIndustries.get(position).setChecked(!checked);
 			childrenAdapter.notifyDataSetChanged();
 		}
 		
@@ -208,12 +239,16 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 		if (checkedNum == 0 || checkedNum == 2) {
 			childrenLayout.setVisibility(View.GONE);
 		} else {
-			childrenLayout.setVisibility(View.VISIBLE);
 			//children layout will invisible when only one item checked
 			for (int i = 0; i < mIndustries.size(); i ++) {
 				if (mIndustries.get(i).getChecked()) {
 					checkedIndustryPosition = i;
 				}
+			}
+			if (mIndustries.get(checkedIndustryPosition).getName().equalsIgnoreCase("Other")) {
+				childrenLayout.setVisibility(View.GONE);
+			} else {
+				childrenLayout.setVisibility(View.VISIBLE);
 			}
 			setChildrenListView(checkedIndustryPosition, fromOnClickParentItem);
 		}

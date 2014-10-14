@@ -65,7 +65,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 	
 	@Override
 	protected List<String> observeNotifications() {
-		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_SAVED_SEARCH);
 	}
 	
 	@Override
@@ -80,6 +80,10 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
 			
 			setFollowOrUnFollow(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_SAVED_SEARCH)) {
+			
+			rightBtn.setText(R.string.Saved);
 			
 		}
 	}
@@ -179,7 +183,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		} else if (num == 1) {
 			setTitle("1 company found");
 		} else {
-			setTitle(num + " companies found");
+			setTitle(CommonUtil.splitNumberByComma(num) + " companies found");
 		}
 		
 	}
@@ -203,9 +207,10 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 
 	private void setRank(String value) {
 		if (value.equalsIgnoreCase("Employee Size") || value.equalsIgnoreCase("Revenue Size")) {
-			rankText.setText(Constant.REVERSE ? " : Low-High" : " : High-Low");
+			Log.v("silen", "Constant.REVERSE = " + Constant.REVERSE);
+			rankText.setText(!Constant.REVERSE ?  " : High-Low" : " : Low-High");
 		} else if (value.equalsIgnoreCase("Name")) {
-			rankText.setText(Constant.REVERSE ? " : Z-A" : " : A-Z");
+			rankText.setText(!Constant.REVERSE ? " : Z-A" : " : A-Z");
 		} else if (value.equalsIgnoreCase("Search Relevance")) {
 			Constant.REVERSE = false;
 			rankText.setText("");
@@ -219,8 +224,6 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
-				
-				Log.v("silen", "jsonObject = " + jsonObject.toString());
 				
 				APIParser parser = new APIParser(jsonObject);
 				
@@ -263,10 +266,6 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		
 		DataPage dataPage = parser.parseGetSimilarCompanies();
 		
-		if (dataPage == null) {
-			Log.v("silen", "dataPage == null");
-		}
-		
 		if (dataPage.items != null) {
 			for (Object obj : dataPage.items) {
 				if (obj instanceof Company) {
@@ -278,7 +277,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setCompany();
-		CommonUtil.setListViewHeight(listView);
+		CommonUtil.setViewHeight(listView, listView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
 		PAGENUM ++;
 		
 		//set title
@@ -318,7 +317,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 					@Override
 					public void onClick(View arg0) {
 						
-						//判断是否有选中条件 TODO
+						//判断是否有选中条件
 						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
 						if (conditions.size() <= 1) {
 							showDialog("You have to enter in search criteria! Try again.");
@@ -326,8 +325,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 						} else if (conditions.size() == 2) {
 							QueryInfoItem condition1 = conditions.get(0);
 							QueryInfoItem condition2 = conditions.get(1);
-							if (condition1.getType().equalsIgnoreCase("search_date_range")
-									|| condition2.getType().equalsIgnoreCase("search_date_range")) {
+							if (condition1.getType().equalsIgnoreCase("search_date_range") || condition2.getType().equalsIgnoreCase("search_date_range")) {
 								showDialog("You have to enter in search criteria! Try again.");
 								return;
 							}
@@ -522,6 +520,7 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			
 		} else if (v == rightBtn) {
 			
+			if (rightBtn.getText().toString().equalsIgnoreCase("Saved")) return;
 			if (null == queryInfo) return;
  			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(true, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_COMPANY);

@@ -1,11 +1,9 @@
 package com.gagein.ui.companies;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,8 +20,7 @@ public class CompaniesFilterActivity extends BaseActivity implements OnItemClick
 	
 	private FilterCompaniesAdapter adapter;
 	private ListView listView;
-	private List<FacetItemIndustry> industryData;
-	private List<Boolean> checkedList;
+	private List<FacetItemIndustry> industryDatas;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,24 +48,9 @@ public class CompaniesFilterActivity extends BaseActivity implements OnItemClick
 	protected void initData() {
 		super.initData();
 		
-		industryData = Constant.industriesItem;
+		industryDatas = Constant.industriesItem;
 		
-		checkedList = new ArrayList<Boolean>();
-		for (int i = 0; i < industryData.size(); i ++) {
-			checkedList.add(false);
-		}
-		
-		if (TextUtils.isEmpty(Constant.FILTER_INDUSTRY_NAME)) {
-			checkedList.set(0, true);
-		} else {
-			for (int i = 0; i < industryData.size(); i ++) {
-				if (Constant.FILTER_INDUSTRY_NAME.equalsIgnoreCase(industryData.get(i).item_name)) {
-					checkedList.set(i, true);
-				}
-			}
-		}
-		
-		adapter = new FilterCompaniesAdapter(mContext, checkedList);
+		adapter = new FilterCompaniesAdapter(mContext, industryDatas);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
@@ -89,20 +71,15 @@ public class CompaniesFilterActivity extends BaseActivity implements OnItemClick
 		
 		if (v == rightBtn) {
 			
-			for (int i= 0; i < checkedList.size(); i ++) {
-				if (checkedList.get(i) == true) {
-					Constant.FILTER_INDUSTRY_NAME = industryData.get(i).item_name;
-					String industryId = industryData.get(i).filter_param_value;
-					if (null == industryId || industryId.isEmpty()) industryId = "0";
-					Constant.INDUSTRYID = industryId;
+			for (int i= 0; i < industryDatas.size(); i ++) {
+				if (industryDatas.get(i).getSelected()) {
+					Constant.INDUSTRIES = industryDatas;
 				}
 			}
 			
-			//TODO
 			Intent intent = new Intent(CompaniesFilterActivity.this, CompaniesActivity.class);
 			setResult(RESULT_OK, intent);
 			finish();
-			Log.v("silen", "Constant.INDUSTRYID = " + Constant.INDUSTRYID);
 			
 		} else if (v == leftBtn) {
 			
@@ -115,14 +92,46 @@ public class CompaniesFilterActivity extends BaseActivity implements OnItemClick
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == position) {
-				checkedList.set(i, true);
+		Boolean checked = industryDatas.get(position).getSelected();
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < industryDatas.size(); i ++) {
+				if (i == 0) continue;
+				if (industryDatas.get(i).getSelected()) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				industryDatas.get(position).setSelected(true);
+				
+				for (int i = 0; i < industryDatas.size(); i ++) {
+					if (i != 0) industryDatas.get(i).setSelected(false);
+				}
+			}
+		} else {
+			
+			//circle 
+			industryDatas.get(position).setSelected(!checked);
+			Boolean haveChecked = false;
+			for (int i = 0; i < industryDatas.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (industryDatas.get(i).getSelected()) {
+						haveChecked = true;
+						industryDatas.get(0).setSelected(false);
+					}
+				}
+			}
+			if (!haveChecked) {
+				industryDatas.get(0).setSelected(true);
 			}
 		}
-		adapter.notifyDataSetChanged();
+		
+		adapter.notifyDataSetChanged();//refresh listview state
 		
 	}
 	

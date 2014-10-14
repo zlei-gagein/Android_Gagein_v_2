@@ -14,6 +14,7 @@ import com.gagein.model.FacetItemIndustry;
 import com.gagein.model.Group;
 import com.gagein.model.Happening;
 import com.gagein.model.SavedSearch;
+import com.gagein.model.ScoresSort;
 import com.gagein.model.Update;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
@@ -66,6 +67,8 @@ public abstract class Constant {
 	public static List<Agent> locationNewsTriggers = new ArrayList<Agent>();
 	
 	public static List<Group> selectedGroupFilter = new ArrayList<Group>();
+	
+	public static List<Group> GroupsForScores = new ArrayList<Group>();
 	
 	public static List<Agent> locationNewsTriggersForCompany = new ArrayList<Agent>();
 	
@@ -190,6 +193,8 @@ public abstract class Constant {
 	
 	public static String BROADCAST_REFRESH_SEARCH = "broadcast refresh search";
 	
+	public static String BROADCAST_SAVED_SEARCH = "broadcast saved search";
+	
 	public static String BROADCAST_REFRESH_COMPANY_NEWS = "broadcast refresh company news";
 	
 	public static String BROADCAST_REFRESH_COMPANY_PEOPLE = "broadcast refresh company people";
@@ -205,6 +210,8 @@ public abstract class Constant {
 	public static String BROADCAST_ADD_BOOKMARKS = "broadcast add bookmarks";
 	
 	public static String BROADCAST_HAVE_READ_STORY = "broadcast have read story";
+	
+	public static String BROADCAST_NEW_GROUP_AND_FOLLOW = "broadcast new group and follow";
 	
 	public static String LINKEDIN = "linkedin";
 	public static String FACEBOOK = "facebook";
@@ -262,6 +269,8 @@ public abstract class Constant {
 	
 	public static String INDUSTRYID = "0";
 	
+	public static List<FacetItemIndustry> INDUSTRIES = new ArrayList<FacetItemIndustry>();
+	
 	public static String SAVEDID = "";
 	
 	public static String FILTERS = "filters";
@@ -308,4 +317,29 @@ public abstract class Constant {
 	public static Boolean SIGNUP = false;
 	
 	public static String RATE_URL = "https://play.google.com/store/apps/details?id=com.gagein";
+	
+	public static List<ScoresSort> scoresSorts = new ArrayList<ScoresSort>();
+	
+	public static String BILLINGSTATUS = "billing_status";
+	
+	public static int NEW_GROUP_ONLY = 1;
+	
+	public static int NEW_GROUP_AND_FOLLOW = 2;
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

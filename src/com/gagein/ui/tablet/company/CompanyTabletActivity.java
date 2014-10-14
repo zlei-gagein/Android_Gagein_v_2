@@ -64,7 +64,7 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 	protected List<String> observeNotifications() {
 		return stringList(Constant.BROADCAST_REFRESH_COMPANY_NEWS, Constant.BROADCAST_REFRESH_COMPANY_PEOPLE,
 				Constant.BROADCAST_FILTER_REFRESH_COMPETITORS, Constant.BROADCAST_FOLLOW_COMPANY, 
-				Constant.BROADCAST_UNFOLLOW_COMPANY);
+				Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_HAVE_READ_STORY);
 	}
 	
 	@Override
@@ -99,6 +99,11 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 			
 			companyFragment.refreshCompany(intent, false);
 			
+		} else if (actionName.equals(Constant.BROADCAST_HAVE_READ_STORY)) {
+			
+			companyFragment.haveReadStory(intent);
+			companyFragment.newsAdapter.notifyDataSetChanged();
+			
 		}
 	}
 
@@ -125,6 +130,8 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 		Constant.currentJobLevelForCompanyPeopleFilter.clear();
 		Constant.currentFunctionRoleForCompanyPeopleFilter.clear();
 		Constant.currentLinkedProfileForCompanyPeopleFilter.clear();
+		
+		Constant.locationNewsTriggersForCompany.clear();
 		
 		Constant.COMPETITOR_SORT_BY = "noe";
 		Constant.COMPETITOR_FILTER_PARAM_VALUE.clear();

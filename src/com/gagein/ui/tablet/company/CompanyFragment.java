@@ -69,7 +69,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private XListView aboutList;
 	private XListView personList;
 	private XListView competitorList;
-	private CompanyNewsAdapter newsAdapter;
+	public CompanyNewsAdapter newsAdapter;
 	private CompanyAboutAdapter aboutAdapter;
 	private CompanyPersonAdapter personAdapter;
 	private CompanyCompetitorsAdapter competitorAdapter;
@@ -81,7 +81,6 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private TextView websiteAndAddress;
 	private List<Update> updates = new ArrayList<Update>();
 	private int employeesPageNumber = Constant.PAGE_NUMBER_START;
-	private byte orderBy;
 	private DataPage dpPersons;
 	private DataPage dpCompetitors;
 	private List<FacetItem> personFacetItems;
@@ -120,11 +119,8 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private ScrollView noNewsLayout;
 	private LinearLayout resourceShowLayout;
 	private Boolean haveProcessed = false;
-	private Boolean haveProvisionDate;
-	private Boolean isProcessed;
 	private Boolean haveGotPeople = false;;
 	private Boolean haveGotCompetitors = false;
-	private long provisionDate;
 	private TextView provisionPt;
 	private RelativeLayout provisionBottomLayout;
 	private LinearLayout provisionedLayout;
@@ -256,8 +252,6 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	protected void initData() {
 		super.initData();
 		
-		orderBy = APIHttpMetadata.kGGContactsOrderByJobLevel;
-		
 		getCompanyDetail();
 		
 		setSelectedButton(newsBtn);
@@ -281,6 +275,19 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		CommonUtil.setScoreLayout(oneDayLayout, mCompany.fol_rank1, mCompany.fol_score1, folRankDay, folScoreDay, mContext);
 		CommonUtil.setScoreLayout(oneWeekLayout, mCompany.fol_rank7, mCompany.fol_score7, folRankWeek, folScoreWeek, mContext);
 		CommonUtil.setScoreLayout(oneMonthLayout, mCompany.fol_rank30, mCompany.fol_score30, folRankMonth, folScoreMonth, mContext);
+	}
+	
+	public void haveReadStory(Intent intent) {
+		
+		long newsId = intent.getLongExtra(Constant.NEWSID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			if (updates.get(i).newsId == newsId) {
+				updates.get(i).hasBeenRead = true;
+				
+			}
+		}
+		
 	}
 	
 	public void refreshCompany(Intent intent, Boolean follow) {
@@ -682,10 +689,10 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 						JSONObject dataObject = parser.data();
 						
 						haveProcessed = dataObject.has("is_processed");
-						haveProvisionDate = dataObject.has("provision_date");
-						
-						isProcessed = dataObject.optBoolean("is_processed");
-						provisionDate = dataObject.optLong("provision_date");
+//						haveProvisionDate = dataObject.has("provision_date");
+//						
+//						isProcessed = dataObject.optBoolean("is_processed");
+//						provisionDate = dataObject.optLong("provision_date");
 						
 					}
 				}
@@ -791,6 +798,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 						public void onResponse(JSONObject response) {
 							
 							if (!loadMore) updates.clear();
+							newsList.setPullLoadEnable(false);
 							
 							APIParser parser = new APIParser(response);
 							
@@ -982,6 +990,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		
 		int resourcesLength = resourceArray.length();
 		resources.clear();
+		resourceParentLayout.removeAllViews();
 		
 		for (int i = 0; i < resourcesLength; i ++) {
 			Resource resource = new Resource();
@@ -1232,7 +1241,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		} else if (typeChecked == typeCompetitors) {
 			Intent intent = new Intent();
 			intent.putExtra(Constant.COMPANYID, competitors.get(position - 1).validID());
-			intent.setClass(mContext, CompanyActivity.class);
+			intent.setClass(mContext, CompanyTabletActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -1241,6 +1250,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	public void onRefresh() {//no this function
 	}
 	
+	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
 
 		@Override

@@ -87,7 +87,7 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 	
 	@Override
 	protected List<String> observeNotifications() {
-		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY);
+		return stringList(Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_SAVED_SEARCH);
 	}
 	
 	@Override
@@ -102,6 +102,10 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 		} else if (actionName.equals(Constant.BROADCAST_UNFOLLOW_COMPANY)) {
 			
 			searchCompanyResultFragment.setFollowOrUnFollow(intent, false);
+			
+		} else if (actionName.equals(Constant.BROADCAST_SAVED_SEARCH)) {
+			
+			searchCompanyResultFragment.setSaved();
 			
 		}
 	}
@@ -915,17 +919,15 @@ public class CompanySearchTabletActivity extends BaseFragmentActivity implements
 		
 	}
 	
-//	@Override
-//	public void onBackPressed() {
-//		if (!filterFragment.isVisible()) {
-//			transaction = getSupportFragmentManager().beginTransaction();
-//			transaction.show(filterFragment);
-//			transaction.commit();
-//		} else {
-//			super.onBackPressed();
-//			return;
-//		}
-//	}
+	@Override
+	public void onBackPressed() {
+		if (leftLayout.getVisibility() == View.VISIBLE) {
+			setLeftLayoutVisible(View.GONE);
+		} else {
+			super.onBackPressed();
+			return;
+		}
+	}
 
 }
                                                 

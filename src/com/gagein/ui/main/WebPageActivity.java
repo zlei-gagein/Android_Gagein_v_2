@@ -45,7 +45,7 @@ public class WebPageActivity extends BaseActivity {
 		setLeftImageButton(R.drawable.back_arrow);
 	}
 
-	@SuppressLint("NewApi")
+	@SuppressLint({ "NewApi", "SetJavaScriptEnabled" })
 	@Override
 	protected void initData() {
 		super.initData();

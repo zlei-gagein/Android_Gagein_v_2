@@ -12,24 +12,21 @@ import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.model.FacetItemIndustry;
-import com.gagein.util.Constant;
 
 public class FilterCompaniesAdapter extends BaseAdapter {
 	
 	private Context mContext;
-	private List<Boolean> checkedList;
 	private List<FacetItemIndustry> industries;
 	
-	public FilterCompaniesAdapter(Context mContext, List<Boolean> checkedList) {
+	public FilterCompaniesAdapter(Context mContext, List<FacetItemIndustry> industries) {
 		super();
 		this.mContext = mContext;
-		this.checkedList = checkedList;
-		this.industries = Constant.industriesItem;
+		this.industries = industries;
 	}
 
 	@Override
 	public int getCount() {
-		return checkedList.size();
+		return industries.size();
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public class FilterCompaniesAdapter extends BaseAdapter {
 		}
 		
 		viewHolder.name.setText(industries.get(position).item_name);
-		if (checkedList.get(position)) {
+		if (industries.get(position).getSelected()) {
 			viewHolder.button.setBackgroundResource(R.drawable.button_select);
 		} else {
 			viewHolder.button.setBackgroundResource(R.drawable.button_unselect);

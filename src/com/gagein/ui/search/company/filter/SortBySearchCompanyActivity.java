@@ -65,6 +65,9 @@ public class SortBySearchCompanyActivity extends BaseActivity implements OnItemC
 		super.onClick(v);
 		if (v == rightBtn) {
 			setResultToActivity();
+			for (int i = 0; i < sortBy.size(); i ++) {
+				if (sortBy.get(i).getValue().equalsIgnoreCase("Name")) Constant.REVERSE = true;
+			}
 		}
 	}
 

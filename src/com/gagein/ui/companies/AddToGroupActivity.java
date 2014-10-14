@@ -48,7 +48,7 @@ public class AddToGroupActivity extends BaseActivity implements OnItemClickListe
 	public void handleNotifications(Context aContext, Intent intent) {
 		super.handleNotifications(aContext, intent);
 		String actionName = intent.getAction();
-		if (actionName.equals(Constant.BROADCAST_ADD_COMPANYGROUP)) {
+		if (actionName.equals(Constant.BROADCAST_NEW_GROUP_AND_FOLLOW)) {
 			String groupId = intent.getStringExtra(Constant.GROUPID);
 			addCompaniesToGroup(groupId);
 			getAllCompanyGroups(false, false);
@@ -57,7 +57,7 @@ public class AddToGroupActivity extends BaseActivity implements OnItemClickListe
 	
 	@Override
 	protected List<String> observeNotifications() {
-		return stringList( Constant.BROADCAST_ADD_COMPANYGROUP);
+		return stringList( Constant.BROADCAST_NEW_GROUP_AND_FOLLOW);
 	}
 	
 	@Override
@@ -165,7 +165,7 @@ public class AddToGroupActivity extends BaseActivity implements OnItemClickListe
 			
 		} else if (v == newGroup) {
 			
-			NewGroupDialog dialog = new NewGroupDialog(mContext);
+			NewGroupDialog dialog = new NewGroupDialog(mContext, Constant.NEW_GROUP_AND_FOLLOW);
 			dialog.showDialog();
 			
 		}

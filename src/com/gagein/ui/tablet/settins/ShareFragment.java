@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -26,11 +27,13 @@ public class ShareFragment extends BaseFragment{
 	private ImageButton twitter;
 	private ImageButton facebook;
 	private ImageButton googlePlus;
+	private TextView refer;
 	private TextView freeMonthLeftTx;
 	private TextView freeMonthTotalTx;
 	private TextView coworkerCountTx;
-	private LinearLayout shareLayout;
-	private LinearLayout referalResultLayout;
+	private LinearLayout freeDaysLayout;
+	private LinearLayout freeMonthLayout;
+	private ScrollView wholeLayout;;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,11 +55,13 @@ public class ShareFragment extends BaseFragment{
 		twitter = (ImageButton) view.findViewById(R.id.twitter);
 		facebook = (ImageButton) view.findViewById(R.id.facebook);
 		googlePlus = (ImageButton) view.findViewById(R.id.googlePlus);
+		refer = (TextView) view.findViewById(R.id.refer);
 		freeMonthLeftTx = (TextView) view.findViewById(R.id.freeMonthLeft);
 		freeMonthTotalTx = (TextView) view.findViewById(R.id.freeMonthTotal);
 		coworkerCountTx = (TextView) view.findViewById(R.id.coworkerCount);
-		shareLayout = (LinearLayout) view.findViewById(R.id.shareLayout);
-		referalResultLayout = (LinearLayout) view.findViewById(R.id.referalResultLayout);
+		freeDaysLayout = (LinearLayout) view.findViewById(R.id.freeDaysLayout);
+		freeMonthLayout = (LinearLayout) view.findViewById(R.id.freeMonthLayout);
+		wholeLayout = (ScrollView) view.findViewById(R.id.wholeLayout);
 	}
 	
 	@Override
@@ -67,20 +72,17 @@ public class ShareFragment extends BaseFragment{
 		shareReferalResult();
 	}
 	
-private void setShareLayoutVisible(String planId) {
-		
+	private void setShareLayoutVisible(String planId) {
 		Boolean isProfessional = APIHttpMetadata.kGGPlanTypeProfessional.equalsIgnoreCase(planId) ? true : false;
-		shareLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
-		referalResultLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
-		
+		refer.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
+		freeDaysLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
+		freeMonthLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
 	}
 	
 	private void setReferalResultValue (int freeMonthLeft, int freeMonthTotal, int coworkerCount) {
-		
 		freeMonthLeftTx.setText(freeMonthLeft + "");
 		freeMonthTotalTx.setText(freeMonthTotal + "");
 		coworkerCountTx.setText(coworkerCount + "");
-		
 	}
 	
 	private void billingGetInfo() {
@@ -121,12 +123,17 @@ private void setShareLayoutVisible(String planId) {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
+					wholeLayout.setVisibility(View.VISIBLE);
+					
 					int freeMonthLeft = parser.data().optInt("free_month_left");
 					int freeMonthTotal = parser.data().optInt("free_month_total");
 					int coworkerCount = parser.data().optInt("coworker_count");
 					setReferalResultValue(freeMonthLeft, freeMonthTotal, coworkerCount);
 					
 				} else {
+					
+					wholeLayout.setVisibility(View.GONE);
+					
 				}
 			}
 		}, new Response.ErrorListener() {
@@ -166,3 +173,10 @@ private void setShareLayoutVisible(String planId) {
 	}
 	
 }
+
+
+
+
+
+
+

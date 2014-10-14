@@ -5,11 +5,11 @@ import org.json.JSONObject;
 public class AutoLoginInfo extends DataModel {
 
 	
-	public String accessToken = null;
-	public long memberID = 0;
-	public String memberEmail = null;
-	public String memberFullName = null;
-	public String memberTimeZone = null;
+	public String accessToken = "";
+	public String memberID = "";
+	public String memberEmail = "";
+	public String memberFullName = "";
+	public String memberTimeZone = "";
 	public int signupProcessStatus = 0;
 	
 	
@@ -19,7 +19,7 @@ public class AutoLoginInfo extends DataModel {
 		if (aJSONObject == null) return;
 		super.parseData(aJSONObject);
 		
-		memberID = aJSONObject.optLong("memid");
+		memberID = aJSONObject.optString("memid");
 		accessToken = aJSONObject.optString("access_token");
 		memberEmail = aJSONObject.optString("mem_email");
 		memberFullName = aJSONObject.optString("mem_full_name");
@@ -33,7 +33,7 @@ public class AutoLoginInfo extends DataModel {
 		
 		AutoLoginInfo info = new AutoLoginInfo();
 		info.accessToken = aMember.accessToken;
-		info.memberID = aMember.id;
+		info.memberID = aMember.memid;
 		info.memberEmail = aMember.accountEmail;
 		info.memberFullName = aMember.fullName;
 		info.signupProcessStatus = aMember.signupProcessStatus;

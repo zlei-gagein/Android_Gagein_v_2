@@ -198,7 +198,7 @@ public class APIHttp {
 			params.put("agentid", agentID + "");
 	    }
 		
-		connectURL(Method.GET,listener, errorListener, url, params);
+		connectURLNoEncode(Method.GET,listener, errorListener, url, params);
 	}
 	
 	
@@ -288,17 +288,23 @@ public class APIHttp {
 		params.put("page", aPageNumber + "");
 		params.put("no_proxy", "true");
 		
-		String functionalKey = "functional_areaid";
-		String functionalValue = stringForMultipleValuesToOneKey(aFunctionalAreaID, functionalKey);
-		params.put(functionalKey, functionalValue);
+		if (aFunctionalAreaID.size() > 0) {
+			String functionalKey = "functional_areaid";
+			String functionalValue = stringForMultipleValuesToOneKey(aFunctionalAreaID, functionalKey);
+			params.put(functionalKey, functionalValue);
+		}
 		
-		String jobLevelKey = "job_levelid";
-		String jobLevelValue = stringForMultipleValuesToOneKey(aJobLevelID, jobLevelKey);
-		params.put(jobLevelKey, jobLevelValue);
+		if (aJobLevelID.size() > 0) {
+			String jobLevelKey = "job_levelid";
+			String jobLevelValue = stringForMultipleValuesToOneKey(aJobLevelID, jobLevelKey);
+			params.put(jobLevelKey, jobLevelValue);
+		}
 		
-		String linkedProfileKey = "profile_type";
-		String linkedProfileValue = stringForMultipleValuesToOneKey(aLinkedProfile, linkedProfileKey);
-		params.put(linkedProfileKey, linkedProfileValue);
+		if (aLinkedProfile.size() > 0) {
+			String linkedProfileKey = "profile_type";
+			String linkedProfileValue = stringForMultipleValuesToOneKey(aLinkedProfile, linkedProfileKey);
+			params.put(linkedProfileKey, linkedProfileValue);
+		}
 		
 		// sort
 		String orderByStr = null;
@@ -324,7 +330,7 @@ public class APIHttp {
 		if (orderByStr != null)
 			params.put("order", orderByStr);
 		
-		connectURL(Method.GET,listener, errorListener, url, params);
+		connectURLNoEncode(Method.GET,listener, errorListener, url, params);
 	}
 	
 	/**
@@ -348,7 +354,7 @@ public class APIHttp {
 			String value = stringForMultipleValuesToOneKey(industryIds, key);
 			params.put(key, value);
 		}
-		connectURL(Method.GET,listener, errorListener, url, params);
+		connectURLNoEncode(Method.GET,listener, errorListener, url, params);
 	}
 	
 	/**
@@ -527,7 +533,7 @@ public class APIHttp {
 		params.put("orgid", aCompanyID + "");
 		params.put("similarids", aSimilarIDs);
 		params.put("no_proxy", "true");
-		connectURL(Method.GET,listener, errorListener, url, params);
+		connectURLNoEncode(Method.GET,listener, errorListener, url, params);
 		
 	}
 
@@ -1457,7 +1463,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void addCompanyWebsite(long aCompanyId,String name, String aWebsite, Boolean forceAdd, Listener<JSONObject> listener, ErrorListener errorListener) {
+	public void addCompanyWebsite(long aCompanyId, String name, String aWebsite, Boolean forceAdd, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "member/me/company/" + aCompanyId + "/add_website";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1504,6 +1510,7 @@ public class APIHttp {
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		params.put("page", pageNum + "");
+		params.put("limit", 1000 + "");
 		connectURL(Method.GET, listener, errorListener, url, params);
 	}
 	
@@ -1520,10 +1527,11 @@ public class APIHttp {
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		params.put("page", pageNum + "");
+		params.put("limit", 1000 + "");
 		connectURL(Method.GET, listener, errorListener, url, params);
 	}
 	
-	public void searchAdvancedCompanies(int pageNum, String filterJsonStr, Listener<JSONObject> listener, ErrorListener errorListener) {//TODO
+	public void searchAdvancedCompanies(int pageNum, String filterJsonStr, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "search/advanced/companies";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1534,7 +1542,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void searchAdvancedPersons(int pageNum, String filterJsonStr, Listener<JSONObject> listener, ErrorListener errorListener) {//TODO
+	public void searchAdvancedPersons(int pageNum, String filterJsonStr, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "search/advanced/contacts";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1544,7 +1552,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void saveSearchCompanies(String searchName, String queryInfo, Listener<JSONObject> listener, ErrorListener errorListener) {//TODO
+	public void saveSearchCompanies(String searchName, String queryInfo, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "search/advanced/companies/save_search";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1553,7 +1561,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void saveSearchPersons(String searchName, String queryInfo, Listener<JSONObject> listener, ErrorListener errorListener) {//TODO
+	public void saveSearchPersons(String searchName, String queryInfo, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "search/advanced/contacts/save_search";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1562,7 +1570,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void deleteSavedSearch(String searchId, Listener<JSONObject> listener, ErrorListener errorListener) {//TODO
+	public void deleteSavedSearch(String searchId, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "search/delete_saved_search";
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
@@ -1677,21 +1685,33 @@ public class APIHttp {
 		connectURL(Method.GET, listener, errorListener, url, params);
 	}
 	
-	public void getCompaniesOfGroupNew(int followLinkType, String nextPage, String groupId, String industryId, int followedCompanyType, Listener<JSONObject> listener, ErrorListener errorListener) {
+	public void getCompaniesOfGroupNew(String folRank, int followLinkType, String nextPage, List<String> groupIds, ArrayList<String> industryIds,
+			int followedCompanyType, Listener<JSONObject> listener, ErrorListener errorListener) {
 		
 		String url = apiRootPath + "member/me/company/followed";
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-		if (!groupId.equalsIgnoreCase("0")) params.put("groupid", groupId + "");
-		if (Long.parseLong(industryId) > 0 || Long.parseLong(industryId) == -1) {
-			params.put("industryid", industryId + "");
+		
+		if (groupIds.size() != 0) {
+			String key = "groupid";
+			String value = stringForMultipleValuesToOneKey(groupIds, key);
+			params.put(key, value);
 		}
 		
+		if (industryIds.size() != 0) {
+			String key = "industryid";
+			String value = stringForMultipleValuesToOneKey(industryIds, key);
+			params.put(key, value);
+		}
+		
+		if (!TextUtils.isEmpty(folRank)) params.put("sort_by", folRank);
 		params.put("followed_company_type", followedCompanyType + "");
-		params.put("follow_link_type", followLinkType + "");
-		params.put("page", nextPage);
+//		params.put("follow_link_type", followLinkType + "");
+		if (!TextUtils.isEmpty(nextPage)) params.put("page", nextPage);
+		params.put("only_basic_info", false + "");
+		params.put("reverse", true + "");
 		addBasicParams(params);
-		connectURL(Method.GET, listener, errorListener, url, params);
+		connectURLNoEncode(Method.GET, listener, errorListener, url, params);
 	}
 	
 	public void importCompaniesWithContactsDomain(List<Contact> contacts, Listener<JSONObject> listener, ErrorListener errorListener) {
@@ -1727,7 +1747,7 @@ public class APIHttp {
 		connectURLNoEncode(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void addNewCompanyWithName(String name, String website, Boolean forceAdd, Listener<JSONObject> listener, ErrorListener errorListener) {
+	public void addNewCompanyWithNameAndWebsite(String name, String website, Boolean forceAdd, Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "member/me/company/add";
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("org_website", website);

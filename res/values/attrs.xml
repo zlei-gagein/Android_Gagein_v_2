@@ -55,4 +55,15 @@
         <!-- Defines closed handle (drawable/color). -->
         <attr name="closedHandle" format="reference|color" />
     </declare-styleable>
+    
+    
+    <declare-styleable name="verticaltextview">  
+        <attr name="text" format="string" />  
+        <attr name="textColor" format="reference|color" />  
+        <attr name="textSize" format="reference|dimension" />  
+        <attr name="direction" >    
+            <enum name="uptodown" value="0" />  
+            <enum name="downtoup" value="1" />  
+        </attr>  
+    </declare-styleable> 
 </resources>

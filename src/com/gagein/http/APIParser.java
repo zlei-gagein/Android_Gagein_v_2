@@ -23,6 +23,7 @@ import com.gagein.model.MediaFilter;
 import com.gagein.model.Member;
 import com.gagein.model.MenuData;
 import com.gagein.model.Person;
+import com.gagein.model.PlanInfo;
 import com.gagein.model.SavedSearch;
 import com.gagein.model.SearchPerson;
 import com.gagein.model.SnUserInfo;
@@ -417,6 +418,22 @@ public class APIParser {
 		Member result = new Member();
 		result.parseData(data());
 		return result;
+	}
+	
+	public List<PlanInfo> parsePlanInfos() {
+		JSONObject data = data();
+		if (data == null)
+			return null;
+		
+		JSONArray infoArray = data.optJSONArray("mem_info_list");
+		List<PlanInfo> planInfos = new ArrayList<PlanInfo>();
+		for (int i = 0; i < infoArray.length(); i++) {
+			PlanInfo planInfo = new PlanInfo();
+			planInfo.parseData(infoArray.optJSONObject(i));
+			planInfos.add(planInfo);
+		}
+		
+		return planInfos;
 	}
 
 	public Company parseGetCompanyOverview() {
@@ -953,7 +970,6 @@ public class APIParser {
 			queryInfoItem.setType("event_search_keywords");
 			queryInfo.setEventSearchKeywords(queryInfoItem);
 			
-			//TODO
 //			mFilters.get
 			Log.v("silen", "eventSearchKeywords = " + eventSearchKeywords);
 			if (TextUtils.isEmpty(companyQueryInfoStr)) {
@@ -975,6 +991,7 @@ public class APIParser {
 			
 			//根据返回的queryInfo 设置savedCompany
 			for (int i = 0; i < savedCompanyArray.length(); i ++) {
+				if (savedCompaniesList.size() == 0) break;
 				savedCompaniesList.get(0).setChecked(false);
 				String id = savedCompanyArray.optJSONObject(i).optString("id");
 				for (int j = 0 ; j < savedCompaniesList.size(); j ++) {
@@ -1005,19 +1022,35 @@ public class APIParser {
 			queryInfo.setLocationCode(setQueryInfo(locationCodeArray, "location_code"));
 			
 			List<Location> headquarters = mFilters.getHeadquarters();
-			setLocationFilterOptionsCheck(locationCodeArray, headquarters);
 			
 			//根据返回的queryInfo 设置LocationCode
-//			List<Location> headquarters = mFilters.getHeadquarters();
-//			headquarters.clear();
+			List<Location> locations = new ArrayList<Location>();
 			for (int i = 0; i < locationCodeArray.length(); i ++) {
 				Location location = new Location();
 				location.setChecked(true);
 				location.setCode(locationCodeArray.optJSONObject(i).optString("id"));
 				location.setLocation(locationCodeArray.optJSONObject(i).optString("name"));
 				
-				headquarters.add(location);
+				locations.add(location);
 			}
+			
+			setLocationFilterOptionsCheck(locationCodeArray, locations);
+			
+			for (int i = 0; i < headquarters.size(); i++) {
+				Location headquarter = headquarters.get(i);
+				Boolean locationExist = false;
+				for (int j = 0; j < locations.size(); j++) {
+					if (headquarter.getCode().equalsIgnoreCase(locations.get(j).getCode())) {
+						locationExist = true;
+					}
+				}
+				if (!locationExist) {
+					headquarter.setChecked(false);
+					locations.add(headquarter);
+				}
+			}
+			
+			
 		}
 
 		//Industries
@@ -1029,7 +1062,6 @@ public class APIParser {
 			List<Industry> industryList = mFilters.getIndustries();
 			setIndustryFilterOptionsCheck(industryArray, industryList);
 			
-			//TODO
 			//根据返回的queryInfo 设置MileStoneOccurrenceType
 			for (int i = 0; i < industryArray.length(); i ++) {
 				industryList.get(0).setChecked(false);

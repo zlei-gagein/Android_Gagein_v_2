@@ -1,5 +1,6 @@
 package com.gagein.ui.tablet.search.people;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.gagein.R;
+import com.gagein.ui.main.BaseFragmentActivity;
 import com.gagein.ui.tablet.search.PeopleEmptyViewFragment;
 import com.gagein.ui.tablet.search.people.CompaniesFragment.OnCanleTask;
 import com.gagein.ui.tablet.search.people.CompaniesFragment.OnCompaniesFinish;
@@ -66,7 +68,7 @@ import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
 
-public class PeopleSearchTabletActivity extends FragmentActivity implements OnFinishActivity, OnStartNewsTriggers, OnStartHeadquarters
+public class PeopleSearchTabletActivity extends BaseFragmentActivity implements OnFinishActivity, OnStartNewsTriggers, OnStartHeadquarters
  	, OnStartIndustry, OnStartEmployeeSize, OnStartRevenueSize, OnStartOwnership, OnStartMilestone, OnStartRank, OnStartFiscalYear, 
  	OnStartJobTitle, OnStartJobLevel, OnStartLocation, OnStartFunctionalRole, OnStartCompanies ,OnNewsTriggersFinish, OnHeadquartersFinish,
  	OnIndustryFinish, OnEmployeeSizeFinish, OnRevenueSizeFinish, OnOwnershipFinish, OnJobTitleFinish, OnJobLevelFinish, OnFunctionalRoleFinish,
@@ -100,6 +102,23 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 	private String savedId = "";
 	private IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_REFRESH_FILTER);
 	private RefreshFilterBroadcastReceiver receiver = new RefreshFilterBroadcastReceiver();
+	
+	@Override
+	protected List<String> observeNotifications() {
+		return stringList(Constant.BROADCAST_SAVED_SEARCH);
+	}
+	
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		if (actionName.equals(Constant.BROADCAST_SAVED_SEARCH)) {
+			
+			searchPeopleResultFragment.setSaved();
+			
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -1126,7 +1145,6 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 
 	@Override
 	public void onUpdateFilterStatusForPeople() {
-		// TODO Auto-generated method stub
 		
 		if (null != jobTitleFragment) {
 			jobTitleFragment.setInitialData();
@@ -1187,15 +1205,13 @@ public class PeopleSearchTabletActivity extends FragmentActivity implements OnFi
 		
 	}
 	
-//	@Override
-//	public void onBackPressed() {
-//		if (!filterFragment.isVisible()) {
-//			transaction = getSupportFragmentManager().beginTransaction();
-//			transaction.show(filterFragment);
-//			transaction.commit();
-//		} else {
-//			super.onBackPressed();
-//			return;
-//		}
-//	}
+	@Override
+	public void onBackPressed() {
+		if (leftLayout.getVisibility() == View.VISIBLE) {
+			setLeftLayoutVisible(View.GONE);
+		} else {
+			super.onBackPressed();
+			return;
+		}
+	}
 }

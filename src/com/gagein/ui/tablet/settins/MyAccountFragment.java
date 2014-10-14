@@ -21,6 +21,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -31,7 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
-import com.gagein.adapter.SearchCompanyAdapter;
+import com.gagein.adapter.SettingCompanyAdapter;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Company;
@@ -42,7 +44,7 @@ import com.gagein.util.CommonUtil;
 import com.gagein.util.Log;
 import com.gagein.util.MessageCode;
 
-public class MyAccountFragment extends BaseFragment implements OnClickListener, OnFocusChangeListener, OnEditorActionListener{
+public class MyAccountFragment extends BaseFragment implements OnClickListener, OnFocusChangeListener, OnEditorActionListener, OnItemClickListener{
 	
 	private EditText nameEdt;
 	private EditText emailEdt;
@@ -61,7 +63,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	private TimerTask timerTask;
 	private Timer timer;
 	private List<Company> searchCompanies = new ArrayList<Company>();
-	private SearchCompanyAdapter companyAdapter;
+	private SettingCompanyAdapter companyAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +98,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	protected void initData() {
 		super.initData();
 		
-		companyAdapter = new SearchCompanyAdapter(mContext, searchCompanies);
+		companyAdapter = new SettingCompanyAdapter(mContext, searchCompanies);
 		companyListView.setAdapter(companyAdapter);
 		companyAdapter.notifyDataSetChanged();
 		companyAdapter.notifyDataSetInvalidated();
@@ -147,6 +149,9 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
 		});
+		
+		companyListView.setOnItemClickListener(this);
+		
 	}
 	
 	/**schedule search*/
@@ -171,6 +176,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	protected void setData() {
 		super.setData();
+		
 		nameEdt.setText(profile.firstName + " " + profile.lastName);
 		emailEdt.setText(profile.email);
 		companyEdt.setText(profile.orgName);
@@ -203,10 +209,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onClick(View v) {
 		if (v == layout) {
-			nameEdt.clearFocus();
-			emailEdt.clearFocus();
-			companyEdt.clearFocus();
-			jobTitleEdt.clearFocus();
+			clearAllEditFocus();
 		} else if (v == clearName) {
 			nameEdt.setText("");
 			clearName.setVisibility(View.GONE);
@@ -220,6 +223,13 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 			jobTitleEdt.setText("");
 			clearJobTitle.setVisibility(View.GONE);
 		}
+	}
+
+	private void clearAllEditFocus() {
+		nameEdt.clearFocus();
+		emailEdt.clearFocus();
+		companyEdt.clearFocus();
+		jobTitleEdt.clearFocus();
 	}
 
 	@Override
@@ -256,39 +266,46 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 			}
 			
 			// 468494# setting-my account,name, company, job title为空的时候不允许保存
-			if (canSave) {
-				hideSoftKey();
-				
-				String firstName = null;
-				String lastName = null;
-				if (!TextUtils.isEmpty(name)) {
-					int index = name.indexOf(" ");
-					if (index > 0) {
-						firstName = name.substring(0, index);
-						lastName = name.substring(index).trim();
-					} else {
-						firstName = name;
-					}
-				}
-				
-				if (TextUtils.isEmpty(firstName)) {
-					firstName = profile.firstName;
-				}
-				
-				if (TextUtils.isEmpty(lastName)) {
-					lastName = profile.lastName;
-				}
-				
-				saveProfile(firstName, lastName
-						, TextUtils.isEmpty(email) ? profile.email : email
-								, TextUtils.isEmpty(company) ? profile.orgName : company
-										, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
-			}
+			if (canSave) saveProfileWithParams();
 			
 			return true;
 		}
 
 		return false;
+	}
+
+	private void saveProfileWithParams() {
+		hideSoftKey();
+		
+		String name = nameEdt.getText().toString().trim();
+		String email = emailEdt.getText().toString().trim();
+		String company = companyEdt.getText().toString().trim();
+		String jobTitle = jobTitleEdt.getText().toString().trim();
+		
+		String firstName = null;
+		String lastName = null;
+		if (!TextUtils.isEmpty(name)) {
+			int index = name.indexOf(" ");
+			if (index > 0) {
+				firstName = name.substring(0, index);
+				lastName = name.substring(index).trim();
+			} else {
+				firstName = name;
+			}
+		}
+		
+		if (TextUtils.isEmpty(firstName)) {
+			firstName = profile.firstName;
+		}
+		
+		if (TextUtils.isEmpty(lastName)) {
+			lastName = profile.lastName;
+		}
+		
+		saveProfile(firstName, lastName
+				, TextUtils.isEmpty(email) ? profile.email : email
+						, TextUtils.isEmpty(company) ? profile.orgName : company
+								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -313,7 +330,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		}
 	};
 	
-	public void getCompanySuggestions(String keyWords) {//TODO
+	public void getCompanySuggestions(String keyWords) {
 		
 		showLoadingDialog(getActivity());
 		mApiHttp.getCompanySuggestions(keyWords, new Listener<JSONObject>() {
@@ -354,6 +371,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 
 	@Override
 	public void onFocusChange(View view, boolean changed) {
+		
 		if (view == nameEdt) {
 			clearName.setVisibility(changed ? View.VISIBLE : View.GONE);
 		} else if (view == emailEdt) {
@@ -364,6 +382,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 			clearJobTitle.setVisibility(changed ? View.VISIBLE : View.GONE);
 		}
 		setEditSelectionPosition();
+		
 	}
 
 	private void setEditSelectionPosition() {
@@ -437,6 +456,23 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		if (timerTask != null) {
 			timerTask.cancel();
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		
+		String companyName = searchCompanies.get(position).name;
+		companyEdt.setText(companyName);
+		cancelSearchTask();
+		clearCompany.setVisibility(View.GONE);
+		clearAllEditFocus();
+		
+		searchCompanies.clear();
+		companyAdapter.notifyDataSetChanged();
+		CommonUtil.setViewHeight(companyListView, 0);
+		
+		
+		saveProfileWithParams();
 	}
 	
 }

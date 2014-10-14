@@ -27,6 +27,20 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padingleft" >
+                
+                <include layout="@layout/lines" />
+
+                <Button
+                    android:id="@+id/switchAccount"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/edit_hight"
+                    android:background="@null"
+                    android:drawableRight="@drawable/button_chevron"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/marginright"
+                    android:text="@string/switch_accounts"
+                    android:textColor="@color/text_dark"
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -40,7 +54,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/u_account"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -52,9 +66,9 @@
                     android:drawableRight="@drawable/button_chevron"
                     android:gravity="left|center_vertical"
                     android:paddingRight="@dimen/marginright"
-                    android:text="@string/triggerchart"
+                    android:text="@string/triggers"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -68,7 +82,7 @@
 <!--                     android:paddingRight="@dimen/marginright" -->
 <!--                     android:text="@string/upgrade_to_gagein_pro" -->
 <!--                     android:textColor="@color/text_dark" -->
-<!--                     android:textSize="@dimen/button_text_size" /> -->
+<!--                     android:textSize="18sp" /> -->
 
 <!--                 <include layout="@layout/lines" /> -->
             </LinearLayout>
@@ -93,7 +107,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/share"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -107,7 +121,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/u_rate"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -121,7 +135,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/feedback"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -141,7 +155,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/terms_of_service"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
 
@@ -155,7 +169,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/privacy_policy"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -168,7 +182,7 @@
                         android:layout_centerVertical="true"
                         android:text="@string/tutorial"
                         android:textColor="@color/text_dark"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="18sp" />
 
                     <Button
                         android:id="@+id/tutorialBtn"
@@ -179,7 +193,7 @@
                         android:layout_marginRight="@dimen/marginright"
                         android:background="@drawable/tutorial_off"
                         android:textColor="@color/text_weak"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="18sp" />
                 </RelativeLayout>
 
                 <include layout="@layout/lines" />
@@ -194,7 +208,7 @@
                     android:paddingRight="@dimen/marginright"
                     android:text="@string/log_out"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/button_text_size" />
+                    android:textSize="18sp" />
 
                 <include layout="@layout/lines" />
                 

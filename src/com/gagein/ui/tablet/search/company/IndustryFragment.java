@@ -241,12 +241,16 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 		if (checkedNum == 0 || checkedNum == 2) {
 			childrenLayout.setVisibility(View.GONE);
 		} else {
-			childrenLayout.setVisibility(View.VISIBLE);
 			//children layout will invisible when only one item checked
 			for (int i = 0; i < mIndustries.size(); i ++) {
 				if (mIndustries.get(i).getChecked()) {
 					checkedIndustryPosition = i;
 				}
+			}
+			if (mIndustries.get(checkedIndustryPosition).getName().equalsIgnoreCase("Other")) {
+				childrenLayout.setVisibility(View.GONE);
+			} else {
+				childrenLayout.setVisibility(View.VISIBLE);
 			}
 			setChildrenListView(checkedIndustryPosition, fromOnClickParentItem);
 		}

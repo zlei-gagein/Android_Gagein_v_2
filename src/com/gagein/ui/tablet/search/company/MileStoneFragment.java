@@ -142,7 +142,18 @@ public class MileStoneFragment extends BaseFragment implements OnItemClickListen
 			
 		}
 		
-		onSearchFromMileStone.onSearchFromMileStone();
+		// 判断有没有选择时间
+		Boolean haveSelectedMilestones = false;
+		Boolean haveSelectedTime = false;
+		for (int i = 0; i < mMilestones.size(); i++) {
+			if (mMilestones.get(i).getChecked()) haveSelectedMilestones = true;
+		}
+		
+		for (int i = 0; i < mDateRanks.size(); i++) {
+			if (mDateRanks.get(i).getChecked()) haveSelectedTime = true;
+		}
+		
+		if (haveSelectedMilestones && haveSelectedTime) onSearchFromMileStone.onSearchFromMileStone();
 	}
 	
 	private void setPastDateShow() {

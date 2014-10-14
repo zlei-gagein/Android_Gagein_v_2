@@ -27,6 +27,7 @@ import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.model.AutoLoginInfo;
 import com.gagein.model.Member;
+import com.gagein.model.PlanInfo;
 import com.gagein.model.SnUserInfo;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Log;
@@ -316,8 +317,15 @@ public class LoginActivity extends BaseActivity {
 			public void onResponse(JSONObject jsonObject) {
 				
 				if (null != jsonObject) {
+					
+					Log.v("silen", "jsonObject = " + jsonObject.toString());
+					
 					APIParser parser = new APIParser(jsonObject);
 					if (parser.isOK()) {
+						
+						List<PlanInfo> planInfos = parser.parsePlanInfos();
+						CommonUtil.savePlanInfos(planInfos);
+						
 						
 						Member member = parser.parseLogin();
 						AutoLoginInfo loginInfo = AutoLoginInfo.loginInfoFromMember(member);
@@ -334,31 +342,6 @@ public class LoginActivity extends BaseActivity {
 			}
 		}, new Response.ErrorListener() {
 
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
-			}
-		});
-	}
-	
-	//TODO
-	private void billingGetInfo() {
-		
-		mApiHttp.billingGetInfo(new Listener<JSONObject>() {
-			
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				
-				APIParser parser = new APIParser(jsonObject);
-				if (parser.isOK()) {
-					
-				} else {
-					alertMessageForParser(parser);
-				}
-				dismissLoadingDialog();
-			}
-		}, new Response.ErrorListener() {
-			
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				showConnectionError();

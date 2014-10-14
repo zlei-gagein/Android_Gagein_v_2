@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -24,11 +25,13 @@ public class ShareActivity extends BaseActivity {
 	private ImageButton twitter;
 	private ImageButton facebook;
 	private ImageButton googlePlus;
+	private TextView refer;
 	private TextView freeMonthLeftTx;
 	private TextView freeMonthTotalTx;
 	private TextView coworkerCountTx;
-	private LinearLayout shareLayout;
-	private LinearLayout referalResultLayout;
+	private LinearLayout freeDaysLayout;
+	private LinearLayout freeMonthLayout;
+	private ScrollView wholeLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,8 @@ public class ShareActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		super.initView();
-		setTitle(R.string.share);
+		
+		setTitle(R.string.share_gagein);
 		setLeftImageButton(R.drawable.back_arrow);
 		
 		mail = (ImageButton) findViewById(R.id.mail);
@@ -49,11 +53,13 @@ public class ShareActivity extends BaseActivity {
 		twitter = (ImageButton) findViewById(R.id.twitter);
 		facebook = (ImageButton) findViewById(R.id.facebook);
 		googlePlus = (ImageButton) findViewById(R.id.googlePlus);
+		refer = (TextView) findViewById(R.id.refer);
 		freeMonthLeftTx = (TextView) findViewById(R.id.freeMonthLeft);
 		freeMonthTotalTx = (TextView) findViewById(R.id.freeMonthTotal);
 		coworkerCountTx = (TextView) findViewById(R.id.coworkerCount);
-		shareLayout = (LinearLayout) findViewById(R.id.shareLayout);
-		referalResultLayout = (LinearLayout) findViewById(R.id.referalResultLayout);
+		freeDaysLayout = (LinearLayout) findViewById(R.id.freeDaysLayout);
+		freeMonthLayout = (LinearLayout) findViewById(R.id.freeMonthLayout);
+		wholeLayout = (ScrollView) findViewById(R.id.wholeLayout);
 	}
 	
 	@Override
@@ -67,8 +73,9 @@ public class ShareActivity extends BaseActivity {
 	private void setShareLayoutVisible(String planId) {
 		
 		Boolean isProfessional = APIHttpMetadata.kGGPlanTypeProfessional.equalsIgnoreCase(planId) ? true : false;
-		shareLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
-		referalResultLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
+		refer.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
+		freeDaysLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
+		freeMonthLayout.setVisibility(isProfessional ? View.VISIBLE : View.GONE);
 		
 	}
 	
@@ -118,12 +125,17 @@ public class ShareActivity extends BaseActivity {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
+					wholeLayout.setVisibility(View.VISIBLE);
+					
 					int freeMonthLeft = parser.data().optInt("free_month_left");
 					int freeMonthTotal = parser.data().optInt("free_month_total");
 					int coworkerCount = parser.data().optInt("coworker_count");
 					setReferalResultValue(freeMonthLeft, freeMonthTotal, coworkerCount);
 					
 				} else {
+					
+					wholeLayout.setVisibility(View.GONE);
+					
 				}
 			}
 		}, new Response.ErrorListener() {

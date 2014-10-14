@@ -137,7 +137,7 @@ public class SaveSearchDialog implements OnClickListener {
 					@Override
 					public void onResponse(JSONObject jsonObject) {
 						APIParser parser = new APIParser(jsonObject);
-						if (parser.isOK()) {//TODO send broadcast
+						if (parser.isOK()) {// send broadcast
 							
 							Intent intent = new Intent();
 							intent.setAction(Constant.BROADCAST_SAVED_SEARCH);

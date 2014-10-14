@@ -1,7 +1,5 @@
 package com.gagein.ui.settings;
 
-import java.util.Calendar;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -22,6 +20,7 @@ import com.gagein.util.CommonUtil;
 
 public class SettingsActivity extends BaseActivity {
 	
+	private Button switchAccount;
 	private Button myAccountBtn;
 	private Button newsFilterBtn;
 	private Button privacyPolicyBtn;
@@ -50,6 +49,7 @@ public class SettingsActivity extends BaseActivity {
 		
 		setTitle(R.string.u_settings);
 		
+		switchAccount = (Button) findViewById(R.id.switchAccount);
 		myAccountBtn = (Button) findViewById(R.id.myAccountBtn);
 		newsFilterBtn = (Button) findViewById(R.id.newsFilterBtn);
 		privacyPolicyBtn = (Button) findViewById(R.id.privacyPolicyBtn);
@@ -68,7 +68,7 @@ public class SettingsActivity extends BaseActivity {
 	protected void initData() {
 		super.initData();
 		
-		Calendar calendar = Calendar.getInstance();
+//		Calendar calendar = Calendar.getInstance();
 //		copyright.setText(String.format(stringFromResID(R.string.copyright), calendar.get(Calendar.YEAR) + ""));
 		copyright.setText(String.format(stringFromResID(R.string.copyright), "2014"));
 		versionCode.setText(String.format(stringFromResID(R.string.version_code), CommonUtil.getVersion(mContext)));
@@ -77,6 +77,7 @@ public class SettingsActivity extends BaseActivity {
 	@Override
 	protected void setOnClickListener() {
 		super.setOnClickListener();
+		switchAccount.setOnClickListener(this);
 		myAccountBtn.setOnClickListener(this);
 		newsFilterBtn.setOnClickListener(this);
 		privacyPolicyBtn.setOnClickListener(this);
@@ -93,7 +94,11 @@ public class SettingsActivity extends BaseActivity {
 	public void onClick(View v) {
 		super.onClick(v);
 		
-		if (v == myAccountBtn) {
+		if (v == switchAccount) {
+			
+			startActivitySimple(SwitchPlanActivity.class);
+			
+		} else if (v == myAccountBtn) {
 			
 			startActivitySimple(MyAccountActivity.class);
 			

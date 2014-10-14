@@ -5,29 +5,29 @@ import java.util.List;
 
 public class QueryInfo {
 
-	private List<QueryInfoItem> NewsTriggers;
+	private List<QueryInfoItem> NewsTriggers = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> Ranks;
+	private List<QueryInfoItem> Ranks = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> FiscalMonth;
+	private List<QueryInfoItem> FiscalMonth = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> MileStoneOccurrenceType;
+	private List<QueryInfoItem> MileStoneOccurrenceType = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> Industries;
+	private List<QueryInfoItem> Industries = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> LocationCode;
+	private List<QueryInfoItem> LocationCode = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> EmployeeSize;
+	private List<QueryInfoItem> EmployeeSize = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> DateRange;
+	private List<QueryInfoItem> DateRange = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> MileStoneType;
+	private List<QueryInfoItem> MileStoneType = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> Ownership;
+	private List<QueryInfoItem> Ownership = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> RevenueSize;
+	private List<QueryInfoItem> RevenueSize = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> SavedCompany;
+	private List<QueryInfoItem> SavedCompany = new ArrayList<QueryInfoItem>();
 	
 	private QueryInfoItem EventSearchKeywords;	/// 用户自定义trigger
 	
@@ -35,20 +35,20 @@ public class QueryInfo {
 	
 	private String companySearchKeywords = "";
 	
-	private String JobTitle;
+	private String JobTitle = "";
 	
-	private List<QueryInfoItem> JobLevels;
+	private List<QueryInfoItem> JobLevels = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> FunctionalRoles;
+	private List<QueryInfoItem> FunctionalRoles = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> CompaniesForCompany;
+	private List<QueryInfoItem> CompaniesForCompany = new ArrayList<QueryInfoItem>();
 	
-	private List<QueryInfoItem> CompaniesForPeople;
+	private List<QueryInfoItem> CompaniesForPeople = new ArrayList<QueryInfoItem>();
 	
-	private List<Location> Locations;
+	private List<Location> Locations = new ArrayList<Location>();
 	
 	private void addItems(List<QueryInfoItem> fromList, List<QueryInfoItem> toList) {
-		if (fromList != null && toList != null) {
+		if (fromList != null && fromList.size() > 0 && toList != null) {
 			toList.addAll(fromList);
 		}
 	}
@@ -60,6 +60,7 @@ public class QueryInfo {
 		} else {
 			addItems(NewsTriggers, conditions);
 		}
+		
 		///
 		if (companySearchKeywords != null && !companySearchKeywords.isEmpty()) {
 			QueryInfoItem queryInfoItem = new QueryInfoItem();
@@ -89,11 +90,11 @@ public class QueryInfo {
 
 		///
 		if (isCompanySearch) {
+			addItems(CompaniesForCompany, conditions);
+		} else {
 			addItems(JobLevels, conditions);
 			addItems(FunctionalRoles, conditions);
 			addItems(CompaniesForPeople, conditions);
-		} else {
-			addItems(CompaniesForCompany, conditions);
 		}
 		
 		return conditions;

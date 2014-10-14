@@ -253,27 +253,40 @@
             android:layout_marginTop="14dp"
             android:background="@color/white" >
 
-            <TextView
+            <com.gagein.component.VerticalTextView xmlns:app="http://schemas.android.com/apk/res/com.gagein"
                 android:id="@+id/revenuesText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:text="@string/in_millions"
-                android:textColor="@color/text_dark"
-                android:textSize="12sp" />
-
-            <ImageView
-                android:id="@+id/revenuesImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                app:text="@string/in_millions"
+                app:textColor = "@color/text_dark"
+                app:textSize="12sp"
+                app:direction="downtoup" />
+
+<!--             <ImageView -->
+<!--                 android:id="@+id/revenuesImage" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:layout_centerVertical="true" -->
+<!--                 android:layout_marginBottom="24dp" -->
+<!--                 android:layout_marginLeft="40dp" -->
+<!--                 android:layout_marginRight="24dp" -->
+<!--                 android:layout_marginTop="35dp" -->
+<!--                  /> -->
+            
+            <com.gagein.component.ImageViewAdapterScreen
+                android:id="@+id/revenuesImage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginTop="35dp"
-                 />
+                android:layout_centerVertical="true"
+                android:background="@color/white"/>
+            
         </RelativeLayout>
     </LinearLayout>
     

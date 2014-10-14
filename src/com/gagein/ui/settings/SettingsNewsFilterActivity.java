@@ -58,7 +58,7 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 	protected void initView() {
 		super.initView();
 		
-		setTitle(R.string.news_filter);
+		setTitle(R.string.triggers);
 		setLeftImageButton(R.drawable.back_arrow);
 		
 		listView = (ListView) findViewById(R.id.listView);

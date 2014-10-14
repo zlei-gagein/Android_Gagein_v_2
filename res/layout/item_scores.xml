@@ -37,6 +37,7 @@
 	            android:layout_height="wrap_content"
 	            android:textColor="@color/white"
 	            android:textSize="14sp"
+	            android:visibility="gone"
 	            />
 	        
 	        <TextView 
@@ -55,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/revenueLayout"
+        android:layout_toLeftOf="@id/scoresLayout"
         android:layout_toRightOf="@id/image"
         android:orientation="vertical"
         android:paddingBottom="10dp" >

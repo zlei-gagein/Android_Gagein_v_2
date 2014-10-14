@@ -90,9 +90,13 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	private Boolean haveGotSuggestedCompanies = false;
 	private List<Company> suggestedCompanies = new ArrayList<Company>();
 	private OnFilterClickListener filterListener;
+	private OnBackClickListener onBackClickListener;
 	
 	public interface OnFilterClickListener {
 		public void onFilterClickListener();
+	}
+	public interface OnBackClickListener {
+		public void onBackClickListener();
 	}
 	
 	@Override
@@ -103,6 +107,11 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			filterListener = (OnFilterClickListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement onFilterClickListener");
+		}
+		try {
+			onBackClickListener = (OnBackClickListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement onBackClickListener");
 		}
 		
 	}
@@ -125,6 +134,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		
 		setTitle(R.string.u_followed_companies);
 		setRightButton(R.string.edit);
+		setLeftImageButton(R.drawable.back_arrow);
 		
 		noSectionListView = (XListView) view.findViewById(R.id.noSectionListView);
 		headView = LayoutInflater.from(mContext).inflate(R.layout.header_companies, null);
@@ -187,11 +197,32 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		}
 	}
 	
+	private ArrayList<String> getIndustriesIds() {
+		
+		ArrayList<String> industriesIds = new ArrayList<String>();
+		for (int i = 0; i < Constant.INDUSTRIES.size() ; i++) {
+			FacetItemIndustry facetItemIndustry = Constant.INDUSTRIES.get(i);
+			if (facetItemIndustry.getSelected() && !TextUtils.isEmpty(facetItemIndustry.getFilter_param_value())) {
+				industriesIds.add(facetItemIndustry.getFilter_param_value());
+			}
+		}
+		
+		return industriesIds;
+	}
+	
+	private ArrayList<String> getGroupIds() {
+		
+		ArrayList<String> groupIds = new ArrayList<String>();
+		groupIds.add(groupId);
+		
+		return groupIds;
+	}
+	
 	public void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore) {
 		
 		if (showDialog) CommonUtil.showLoadingDialog(mContext);
 		
-		mApiHttp.getCompaniesOfGroupNew(group.getFollowLinkType(), nextPage, groupId, Constant.INDUSTRYID, APIHttpMetadata.kGGExceptPendingFollowCompanies, new Listener<JSONObject>() {
+		mApiHttp.getCompaniesOfGroupNew("", group.getFollowLinkType(), nextPage, getGroupIds(), getIndustriesIds(), APIHttpMetadata.kGGExceptPendingFollowCompanies, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -223,14 +254,19 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					noSectionListView.setPullLoadEnable(haveMoreNews);
 					
 					facet = page.facet;
-					if (facet != null) {
+					if (facet != null && Constant.industriesItem.size() == 0) {
+						
 						industryData = facet.industryFacets;
+						
+						Constant.industriesItem = industryData;
+						
 					}
 					
 					setListView();
 					
 					Collections.sort(companies);
 					
+					filterBtn.setVisibility((Constant.industriesItem.size() == 0) ? View.GONE : View.VISIBLE);
 					filterBtn.setVisibility((companies.size() == 0) ? View.GONE : View.VISIBLE);
 					
 					if (!loadMore) setData();
@@ -412,7 +448,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		super.onClick(v);
 		
 		if (v == filterBtn) {
-			if (industryData.size() == 0) {
+			if (Constant.industriesItem.size() == 0) {
 				showShortToast(R.string.no_filters);
 				return;
 			}
@@ -428,33 +464,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			}
 			
 			edit = !edit;
-			selectAllBtn.setTag(R.id.tag_select, false);
-			selectAllBtn.setImageResource(R.drawable.button_unselect);
-			if (edit) {
-				for (int i = 0; i < companies.size(); i ++) {
-					companies.get(i).select = false;
-				}
-			}
-			
-			noSectionIndexAdapter.setEdit(edit);
-			noSectionIndexAdapter.notifyDataSetChanged();
-			setEditStatus();
-			
-			if (isLinkedCompanies) {
-				if (!edit) {
-					bottomLayout.setVisibility(View.GONE);
-					bottomLayoutLinkedCompanies.setVisibility(View.GONE);
-				}
-			} else {
-				setBottomButton(companies);
-				setBottomLayoutStatus();
-			}
-			setLeftButtonVisible();
-			setFiltersVisible();
-			
-			if (!isSystemGroup) {
-				bottomLayoutIsNotSystem.setVisibility(edit ? View.GONE : View.VISIBLE);
-			}
+			setNotEditStatus();
 			
 		} else if (v == bottomBtn) {
 			
@@ -553,6 +563,39 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			
 			showUnfollowDialog();
 			
+		} else if (v == leftImageBtn) {
+			
+			//TODO
+			onBackClickListener.onBackClickListener();
+			
+		}
+	}
+	
+	private void setNotEditStatus() {
+		selectAllBtn.setTag(R.id.tag_select, false);
+		selectAllBtn.setImageResource(R.drawable.button_unselect);
+		if (edit) {
+			setAllCompaniesUnSelect();
+		}
+		
+		noSectionIndexAdapter.setEdit(edit);
+		noSectionIndexAdapter.notifyDataSetChanged();
+		
+		setEditStatus();
+		if (isLinkedCompanies) {
+			if (!edit) {
+				bottomLayout.setVisibility(View.GONE);
+				bottomLayoutLinkedCompanies.setVisibility(View.GONE);
+			}
+		} else {
+			setBottomButton(companies);
+			setBottomLayoutStatus();
+		}
+		setLeftButtonVisible();
+		setFiltersVisible();
+		
+		if (!isSystemGroup) {
+			bottomLayoutIsNotSystem.setVisibility(edit ? View.GONE : View.VISIBLE);
 		}
 	}
 
@@ -630,6 +673,9 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					intent.setAction(Constant.BROADCAST_REMOVE_COMPANIES);
 					mContext.sendBroadcast(intent);
 					
+					edit = false;
+					setNotEditStatus();
+					
 				} else {
 					alertMessageForParser(parser);
 				}
@@ -663,6 +709,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	
 	public void setEditStatus() {
 		setRightButton(edit ? R.string.cancel : R.string.edit);
+		setLeftImageButtonVisible(edit ? View.GONE : View.VISIBLE);
 	}
 	
 	public void setNoFollowedCompaniesLayoutGone() {
@@ -746,6 +793,10 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 						mContext.sendBroadcast(intent);
 						
 						setBottomButton(null);
+						
+						edit = false;
+						setNotEditStatus();
+						
 						dismissLoadingDialog();
 					}
 					
@@ -838,6 +889,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 
 	@Override
 	public void onRefresh() {
+		if (edit) return;
 		nextPage = "";
 		getCompaniesOfGroup(true, false);
 	}

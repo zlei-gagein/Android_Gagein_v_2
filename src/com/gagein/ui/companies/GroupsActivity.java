@@ -284,7 +284,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			adapter.setEdit(isEdit);
 			adapter.notifyDataSetChanged();
 			
-			NewGroupDialog dialog = new NewGroupDialog(mContext);
+			NewGroupDialog dialog = new NewGroupDialog(mContext, Constant.NEW_GROUP_ONLY);
 			dialog.showDialog();
 			
 		} else if (v == rightBtn) {

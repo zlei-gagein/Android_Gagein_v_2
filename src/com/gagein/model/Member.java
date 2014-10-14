@@ -17,6 +17,7 @@ public class Member extends Person {
 	public int signupProcessStatus = kGGSignupProcessAgentsSelect;
 	public String accountEmail = null;
 	public String accountPassword = null;
+	public String memid = null;
 	public MemberPlan plan = null;
 
 	/** ----- methods ----- */
@@ -31,6 +32,7 @@ public class Member extends Person {
 		this.fullName = aJSONObject.optString("mem_full_name");
 		this.timeZone = aJSONObject.optString("mem_timezone");
 		this.signupProcessStatus = aJSONObject.optInt("signup_process_status");
+		this.memid = aJSONObject.optString("memid");
 
 		if (company == null)
 			company = new Company();
@@ -58,7 +60,7 @@ public class Member extends Person {
 		
 		Member member = new Member();
 		member.accessToken = aLoginInfo.accessToken;
-		member.id = aLoginInfo.memberID;
+		member.memid = aLoginInfo.memberID;
 		member.accountEmail = aLoginInfo.memberEmail;
 		member.fullName = aLoginInfo.memberFullName;
 		member.signupProcessStatus = aLoginInfo.signupProcessStatus;

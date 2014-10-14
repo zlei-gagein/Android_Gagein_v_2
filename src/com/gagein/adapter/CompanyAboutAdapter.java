@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -70,7 +68,7 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		public TextView name;
 		public TextView description;
 		public TextView more;
-		public TextView revenuesText;
+//		public TextView revenuesText;
 		public TextView phone;
 		public TextView fax;
 		public TextView address;
@@ -127,7 +125,7 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		viewHolder.filings = (Button) convertView.findViewById(R.id.filings);
 		viewHolder.description = (TextView) convertView.findViewById(R.id.description);
 		viewHolder.more = (TextView) convertView.findViewById(R.id.more);
-		viewHolder.revenuesText = (TextView) convertView.findViewById(R.id.revenuesText);
+//		viewHolder.revenuesText = (TextView) convertView.findViewById(R.id.revenuesText);
 		viewHolder.phone = (TextView) convertView.findViewById(R.id.phone);
 		viewHolder.fax = (TextView) convertView.findViewById(R.id.fax);
 		viewHolder.address = (TextView) convertView.findViewById(R.id.address);
@@ -142,7 +140,7 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		setParents(viewHolder.parentsLayout, viewHolder.parents);
 		setSubsidiaries(viewHolder.subsidiariesLayout, viewHolder.subsidiaries);
 		setDivisions(viewHolder.divisionsLayout, viewHolder.divisions);
-		setRevenues(viewHolder.revenuesLayout, viewHolder.revenuesText, viewHolder.revenuesImage);
+		setRevenues(viewHolder.revenuesLayout, viewHolder.revenuesImage);
 		setContact(viewHolder.contactLayout, viewHolder.phoneLayout, viewHolder.faxLayout, viewHolder.addressLayout, 
 				viewHolder.phone, viewHolder.fax, viewHolder.address);
 		setMap(viewHolder.map);
@@ -246,7 +244,7 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		}
 	}
 	
-	private void setRevenues(LinearLayout layout, TextView text, ImageView image) {
+	private void setRevenues(LinearLayout layout, final ImageView image) {
 		final String revenuesUrl = mCompany.revenuesChartUrl;
 		if (TextUtils.isEmpty(revenuesUrl)) return;
 		layout.setVisibility(View.VISIBLE);
@@ -263,8 +261,6 @@ public class CompanyAboutAdapter extends BaseAdapter{
 			}
 		});
 
-		RotateAnimation rotate = (RotateAnimation) AnimationUtils.loadAnimation(mContext, R.anim.rotate);
-		text.setAnimation(rotate);
 	}
 	
 	private void setDivisions(LinearLayout layout, Button button) {
@@ -385,7 +381,6 @@ public class CompanyAboutAdapter extends BaseAdapter{
 		String employees = CommonUtil.parserNum(mCompany.employeeSize);
 		String revenueStr = mCompany.revenueSize;
 		String fiscalyear = mCompany.fiscalYear;
-		String fortuneRank = mCompany.fortuneRank;
 		String specialities = mCompany.specialities;
 		String ownership = mCompany.ownership;
 		
@@ -400,10 +395,42 @@ public class CompanyAboutAdapter extends BaseAdapter{
 				setInformationValue(CommonUtil.revenueFormat(revenueStr), R.string.revenue, R.layout.item_about_detail, layout);
 			}
 		}
-		setInformationValue(fortuneRank, R.string.fortune_rank, R.layout.item_about_detail, layout);
+		
+		setInformationValue(packageRank(), R.string.rank, R.layout.item_about_detail, layout);
 		setInformationValue(fiscalyear, R.string.fiscal_year, R.layout.item_about_detail, layout);
 		setInformationValue(ownership, R.string.ownership, R.layout.item_about_detail, layout);
 		
+	}
+	
+	private String packageRank() {
+		
+		String str = "";
+		String globalRank = mCompany.global_rank;
+		String fortuneRank = mCompany.fortuneRank;
+		String russellRank = mCompany.russell_rank;
+		String inc5000Rank = mCompany.inc5000_rank;
+		
+		
+		if (!TextUtils.isEmpty(globalRank)) {
+			str = "Global " + globalRank;
+		}
+		
+		if (!TextUtils.isEmpty(fortuneRank)) {
+			if (!TextUtils.isEmpty(str)) str = str + ", ";
+			str = str + "Fortune " + fortuneRank;
+		}
+		
+		if (!TextUtils.isEmpty(russellRank)) {
+			if (!TextUtils.isEmpty(str)) str = str + ", ";
+			str = str + "Russel " + russellRank;
+		}
+		
+		if (!TextUtils.isEmpty(inc5000Rank)) {
+			if (!TextUtils.isEmpty(str)) str = str + ", ";
+			str = str + "Inc. " + inc5000Rank;
+		}
+		
+		return str;
 	}
 	
 	private void setInformationValue(String str, int strId, int layoutId, LinearLayout layout) {

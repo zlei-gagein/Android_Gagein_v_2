@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -16,15 +15,15 @@ import android.widget.LinearLayout;
 import com.gagein.R;
 import com.gagein.model.Company;
 import com.gagein.ui.main.BaseFragmentActivity;
+import com.gagein.ui.tablet.companies.CompaniesFragment.OnBackClickListener;
 import com.gagein.ui.tablet.companies.CompaniesFragment.OnFilterClickListener;
 import com.gagein.ui.tablet.companies.FilterFragment.OnFilterCancle;
 import com.gagein.ui.tablet.companies.FilterFragment.OnFilterDone;
 import com.gagein.ui.tablet.companies.FilterFragment.OnRefreshCompaniesForFilter;
-import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class CompaniesTabletActivity extends BaseFragmentActivity implements OnFilterClickListener, 
-	OnFilterCancle, OnFilterDone, OnRefreshCompaniesForFilter{
+	OnFilterCancle, OnFilterDone, OnRefreshCompaniesForFilter, OnBackClickListener{
 	
 	protected boolean doubleBackToExitPressedOnce = false;
 	private LinearLayout leftLayout;
@@ -161,4 +160,18 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 		companiesFragment.nextPage = ""; 
 		companiesFragment.getCompaniesOfGroup(true, false);
 	}
+
+	@Override
+	public void onBackClickListener() {
+		
+		if (leftLayout.getVisibility() == View.VISIBLE) {
+			setLeftLayoutVisible(View.GONE);
+		} else {
+			finish();
+		}
+		
+	}
 }
+
+
+

@@ -12,7 +12,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:textColor="@drawable/tabbar_text_color"
-        android:textSize="@dimen/button_text_size"
+        android:textSize="14sp"
         android:visibility="visible" />
     
     <ImageView 

@@ -23,15 +23,20 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.http.APIHttp;
+import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.ui.companies.GroupsActivity;
 import com.gagein.ui.news.NewsActivity;
+import com.gagein.ui.scores.ScoresActivity;
 import com.gagein.ui.search.SearchActivity;
 import com.gagein.ui.settings.SettingsActivity;
 import com.gagein.ui.tablet.news.NewsTabletActivity;
+import com.gagein.ui.tablet.scores.ScoresTabletActivity;
 import com.gagein.ui.tablet.settins.SettingsTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
+import com.gagein.util.MessageCode;
 import com.gagein.util.RuntimeData;
 
 /**
@@ -55,6 +60,8 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		mApiHttp = new APIHttp(mContext);
+		
+		CommonUtil.addActivity(this);
 		
 		setContentView(R.layout.main_tab_layout);
 
@@ -80,6 +87,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 	/**
 	 * init View
 	 */
+	public static final String TAB_ID_SCORES = "SCORES";
 	public static final String TAB_ID_NEWS = "NEWS";
 	public static final String TAB_ID_COMPANIES = "COMPANIES";
 	public static final String TAB_ID_SEARCH = "SEARCH";
@@ -87,6 +95,9 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 	
 	private void initView() {
 		tabHost = getTabHost();
+		
+		setupTab(mContext.getString(R.string.u_scores), TAB_ID_SCORES,
+				new Intent(mContext, CommonUtil.isTablet(mContext) ? ScoresTabletActivity.class : ScoresActivity.class));
 		
 		setupTab(mContext.getString(R.string.u_news), TAB_ID_NEWS,
 				new Intent(mContext, CommonUtil.isTablet(mContext) ? NewsTabletActivity.class : NewsActivity.class));
@@ -123,7 +134,6 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 			}
 		});
 		
-		//TODO
 		billingGetInfo();
 	}
 
@@ -131,7 +141,12 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 		tabHost.addTab(tabHost.newTabSpec(tag).setIndicator(getView(name)).setContent(intent));
 	}
 	
-	//TODO
+	private Boolean expired = false;
+	private Boolean isAssigned = false;
+	private Boolean inTrial = false;
+	private Boolean isTeam = false;
+	private Boolean isOwner = false;
+	
 	private void billingGetInfo() {
 		
 		mApiHttp.billingGetInfo(new Listener<JSONObject>() {
@@ -142,18 +157,75 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
-				} else {
-//					alertMessageForParser(parser);
+					expired = parser.data().optInt("plan_expired_flag") == 0 ? false : true;
+					isAssigned = parser.data().optInt("is_assigned") == 0 ? false : true;
+					inTrial = parser.data().optInt("is_trial") == 0 ? false : true;
+					isTeam = parser.data().optInt("is_team") == 0 ? false : true;
+					isOwner = parser.data().optInt("is_owner") == 0 ? false : true;
+					
 				}
-//				dismissLoadingDialog();
+				
+				int billingStatus = getBillingStatus(parser.messageCode());
+				Log.v("silen", "billingStatus = " + billingStatus);
+				
+				if (billingStatus == APIHttpMetadata.kBillingStatusNotPurchased || billingStatus == APIHttpMetadata.kBillingStatusPurchaseExpired
+						|| billingStatus == APIHttpMetadata.kBillingStatusSeatRemoved) {
+					Intent intent = new Intent();
+					intent.setClass(mContext, BillingFailedActivity.class);
+					intent.putExtra(Constant.BILLINGSTATUS, billingStatus);
+					startActivity(intent);
+					
+					//清除token
+					CommonUtil.clearLoginInfo(mContext);
+					CommonUtil.removeActivity();
+				}
+				
 			}
 		}, new Response.ErrorListener() {
 			
 			@Override
 			public void onErrorResponse(VolleyError error) {
-//				showConnectionError();
+				billingGetInfo();
 			}
 		});
+	}
+	
+	private Boolean isAvailable() {
+		return !expired && isAssigned;
+	}
+	
+	private int getBillingStatus(int messageCode) {
+		
+		if (messageCode == MessageCode.MESSAGE_CODE_START_TRIAL) {
+	        return APIHttpMetadata.kBillingStatusNotStarted;
+	    } else {
+	        if (inTrial) {
+	            
+	            if (isAvailable()) {
+	                return APIHttpMetadata.kBillingStatusInTrail;
+	            } else {
+	                return APIHttpMetadata.kBillingStatusNotPurchased;
+	            }
+	            
+	        } else {
+	            
+	            if (isAvailable()) {
+	                return APIHttpMetadata.kBillingStatusPurchaseInEffect;
+	            } else {
+	                
+	                if (isAssigned) {
+	                	if (isTeam && !isOwner) {
+	                		return APIHttpMetadata.kBillingStatusTeamMemberExpired;
+	                	} else {
+	                		return APIHttpMetadata.kBillingStatusPurchaseExpired;
+	                	}
+	                } else {
+	                   return APIHttpMetadata.kBillingStatusSeatRemoved;
+	                }
+	            }
+	        }
+	    }
+		
 	}
 
 	/**

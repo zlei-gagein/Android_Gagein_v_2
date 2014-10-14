@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -66,7 +67,24 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private TextView rankText;
 	private String savedId = "";
 	
-
+	@Override
+	public void handleNotifications(Context aContext, Intent intent) {
+		super.handleNotifications(aContext, intent);
+		
+		String actionName = intent.getAction();
+		
+		if (actionName.equals(Constant.BROADCAST_SAVED_SEARCH)) {
+			
+			rightBtn.setText(R.string.Saved);
+			
+		}
+	}
+    
+    @Override
+    protected List<String> observeNotifications() {
+    	return stringList(Constant.BROADCAST_SAVED_SEARCH);
+    }
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -160,7 +178,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		if (num == 0) {
 			setTitle("No people found");
 		} else {
-			setTitle(num + " people found");
+			setTitle(CommonUtil.splitNumberByComma(num) + " people found");
 		}
 		
 	}
@@ -181,9 +199,9 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private void setRank(String value) {
 		
 		if (value.equalsIgnoreCase("Job Level") || value.equalsIgnoreCase("Company Name")) {
-			rankText.setText(Constant.REVERSE ? " : Low-High" : " : High-Low");
+			rankText.setText(!Constant.REVERSE ?  " : High-Low" : " : Low-High");
 		} else if (value.equalsIgnoreCase("Name")) {
-			rankText.setText(Constant.REVERSE ? " : Z-A" : " : A-Z");
+			rankText.setText(!Constant.REVERSE ? " : Z-A" : " : A-Z");
 		} else if (value.equalsIgnoreCase("Search Relevance")) {
 			Constant.REVERSE = false;
 			rankText.setText("");
@@ -253,7 +271,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		Boolean haveMoreNews = dataPage.hasMore;
 		listView.setPullLoadEnable(haveMoreNews);
 		if (!loadMore) setPersons();
-		CommonUtil.setListViewHeight(listView);
+		CommonUtil.setViewHeight(listView, listView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
 		PAGENUM ++;
 		
 		//set title
@@ -302,6 +320,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			
 		} else if (v == rightBtn) {
 			
+			if (rightBtn.getText().toString().equalsIgnoreCase("Saved")) return;
+			
 			SaveSearchDialog dialog = new SaveSearchDialog(mContext, type, CommonUtil.packageRequestDataForCompanyOrPeople(false, false).get(0), queryInfo.getQueryInfoResult());
 			dialog.showDialog(Constant.SEARCH_PEOPLE);
 			
@@ -347,9 +367,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 					@Override
 					public void onClick(View arg0) {
 						
-						
-						//判断是否有选中条件 TODO
-						List<QueryInfoItem> conditions = queryInfo.allConditions(true);
+						//判断是否有选中条件 
+						List<QueryInfoItem> conditions = queryInfo.allConditions(false);
 						if (conditions.size() <= 1) {
 							showDialog("You have to enter in search criteria! Try again.");
 							return;
@@ -369,7 +388,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 						} else if (type.equalsIgnoreCase(personal)) {
 							pesonalInfoLayout.removeView(view);
 						}
-						//TODO 数据删除
+						// 数据删除
 						Log.v("silen", "delte - queryType = " + queryType);
 						String id = queryInfoItem.getId();
 						
@@ -431,7 +450,6 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 							List<FilterItem> revenueSizeList = mFilters.getSalesVolumeFromBuz();
 							deleteFilters(id, revenueSizeList);
 						}
-						//TODO
 						
 						else if (queryType.equalsIgnoreCase("dop_title")) {
 							List<JobTitle> titleList = mFilters.getJobTitles();

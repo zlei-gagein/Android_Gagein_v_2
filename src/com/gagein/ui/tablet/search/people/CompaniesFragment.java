@@ -178,11 +178,11 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			}
 		}
 		
-		if (mFilters.getSavedCompanies().size() == 0) {
-			
-			getSavedCompany(false);
-			
-		}
+//		if (mFilters.getSavedCompanies().size() == 0) {
+//			
+//		}
+		
+		getSavedCompany(false);
 		
 	}
 	
@@ -286,6 +286,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
 						
 						if (mSavedSearchs.size() == 0) {
+							showShortToast("You have no saved searches");
 							getSavedCompany(false);
 							return;
 						}
@@ -327,19 +328,13 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
 					
 					if (haveSelectCondition.equalsIgnoreCase("false")) {
-						
 						showShortToast("You have to enter in search criteria! Try again.");
-						
 					} else {
-						
 						onSearchFromCompanies.onSearchFromCompanies();
-						
 					}
 					
 				} else {
-					
 					onSearchFromCompanies.onSearchFromCompanies();
-					
 				}
 			}
 			
@@ -363,7 +358,9 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				savedCompanies.get(position).setChecked(true);
 				
 			}
+			
 			companiesAdapter.notifyDataSetChanged();
+			onSearchFromCompanies.onSearchFromCompanies();
 			
 		}
 		

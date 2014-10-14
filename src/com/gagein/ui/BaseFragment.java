@@ -100,6 +100,10 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 		rightBtn.setText(stringId);
 	}
 	
+	protected void setLeftImageButtonVisible(int visible) {
+		leftImageBtn.setVisibility(visible);
+	}
+	
 	public void setTitle(int stringId) {
 		title.setText(stringId);
 	}

@@ -53,8 +53,10 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	private LinearLayout noNews;
 	private LinearLayout firstSignUp;
 	private List<Company> pendingCompanies = new ArrayList<Company>();
-	private LinearLayout pendingLayout;
+//	private LinearLayout pendingLayout;
 	private Button pending;
+	private Boolean getNewsConnectionFailed = false;
+	private Boolean getPendingCompaniesConnectionFailed = false;
 	
 	@Override
 	protected List<String> observeNotifications() {
@@ -162,7 +164,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 		listview = (XListView) findViewById(R.id.listview);
 		noNews = (LinearLayout) findViewById(R.id.noNews);
 		firstSignUp = (LinearLayout) findViewById(R.id.firstSignUp);
-		pendingLayout = (LinearLayout) findViewById(R.id.pendingLayout);
+//		pendingLayout = (LinearLayout) findViewById(R.id.pendingLayout);
 		pending = (Button) findViewById(R.id.pending);
 		listview.setPullLoadEnable(false);
 	}
@@ -186,6 +188,17 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		//处理网络错误
+		if (getNewsConnectionFailed) {
+			CommonUtil.setSimilarIdToNullFromUpadates(updates);
+			getNews(0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true, false);
+		}
+		
+		if (getPendingCompaniesConnectionFailed) {
+			getPendingCompany();
+		}
+		
 		List<Company> currentPendingCompanies = new ArrayList<Company>();
 		for (int i = 0; i < Constant.CURRENT_PENDING_COMPANY.size(); i ++) {
 			Company company = Constant.CURRENT_PENDING_COMPANY.get(i);
@@ -277,7 +290,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 					}
 					Collections.sort(pendingCompanies);
 					Log.v("silen", "pendingCompanies.size = " + pendingCompanies.size());
-					pendingLayout.setVisibility((pendingCompanies.size() != 0) ? View.VISIBLE : View.GONE);
+//					pendingLayout.setVisibility((pendingCompanies.size() != 0) ? View.VISIBLE : View.GONE);
 					Constant.CURRENT_PENDING_COMPANY = pendingCompanies;
 					setPendingNum();
 				} else {
@@ -288,7 +301,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
+				getPendingCompaniesConnectionFailed = true;
 			}
 		});
 	}
@@ -373,7 +386,7 @@ public class NewsActivity extends BaseActivity implements IXListViewListener, On
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
+				getNewsConnectionFailed = true;
 				handler.sendEmptyMessage(FRESHOK);
 			}
 		});

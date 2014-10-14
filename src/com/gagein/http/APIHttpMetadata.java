@@ -122,16 +122,42 @@ public class APIHttpMetadata {
 	public static final String kGGPlanTypeSF = "301";
 	
 	//scores sort
-	public static final String kGGScoreRank1 = "fol_rank1";
-	public static final String kGGScoreRank7 = "fol_rank7";
-	public static final String kGGScoreRank30 = "fol_rank30";
+	public static final String kGGScoreRank1 = "fol_score1";
+	public static final String kGGScoreRank7 = "fol_score7";
+	public static final String kGGScoreRank30 = "fol_score30";
 	
+	//billing status
+	public static final byte kBillingStatusNotStarted       = 101;
+	public static final byte kBillingStatusInTrail          = 102;
+	public static final byte kBillingStatusNotPurchased     = 103;
+	public static final byte kBillingStatusPurchaseInEffect = 104;
+	public static final byte kBillingStatusPurchaseExpired  = 105;
+	public static final byte kBillingStatusTeamMemberExpired  = 106;
+	public static final byte kBillingStatusSeatRemoved      = 107;
+	
+	//From platform
+	public static final int GWEB = 1000;
+
+	 // Salesforce
+	public static final int SF = 1001;
+
+	// sugerCRM
+	public static final int SU = 1002;
+
+	// FusionCRM
+	public static final int FU = 1003;
+
+	// Iphone
+	public static final int IPHONE = 1004;
+
+	// Ipad
+	public static final int IPAD = 1005;
+
+	// ANDROID
+	public static final int ANDROID = 1006;
+	 
+	 
 	
 }
-
-
-
-
-
 
 

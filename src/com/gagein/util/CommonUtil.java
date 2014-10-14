@@ -1,9 +1,14 @@
 package com.gagein.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
@@ -16,6 +21,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +65,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +76,7 @@ import com.gagein.http.APIParser;
 import com.gagein.model.AutoLoginInfo;
 import com.gagein.model.Contact;
 import com.gagein.model.Group;
+import com.gagein.model.PlanInfo;
 import com.gagein.model.SavedSearch;
 import com.gagein.model.Update;
 import com.gagein.model.filter.FilterItem;
@@ -184,6 +192,54 @@ public class CommonUtil {
 		showShortToast(strStatusInfo);
 	}
 
+	public static void savePlanInfos(List<PlanInfo> planInfos) {  
+	    SharedPreferences preferences = getContext().getSharedPreferences("PLAN_INFO", Context.MODE_PRIVATE);  
+	    // 创建字节输出流  
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+	    try {  
+	        // 创建对象输出流，并封装字节流  
+	        ObjectOutputStream oos = new ObjectOutputStream(baos);  
+	        // 将对象写入字节流  
+	        oos.writeObject(planInfos);  
+	        // 将字节流编码成base64的字符窜  
+			String oAuth_Base64 = new String(Base64.encodeBase64(baos.toByteArray()));  
+	        Editor editor = preferences.edit();  
+	        editor.putString("plan_info", oAuth_Base64);  
+	  
+	        editor.commit();  
+	    } catch (IOException e) {  
+	    }  
+	    Log.v("silen", "存储成功");  
+	}  
+	
+	@SuppressWarnings("unchecked")
+	public static List<PlanInfo> readPlanInfos() {  
+		List<PlanInfo> planInfos = new ArrayList<PlanInfo>();  
+	    SharedPreferences preferences = getContext().getSharedPreferences("PLAN_INFO", Context.MODE_PRIVATE);  
+	    String productBase64 = preferences.getString("plan_info", "");  
+	              
+	    //读取字节  
+	    byte[] base64 = Base64.decodeBase64(productBase64.getBytes());  
+	      
+	    //封装到字节流  
+	    ByteArrayInputStream bais = new ByteArrayInputStream(base64);  
+	    try {  
+	        //再次封装  
+	        ObjectInputStream bis = new ObjectInputStream(bais);  
+	        try {  
+	            //读取对象  
+	        	planInfos = (List<PlanInfo>) bis.readObject();  
+	        } catch (ClassNotFoundException e) {  
+	            e.printStackTrace();  
+	        }  
+	    } catch (StreamCorruptedException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }  
+	    return planInfos;  
+	}  
+	
 	/**
 	 * 保存登录信息
 	 * 
@@ -206,6 +262,17 @@ public class CommonUtil {
 		editor.commit();
 
 		CommonUtil.setToken(mContext);
+	}
+	
+	public static String getMemid(Context mContext) {
+		if (mContext != null) {
+			SharedPreferences sharedPreferences = mContext.getSharedPreferences("LOGIN_INFO", Context.MODE_PRIVATE);
+			String memid = "";
+			memid = sharedPreferences.getString("memid", "");
+			return memid;
+		} else {
+			return "";
+		}
 	}
 	
 	@SuppressLint("CommitPrefEdits")
@@ -248,6 +315,17 @@ public class CommonUtil {
 		String token = "";
 		token = sharedPreferences.getString("access_token", "");
 		APIHttpMetadata.TOKEN = token;
+	}
+	
+	public static void setLoginInfo(Context mContext, String token, String memid) {
+		
+		SharedPreferences sharedPreferences = mContext.getSharedPreferences("LOGIN_INFO", Context.MODE_PRIVATE);
+		Editor editor = sharedPreferences.edit();
+		editor.putString("access_token", token);
+		editor.putString("memid", memid);
+		editor.commit();
+
+		CommonUtil.setToken(mContext);
 	}
 
 	/**
@@ -354,7 +432,9 @@ public class CommonUtil {
 
 	/** Toast */
 	public static void showShortToast(String aMessage, Context aContext) {
+		
 		if (aMessage != null && aMessage.length() > 0 && aContext != null) {
+			
 			Toast toast = Toast.makeText(aContext, aMessage, Toast.LENGTH_SHORT);
 			
 			LayoutInflater inflater = (LayoutInflater)aContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -368,7 +448,9 @@ public class CommonUtil {
 	}
 	
 	public static void showImageShortToast(String aMessage, Context aContext) {
+		
 		if (aMessage != null && aMessage.length() > 0 && aContext != null) {
+			
 			Toast toast = Toast.makeText(aContext, aMessage, Toast.LENGTH_SHORT);
 			
 			LayoutInflater inflater = (LayoutInflater)aContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -436,6 +518,34 @@ public class CommonUtil {
 			ImageLoader.getInstance().displayImage(aUrl, aImageView);
 		}
 	}
+//	
+//	/** download image for imageView */
+//	public static void loadImage(String aUrl, final ImageView aImageView, final Bitmap startImage) {
+//		if (aUrl != null && aUrl.length() > 0 && aImageView != null) {
+//			ImageLoader.getInstance().loadImage(aUrl, new ImageLoadingListener() {  
+//	              
+//	            @Override  
+//	            public void onLoadingStarted(String imageUri, View view) {  
+//	            	aImageView.setImageBitmap(startImage);
+//	            }  
+//	              
+//	            @Override  
+//	            public void onLoadingFailed(String imageUri, View view,  
+//	                    FailReason failReason) {  
+//	            }  
+//	              
+//	            @Override  
+//	            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {  
+//	                aImageView.setImageBitmap(loadedImage);  
+//	            }
+//
+//				@Override
+//				public void onLoadingCancelled(String imageUri, View view) {
+//				}  
+//	              
+//	        });  
+//		}
+//	}
 
 	/** check if the social account has been linked */
 	public static Boolean hasLinkedSnType(int aSnType) {
@@ -958,6 +1068,11 @@ public class CommonUtil {
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1)); 
         listView.setLayoutParams(params);
+//		int height = 0;
+//		height = listView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71);
+//		ViewGroup.LayoutParams params = listView.getLayoutParams();
+//		params.height = height; 
+//		listView.setLayoutParams(params);
 	}
 	
 	public static void setViewHeight(View view, int height) {
@@ -1223,7 +1338,7 @@ public class CommonUtil {
 					}
 				}
 				
-				jsonObject.put("reverse", Constant.REVERSE);
+				jsonObject.put("reverse", !Constant.REVERSE);
 				
 			}
 			
@@ -1744,5 +1859,65 @@ public class CommonUtil {
 		
 	}
 	
+	public static void setScoreLayout(RelativeLayout layout, int folRank, int folScore, TextView folRankTx, TextView folScoreTx, Context mContext) {
+		
+		folRankTx.setText(folRank + "");
+		folScoreTx.setText(folScore + "");
+		
+		if (folScore >= 85 && folScore <= 100) {
+			layout.setBackgroundResource(R.drawable.score_orange_fire);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
+		} else if (folScore >= 70 && folScore <= 84) {
+			layout.setBackgroundResource(R.drawable.score_orange_circle);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
+		} else if (folScore >= 50 && folScore <= 69) {
+			layout.setBackgroundResource(R.drawable.score_gray_circle);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
+		} else if (folScore >= 1 && folScore <= 49) {
+			layout.setBackgroundResource(R.drawable.score_light_gray_circle);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
+		} else if (folScore == 0) {
+			layout.setBackgroundResource(R.drawable.score_white_circle);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.text_weak));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.text_weak));
+		} else {
+			layout.setBackgroundResource(R.drawable.score_orange_fire);
+			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
+			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
+		}
+		
+	}
+	
+	public static String splitNumberByComma(long num) {
+		
+		String number = num + "";
+		StringBuilder sb = new StringBuilder(number);
+		if (number.length() > 3 && number.length() < 7) {
+			sb.insert(number.length() - 3,",");
+		} else if (number.length() > 6 && number.length() < 10) {
+			sb.insert(number.length() - 3,",");
+			sb.insert(number.length() - 6,",");
+		}
+		return sb.toString();
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

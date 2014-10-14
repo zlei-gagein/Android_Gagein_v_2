@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_round_rect_silver"
     android:orientation="vertical" >
-    
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -13,10 +13,8 @@
         android:gravity="center_horizontal"
         android:text="@string/new_company"
         android:textColor="@color/text_dark"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:textStyle="bold"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/enter"
@@ -30,7 +28,7 @@
         android:text="@string/enter_a_company_it_the_us_or_canada"
         android:textColor="@color/text_dark"
         android:textSize="16sp" />
-    
+
     <EditText
         android:id="@+id/nameEdt"
         android:layout_width="fill_parent"
@@ -39,10 +37,10 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/linear_frame_silver"
+        android:ellipsize="end"
         android:hint="@string/company_name"
         android:padding="10dp"
         android:singleLine="true"
-        android:ellipsize="end"
         android:textColor="@color/text_dark"
         android:textColorHint="#D5D5D8"
         android:textSize="16sp" />
@@ -55,10 +53,12 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/linear_frame_silver"
+        android:ellipsize="end"
         android:hint="@string/company_website"
         android:padding="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:singleLine="true"
-        android:ellipsize="end"
         android:textColor="@color/text_dark"
         android:textColorHint="#D5D5D8"
         android:textSize="16sp" />
@@ -107,10 +107,10 @@
                 android:gravity="center"
                 android:paddingBottom="12dp"
                 android:paddingTop="12dp"
-                android:textStyle="bold"
                 android:text="@string/add"
                 android:textColor="@color/C7C7C7"
-                android:textSize="21sp"/>
+                android:textSize="21sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

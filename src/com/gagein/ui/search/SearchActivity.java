@@ -1,6 +1,7 @@
 package com.gagein.ui.search;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -76,17 +78,19 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private List<Company> searchCompanies = new ArrayList<Company>();
 	private List<Person> searchPersons = new ArrayList<Person>();
 	private ArrayList<Company> matchedCompanies = new ArrayList<Company>();
+	private ArrayList<Company> matchedNameCompanies = new ArrayList<Company>();
+	private ArrayList<Company> matchedWebsiteCompanies = new ArrayList<Company>();
 	private TimerTask timerTask;
 	private Timer timer;
 	private int PAGE_NUM_COMPANY = 1;
 	private int PAGE_NUM_PERSON = 1;
-	private int PAGE_NUM_SAVESEARCH= 1;
+	private int PAGE_NUM_SAVESEARCH = 1;
 	private LinearLayout mainLayout;
 	private RelativeLayout noSavedSearches;
 	private LinearLayout searchLayout;
 	private LinearLayout noCompanyResultsLayout;
 	private LinearLayout noPeopleResultsLayout;
-	private LinearLayout companyFoundLayout;
+	private ScrollView companyFoundLayout;
 	private TextView companiesFoundNum;
 	private TextView companiesFound;
 	private TextView addDifferentCompany;
@@ -126,7 +130,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			refreshCompanyFollowStatus(intent, false);
 	
-		} else if (actionName.equals(Constant.BROADCAST_GET_SAVED_SEARCH)) {
+		} else if (actionName.equals(Constant.BROADCAST_GET_SAVED_SEARCH) || actionName.equals(Constant.BROADCAST_SAVED_SEARCH)) {
 			
 			PAGE_NUM_SAVESEARCH = 1;
 			getSavedSearches(false, false);
@@ -137,7 +141,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
     @Override
     protected List<String> observeNotifications() {
     	return stringList(Constant.BROADCAST_REFRESH_SEARCH, Constant.BROADCAST_FOLLOW_COMPANY, Constant.BROADCAST_UNFOLLOW_COMPANY, 
-    			Constant.BROADCAST_GET_SAVED_SEARCH);
+    			Constant.BROADCAST_GET_SAVED_SEARCH, Constant.BROADCAST_SAVED_SEARCH);
     }
     
     private void refreshCompanyFollowStatus(Intent intent, Boolean follow) {
@@ -181,7 +185,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 		searchLayout = (LinearLayout) findViewById(R.id.searchLayout);
 		noCompanyResultsLayout = (LinearLayout) findViewById(R.id.noCompanyResultsLayout);
 		noPeopleResultsLayout = (LinearLayout) findViewById(R.id.noPeopleResultsLayout);
-		companyFoundLayout = (LinearLayout) findViewById(R.id.companyFoundLayout);
+		companyFoundLayout = (ScrollView) findViewById(R.id.companyFoundLayout);
 		buildCompany = (Button) findViewById(R.id.buildCompany);
 		buildPeople = (Button) findViewById(R.id.buildPeople);
 		savedList = (XListView) findViewById(R.id.savedList);
@@ -237,7 +241,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
 				
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
 					cancelSearchTask();
 					if (TextUtils.isEmpty(textView.getText().toString())) {
 						return false;
@@ -567,12 +571,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				@Override
 				public void onClick(View arg0) {
 					
+					CommonUtil.hideSoftKeyBoard(mContext, SearchActivity.this);
 					addNewCompany(dialog);
 
 				}
 			});
 			
-			CommonUtil.showSoftKeyBoard(30);
+			CommonUtil.showSoftKeyBoard(300);
 			
 		} else if (v == companiesBtn) {
 			
@@ -671,21 +676,29 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void addNewCompany(final AddNewCompanyDialog dialog) {
+		
 		ArrayList<String> nameWebsite = dialog.getNameAndWebsite();
 		if (null == nameWebsite) return;
 		
 		final String name = nameWebsite.get(0);
 		final String website = nameWebsite.get(1);
 		
+		if (!website.contains(".")) {
+			CommonUtil.showShortToast(mContext.getResources().getString(R.string.enter_valid_url));
+			return;
+		}
 		
 		final APIHttp mApiHttp = new APIHttp(mContext);
 		Pattern pattern1 = Pattern.compile(Utils.regular_url1);
 		Matcher matcher1 = pattern1.matcher(website);
 		Pattern pattern2 = Pattern.compile(Utils.regular_url2);
 		Matcher matcher2 = pattern2.matcher(website);
+		
 		if (matcher1.matches() || matcher2.matches()) {
+			
 			CommonUtil.showLoadingDialog(mContext);
-			mApiHttp.addNewCompanyWithName(name , website, false, new Listener<JSONObject>() {
+			
+			mApiHttp.addNewCompanyWithNameAndWebsite(name , website, false, new Listener<JSONObject>() {
 
 				@Override
 				public void onResponse(JSONObject jsonObject) {
@@ -693,7 +706,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					
 					APIParser parser = new APIParser(jsonObject);
 					
-					Log.v("silen", "parser.status() = " + parser.status());
+					Log.v("silen", "jsonObject = " + jsonObject.toString());
+					
 					int status = parser.status();
 					
 					if (parser.isOK()) {
@@ -716,43 +730,72 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						companyFoundLayout.setVisibility(View.VISIBLE);
 						
 						matchedCompanies.clear();
+						matchedNameCompanies.clear();
+						matchedWebsiteCompanies.clear();
 						JSONArray nameArray = parser.data().optJSONArray("orgs_by_name");
 						JSONArray websiteArray = parser.data().optJSONArray("orgs_by_website");
-						int matchCompanyCount = nameArray.length();
-						int matchWebsiteCount = websiteArray.length();
 						
-						if (matchCompanyCount > 0) {
+						Log.v("silen", "nameArray.length() = " + nameArray.length());
+						Log.v("silen", "websiteArray.length() = " + websiteArray.length());
+						
+						int matchNameFromHttpCount = nameArray.length();
+						int matchWebsiteFromHttpCount = websiteArray.length();
+						
+						if (matchNameFromHttpCount > 0) {
 							
 							for (int i = 0; i < nameArray.length(); i ++) {
 								JSONObject jObject = nameArray.optJSONObject(i);
 								Company company = new Company();
 								company.parseData(jObject);
+								matchedNameCompanies.add(company);
 								
-								for (int k = 0; k < matchedCompanies.size(); k ++) {
-									if (matchedCompanies.get(k).orgID != company.orgID) {
-										matchedCompanies.add(company);
-									}
-								}
+								Log.v("silen", "company.orgID(nameArray) = " + company.orgID);
+								
+//								for (int k = 0; k < matchedCompanies.size(); k ++) {
+//									if (matchedCompanies.get(k).orgID != company.orgID) {
+//										matchedCompanies.add(company);
+//									}
+//								}
 								
 							}
 						}
-						if (matchWebsiteCount > 0) {
+						
+						if (matchWebsiteFromHttpCount > 0) {
 							
 							for (int i = 0; i < websiteArray.length(); i ++) {
 								
 								JSONObject jObject = websiteArray.optJSONObject(i);
 								Company company = new Company();
 								company.parseData(jObject);
-								matchedCompanies.add(company);
+//								matchedCompanies.add(company);
+								Log.v("silen", "company.orgID(websiteArray) = " + company.orgID);
+								matchedWebsiteCompanies.add(company);
 								
-								for (int k = 0; k < matchedCompanies.size(); k ++) {
-									if (matchedCompanies.get(k).orgID != company.orgID) {
-										matchedCompanies.add(company);
+								//如果名字已经匹配的公司，website就不再添加
+								for (int k = 0; k < matchedNameCompanies.size(); k ++) {
+									long matchedNameCompanyOrgId = matchedNameCompanies.get(k).orgID;
+									
+									for (int j = 0; j < matchedWebsiteCompanies.size(); j++) {
+										if (matchedWebsiteCompanies.get(j).orgID == matchedNameCompanyOrgId) {
+											matchedWebsiteCompanies.remove(j);
+										}
 									}
 								}
 								
 							}
+							
 						}
+						
+						for (int i = 0; i < matchedNameCompanies.size(); i++) {
+							matchedCompanies.add(matchedNameCompanies.get(i));
+						}
+						for (int i = 0; i < matchedWebsiteCompanies.size(); i++) {
+							matchedCompanies.add(matchedWebsiteCompanies.get(i));
+						}
+						Collections.sort(matchedCompanies);
+						int matchNameCount = matchedNameCompanies.size();
+						int matchWebsiteCount = matchedWebsiteCompanies.size();
+						
 						String title = "";
 						if (matchedCompanies.size() == 1) {
 							title = "1 Company Found";
@@ -768,10 +811,10 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				         *  We found <n> companies for <company names> and 1 company for <company website> (<n> > = 2)
 						 */
 						String message = "";
-						String strCom4Name = matchCompanyCount == 1 ? "1 company" : matchCompanyCount + " companies";
+						String strCom4Name = matchNameCount == 1 ? "1 company" : matchNameCount + " companies";
 						String strCom4Web = matchWebsiteCount == 1 ? "1 company" : matchWebsiteCount + " companies";
 				           
-						if (matchCompanyCount == 0) {
+						if (matchNameCount == 0) {
 							
 							message = String.format("We found %s for '%s'", strCom4Web, website);
 							
@@ -801,10 +844,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 						
 						SearchCompanyAdapter adapter = new SearchCompanyAdapter(mContext, matchedCompanies);
 						foundCompanyList.setAdapter(adapter);
+						CommonUtil.setViewHeight(foundCompanyList, foundCompanyList.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
 						adapter.notifyDataSetChanged();
 						adapter.notifyDataSetInvalidated();
 						
 					} else if (parser.messageCode() == MessageCode.CompanyWebConnectFailed){
+						
+						dialog.dismissDialog();
 						
 						final VerifingWebsiteConnectTimeOutDialog dialog = new VerifingWebsiteConnectTimeOutDialog(mContext);
 						dialog.setCancelable(false);
@@ -820,6 +866,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			            
 			        } else if (parser.messageCode() == MessageCode.CompanyWebConnectTimeout) {
 			        	
+			        	dialog.dismissDialog();
+			        	
 			        	final VerifyingWebsiteDialog dialog = new VerifyingWebsiteDialog(mContext);
 			        	dialog.setCancelable(false);
 			        	dialog.showDialog(website, new OnClickListener() {
@@ -830,7 +878,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 								dialog.dismissDialog();
 								
 								showLoadingDialog();
-								mApiHttp.addNewCompanyWithName(name , website, true, new Listener<JSONObject>() {
+								mApiHttp.addNewCompanyWithNameAndWebsite(name , website, true, new Listener<JSONObject>() {
 
 									@Override
 									public void onResponse(JSONObject jsonObject) {
@@ -839,7 +887,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 										APIParser parser = new APIParser(jsonObject);
 										
 										if (parser.isOK()) {
-											showShortToast(R.string.companies_added);
+											
+											showShortToast(R.string.company_added);
+											
+											Intent intent = new Intent();
+											intent.setAction(Constant.BROADCAST_ADD_NEW_COMPANIES);
+											mContext.sendBroadcast(intent);
+											
 										}
 									}
 									

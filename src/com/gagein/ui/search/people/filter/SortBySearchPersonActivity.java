@@ -66,6 +66,10 @@ public class SortBySearchPersonActivity extends BaseActivity implements OnItemCl
 		if (v == rightBtn) {
 			setResultToActivity();
 			finish();
+			
+			for (int i = 0; i < sortBy.size(); i ++) {
+				if (sortBy.get(i).getValue().equalsIgnoreCase("Name")) Constant.REVERSE = true;
+			}
 		}
 	}
 

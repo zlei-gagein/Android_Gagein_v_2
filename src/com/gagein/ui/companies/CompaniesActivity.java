@@ -44,6 +44,7 @@ import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class CompaniesActivity extends BaseActivity implements OnItemClickListener, IXListViewListener{
 	
@@ -131,20 +132,20 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			
 		}
 	}
-
-	private void setAllCompaniesUnSelect() {
-		
-		for (int i = 0; i < companies.size(); i ++) {
-			companies.get(i).select = false;
-		}
-		
-	}
 	
 	@Override
 	protected List<String> observeNotifications() {
 		return stringList(Constant.BROADCAST_REFRESH_COMPANIES, Constant.BROADCAST_ADDED_PENDING_COMPANY,
 				Constant.BROADCAST_ADD_COMPANIES_FROM_FOLLOW_COMPANIES, Constant.BROADCAST_FOLLOW_COMPANY,
 				Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_ADD_COMPANIES);
+	}
+	
+	private void setAllCompaniesUnSelect() {
+		
+		for (int i = 0; i < companies.size(); i ++) {
+			companies.get(i).select = false;
+		}
+		
 	}
 	
 	@Override
@@ -218,11 +219,33 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		noSectionIndexAdapter.notifyDataSetInvalidated();
 	}
 	
+	private ArrayList<String> getIndustriesIds() {
+		
+		ArrayList<String> industriesIds = new ArrayList<String>();
+		for (int i = 0; i < Constant.INDUSTRIES.size() ; i++) {
+			FacetItemIndustry facetItemIndustry = Constant.INDUSTRIES.get(i);
+			if (facetItemIndustry.getSelected() && null != facetItemIndustry.getFilter_param_value() && 
+					!TextUtils.isEmpty(facetItemIndustry.getFilter_param_value())) {
+				industriesIds.add(facetItemIndustry.getFilter_param_value());
+			}
+		}
+		
+		return industriesIds;
+	}
+	
+	private ArrayList<String> getGroupIds() {
+		
+		ArrayList<String> groupIds = new ArrayList<String>();
+		groupIds.add(groupId);
+		
+		return groupIds;
+	}
+	
 	private void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore) {
 		
 		if (showDialog) showLoadingDialog();
 		
-		mApiHttp.getCompaniesOfGroupNew(group.getFollowLinkType(), nextPage, groupId, Constant.INDUSTRYID, APIHttpMetadata.kGGExceptPendingFollowCompanies, new Listener<JSONObject>() {
+		mApiHttp.getCompaniesOfGroupNew("", group.getFollowLinkType(), nextPage, getGroupIds(), getIndustriesIds(), APIHttpMetadata.kGGExceptPendingFollowCompanies, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
@@ -253,14 +276,19 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 					noSectionListView.setPullLoadEnable(haveMoreNews);
 					
 					facet = page.facet;
-					if (facet != null) {
+					if (facet != null && Constant.industriesItem.size() == 0) {
+						
 						industryData = facet.industryFacets;
+						
+						Constant.industriesItem = industryData;
+						
 					}
 					
 					setListView();
 					
 					Collections.sort(companies);
 					
+					filterBtn.setVisibility((Constant.industriesItem.size() == 0) ? View.GONE : View.VISIBLE);
 					filterBtn.setVisibility((companies.size() == 0) ? View.GONE : View.VISIBLE);
 					
 					if (!loadMore) setData();
@@ -399,7 +427,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		unfollowBtnLinkedCompanies.setOnClickListener(this);
 		
 		noSectionListView.setXListViewListener(this);
-		noSectionListView.setPullLoadEnable(true);
+		noSectionListView.setPullLoadEnable(false);
 	}
 	
 	@Override
@@ -419,12 +447,11 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		
 		if (v == filterBtn) {
 			
-			if (industryData.size() == 0) {
+			if (Constant.industriesItem.size() == 0) {
 				showShortToast(R.string.no_filters);
 				return;
 			}
 			
-			Constant.industriesItem = industryData;
 			Intent intent = new Intent();
 			intent.setClass(mContext, CompaniesFilterActivity.class);
 			startActivityForResult(intent, requestCode);
@@ -437,31 +464,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 			}
 			
 			edit = !edit;
-			selectAllBtn.setTag(R.id.tag_select, false);
-			selectAllBtn.setImageResource(R.drawable.button_unselect);
-			if (edit) {
-				setAllCompaniesUnSelect();
-			}
-			
-			noSectionIndexAdapter.setEdit(edit);
-			noSectionIndexAdapter.notifyDataSetChanged();
-			
-			setEditStatus();
-			if (isLinkedCompanies) {
-				if (!edit) {
-					bottomLayout.setVisibility(View.GONE);
-					bottomLayoutLinkedCompanies.setVisibility(View.GONE);
-				}
-			} else {
-				setBottomButton(companies);
-				setBottomLayoutStatus();
-			}
-			setLeftButtonVisible();
-			setFiltersVisible();
-			
-			if (!isSystemGroup) {
-				bottomLayoutIsNotSystem.setVisibility(edit ? View.GONE : View.VISIBLE);
-			}
+			setNotEditStatus();
 			
 		} else if (v == bottomBtn) {
 			
@@ -570,6 +573,34 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 		}
 	}
 
+	private void setNotEditStatus() {
+		selectAllBtn.setTag(R.id.tag_select, false);
+		selectAllBtn.setImageResource(R.drawable.button_unselect);
+		if (edit) {
+			setAllCompaniesUnSelect();
+		}
+		
+		noSectionIndexAdapter.setEdit(edit);
+		noSectionIndexAdapter.notifyDataSetChanged();
+		
+		setEditStatus();
+		if (isLinkedCompanies) {
+			if (!edit) {
+				bottomLayout.setVisibility(View.GONE);
+				bottomLayoutLinkedCompanies.setVisibility(View.GONE);
+			}
+		} else {
+			setBottomButton(companies);
+			setBottomLayoutStatus();
+		}
+		setLeftButtonVisible();
+		setFiltersVisible();
+		
+		if (!isSystemGroup) {
+			bottomLayoutIsNotSystem.setVisibility(edit ? View.GONE : View.VISIBLE);
+		}
+	}
+
 	private void startToSuggestedCompanyActivity() {
 		
 		if (suggestedCompanies.size() == 0) return;
@@ -644,6 +675,10 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 					Intent intent = new Intent();
 					intent.setAction(Constant.BROADCAST_REMOVE_COMPANIES);
 					sendBroadcast(intent);
+					
+					edit = false;
+					setNotEditStatus();
+					
 				} else {
 					alertMessageForParser(parser);
 				}
@@ -713,6 +748,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	
 	private void setEditStatus() {
 		setRightButton(edit ? R.string.cancel : R.string.edit);
+		setLeftImageButtonVisible(edit ? View.GONE : View.VISIBLE);
 	}
 
 	private void setBottomLayoutStatus() {
@@ -770,8 +806,16 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 				if (parser.isOK()) {
 					
 					selectedNum--;
+					Log.v("silen", "selectedNum = " + selectedNum);
+					for (int i = 0; i < companies.size(); i ++) {
+						if (mCompanyId == companies.get(i).orgID) {
+							companies.remove(i);
+						}
+					}
 					
 					if (selectedNum == 0) {
+						
+						if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
 						
 						if (companies.size() == 0) {
 							setFiltersVisible();
@@ -785,19 +829,15 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 							sendBroadcast(intent);
 						}
 						
-						for (int i = 0; i < companies.size(); i ++) {
-							if (mCompanyId == companies.get(i).orgID) {
-								companies.remove(i);
-								if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
-							}
-						}
-						
 						Intent intent = new Intent();
 						intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
 						sendBroadcast(intent);
 						
 						setBottomButton(null);
 						dismissLoadingDialog();
+						
+						edit = false;
+						setNotEditStatus();
 					}
 					
 				} else {
@@ -888,6 +928,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 
 	@Override
 	public void onRefresh() {
+		if (edit) return;
 		nextPage = "";
 		getCompaniesOfGroup(true, false);
 	}

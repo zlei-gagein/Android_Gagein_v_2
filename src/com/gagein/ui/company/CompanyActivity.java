@@ -77,7 +77,6 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private List<Person> persons = new ArrayList<Person>();
 	private List<Company> competitors = new ArrayList<Company>();
 	private int employeesPageNumber = Constant.PAGE_NUMBER_START;
-	private byte orderBy;
 	private DataPage dpPersons;
 	private DataPage dpCompetitors;
 	private List<FacetItem> personFacetItems;
@@ -117,14 +116,20 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private TextView shareGagein;
 	private ListView parentsOrSubsidiariesList;
 	private Boolean haveProcessed = false;
-	private Boolean haveProvisionDate;
-	private Boolean isProcessed;
 	private Boolean haveGotPeople = false;;
 	private Boolean haveGotCompetitors = false;
-	private long provisionDate;
 	private String provisionDateStr;
 	private SearchCompanyAdapter searchCompanyAdapter;
 	private final List<Company> parentsAndSubsidiaries = new ArrayList<Company>();
+	private RelativeLayout oneDayLayout;
+	private RelativeLayout oneWeekLayout;
+	private RelativeLayout oneMonthLayout;
+	private TextView folRankDay;
+	private TextView folRankWeek;
+	private TextView folRankMonth;
+	private TextView folScoreDay;
+	private TextView folScoreWeek;
+	private TextView folScoreMonth;
 	
 	@Override
 	protected List<String> observeNotifications() {
@@ -133,7 +138,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 				Constant.BROADCAST_UNFOLLOW_COMPANY, Constant.BROADCAST_LIKED_NEWS,
 				Constant.BROADCAST_UNLIKE_NEWS, Constant.BROADCAST_REMOVE_BOOKMARKS,
 				Constant.BROADCAST_ADD_BOOKMARKS, Constant.BROADCAST_IRRELEVANT_TRUE, 
-				Constant.BROADCAST_IRRELEVANT_FALSE);
+				Constant.BROADCAST_IRRELEVANT_FALSE, Constant.BROADCAST_HAVE_READ_STORY);
 	}
 	
 	@Override
@@ -189,7 +194,25 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			setUpdateIrrelevantStatus(intent, false);
 			
+		} else if (actionName.equals(Constant.BROADCAST_HAVE_READ_STORY)) {
+			
+			haveReadStory(intent);
+			newsAdapter.notifyDataSetChanged();
+			
 		}
+	}
+	
+	private void haveReadStory(Intent intent) {
+		
+		long newsId = intent.getLongExtra(Constant.NEWSID, 0);
+		
+		for (int i = 0; i < updates.size(); i ++) {
+			if (updates.get(i).newsId == newsId) {
+				updates.get(i).hasBeenRead = true;
+				
+			}
+		}
+		
 	}
 
 	private void setUpdateLikeStatus(Intent intent, Boolean like) {
@@ -213,6 +236,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 				updates.get(i).saved = save;
 			}
 		}
+		
 		if (null != newsAdapter) newsAdapter.notifyDataSetChanged();
 		
 	}
@@ -232,14 +256,17 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
+		
 		setContentView(R.layout.activity_company);
 		
 		doInit();
+		
 	}
 	
 	@Override
 	protected void initView() {
 		super.initView();
+		
 		setLeftImageButton(R.drawable.back_arrow);
 		newsList = (XListView) findViewById(R.id.newsList);
 		aboutList = (XListView) findViewById(R.id.aboutList);
@@ -270,6 +297,16 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		filterBtn = (TextView) findViewById(R.id.filter);
 		sortBy = (TextView) findViewById(R.id.sortBy);
 		
+		oneDayLayout = (RelativeLayout) findViewById(R.id.oneDayLayout);
+		oneWeekLayout = (RelativeLayout) findViewById(R.id.oneWeekLayout);
+		oneMonthLayout = (RelativeLayout) findViewById(R.id.oneMonthLayout);
+		folRankDay = (TextView) findViewById(R.id.folRankDay);
+		folRankWeek = (TextView) findViewById(R.id.folRankWeek);
+		folRankMonth = (TextView) findViewById(R.id.folRankMonth);
+		folScoreDay = (TextView) findViewById(R.id.folScoreDay);
+		folScoreWeek = (TextView) findViewById(R.id.folScoreWeek);
+		folScoreMonth = (TextView) findViewById(R.id.folScoreMonth);
+		
 		newsList.setPullLoadEnable(false);
 		aboutList.setPullLoadEnable(false);
 		personList.setPullLoadEnable(false);
@@ -280,7 +317,6 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	protected void initData() {
 		super.initData();
 		
-		orderBy = APIHttpMetadata.kGGContactsOrderByJobLevel;
 		mCompanyId = getIntent().getLongExtra(Constant.COMPANYID, 0);
 		getCompanyDetail();
 		
@@ -296,7 +332,14 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		setTitle(mCompany.orgName);
 		setFollowButton();
 		setHeadView();
+		setScore();
 		
+	}
+	
+	private void setScore() {
+		CommonUtil.setScoreLayout(oneDayLayout, mCompany.fol_rank1, mCompany.fol_score1, folRankDay, folScoreDay, mContext);
+		CommonUtil.setScoreLayout(oneWeekLayout, mCompany.fol_rank7, mCompany.fol_score7, folRankWeek, folScoreWeek, mContext);
+		CommonUtil.setScoreLayout(oneMonthLayout, mCompany.fol_rank30, mCompany.fol_score30, folRankMonth, folScoreMonth, mContext);
 	}
 
 	private void setHeadView() {
@@ -724,10 +767,10 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						JSONObject dataObject = parser.data();
 						
 						haveProcessed = dataObject.has("is_processed");
-						haveProvisionDate = dataObject.has("provision_date");
-						
-						isProcessed = dataObject.optBoolean("is_processed");
-						provisionDate = dataObject.optLong("provision_date");
+//						haveProvisionDate = dataObject.has("provision_date");
+//						
+//						isProcessed = dataObject.optBoolean("is_processed");
+//						provisionDate = dataObject.optLong("provision_date");
 						provisionDateStr = dataObject.optString("provision_date_str");
 						
 					}
@@ -803,6 +846,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						public void onResponse(JSONObject response) {
 							
 							if (!loadMore) updates.clear();
+							newsList.setPullLoadEnable(false);
 							
 							APIParser parser = new APIParser(response);
 							
@@ -996,6 +1040,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		int resourcesLength = resourceArray.length();
 		resources.clear();
+		resourceParentLayout.removeAllViews();
 		
 		for (int i = 0; i < resourcesLength; i ++) {
 			Resource resource = new Resource();
@@ -1199,22 +1244,29 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			if (requestCode == 0) {//news filter
 				
+				newsList.setPullLoadEnable(false);
 				getNews(false, 0, APIHttpMetadata.kGGPageFlagFirstPage, 0, true);
 				
 			} else if (requestCode == 1) {//people filter
 				
 				employeesPageNumber = Constant.PAGE_NUMBER_START;
+				
+				personList.setPullLoadEnable(false);
 				getPersons(false);
 				
 			} else if (requestCode == 2) {//competitor filter
 				
 				requestPageNumber = Constant.PAGE_NUMBER_START;
+				
+				competitorList.setPullLoadEnable(false);
 				getCompetitors(false);
 				
 			} else if (requestCode == 3) {//people sortBy
 				
 				setSortByButton();
 				employeesPageNumber = Constant.PAGE_NUMBER_START;
+				
+				personList.setPullLoadEnable(false);
 				getPersons(false);
 				
 			} else if (requestCode == 4) {//competitor sortBy
@@ -1223,6 +1275,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 				competitorSortBy = Constant.COMPETITOR_SORT_BY;
 				industryid = Constant.COMPETITOR_FILTER_PARAM_VALUE;
 				requestPageNumber = Constant.PAGE_NUMBER_START;
+				
+				competitorList.setPullLoadEnable(false);
 				getCompetitors(false);
 				
 			}
@@ -1293,6 +1347,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		Constant.currentJobLevelForCompanyPeopleFilter.clear();
 		Constant.currentFunctionRoleForCompanyPeopleFilter.clear();
 		Constant.currentLinkedProfileForCompanyPeopleFilter.clear();
+		
+		Constant.locationNewsTriggersForCompany.clear();
 		
 		Constant.COMPETITOR_SORT_BY = "noe";
 		Constant.COMPETITOR_FILTER_PARAM_VALUE.clear();

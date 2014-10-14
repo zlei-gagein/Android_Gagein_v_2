@@ -1,11 +1,9 @@
 package com.gagein.ui.tablet.companies;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +22,7 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	
 	private FilterCompaniesAdapter adapter;
 	private ListView listView;
-	private List<FacetItemIndustry> industryData;
-	private List<Boolean> checkedList;
+	private List<FacetItemIndustry> industryDatas;
 	private OnFilterCancle onFilterCancle;
 	private OnFilterDone onFilterDone;
 	private OnRefreshCompaniesForFilter onRefreshCompaniesForFilter;
@@ -90,24 +87,10 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	protected void initData() {
 		super.initData();
 		
-		industryData = Constant.industriesItem;
+
+		industryDatas = Constant.industriesItem;
 		
-		checkedList = new ArrayList<Boolean>();
-		for (int i = 0; i < industryData.size(); i ++) {
-			checkedList.add(i == 0 ? true : false);
-		}
-		
-		if (TextUtils.isEmpty(Constant.FILTER_INDUSTRY_NAME)) {
-			checkedList.set(0, true);
-		} else {
-			for (int i = 0; i < industryData.size(); i ++) {
-				if (Constant.FILTER_INDUSTRY_NAME.equalsIgnoreCase(industryData.get(i).item_name)) {
-					checkedList.set(i + 1, true);
-				}
-			}
-		}
-		
-		adapter = new FilterCompaniesAdapter(mContext, checkedList);
+		adapter = new FilterCompaniesAdapter(mContext, industryDatas);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		adapter.notifyDataSetInvalidated();
@@ -135,20 +118,50 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (i == position) {
-				checkedList.set(i, true);
+		Boolean checked = industryDatas.get(position).getSelected();
+		if (position == 0) {
+			Boolean haveChecked = false;
+			for (int i = 0; i < industryDatas.size(); i ++) {
+				if (i == 0) continue;
+				if (industryDatas.get(i).getSelected()) {
+					haveChecked = true;
+					break;
+				}
+			}
+			if (!haveChecked) {
+				return;
 			} else {
-				checkedList.set(i, false);
+				industryDatas.get(position).setSelected(true);
+				
+				for (int i = 0; i < industryDatas.size(); i ++) {
+					if (i != 0) industryDatas.get(i).setSelected(false);
+				}
+			}
+		} else {
+			
+			//circle 
+			industryDatas.get(position).setSelected(!checked);
+			Boolean haveChecked = false;
+			for (int i = 0; i < industryDatas.size(); i ++) {
+				if (i == 0) {
+					continue;
+				} else {
+					if (industryDatas.get(i).getSelected()) {
+						haveChecked = true;
+						industryDatas.get(0).setSelected(false);
+					}
+				}
+			}
+			if (!haveChecked) {
+				industryDatas.get(0).setSelected(true);
 			}
 		}
 		
-		adapter.notifyDataSetChanged();
+		adapter.notifyDataSetChanged();//refresh listview state
 		
-		for (int i= 0; i < checkedList.size(); i ++) {
-			if (checkedList.get(i) == true) {
-				Constant.FILTER_INDUSTRY_NAME = industryData.get(i).item_name;
-				Constant.INDUSTRYID = industryData.get(i).filter_param_value;
+		for (int i= 0; i < industryDatas.size(); i ++) {
+			if (industryDatas.get(i).getSelected()) {
+				Constant.INDUSTRIES = industryDatas;
 			}
 		}
 		

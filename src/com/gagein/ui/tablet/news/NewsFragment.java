@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -57,7 +58,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	private LinearLayout noNews;
 	private LinearLayout firstSignUp;
 	private List<Company> pendingCompanies = new ArrayList<Company>();
-	private LinearLayout pendingLayout;
+//	private LinearLayout pendingLayout;
 	private Button pending;
 	private OnFilterClickListener filterListener;
 	
@@ -107,7 +108,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		listview = (XListView) view.findViewById(R.id.listview);
 		noNews = (LinearLayout) view.findViewById(R.id.noNews);
 		firstSignUp = (LinearLayout) view.findViewById(R.id.firstSignUp);
-		pendingLayout = (LinearLayout) view.findViewById(R.id.pendingLayout);
+//		pendingLayout = (LinearLayout) view.findViewById(R.id.pendingLayout);
 		pending = (Button) view.findViewById(R.id.pending);
 		
 		setRightImageButton(R.drawable.bookmarks);
@@ -285,7 +286,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 					}
 					Collections.sort(pendingCompanies);
 					Log.v("silen", "pendingCompanies.size = " + pendingCompanies.size());
-					pendingLayout.setVisibility((pendingCompanies.size() != 0) ? View.VISIBLE : View.GONE);
+//					pendingLayout.setVisibility((pendingCompanies.size() != 0) ? View.VISIBLE : View.GONE);
 					Constant.CURRENT_PENDING_COMPANY = pendingCompanies;
 					setPendingNum();
 				} else {
@@ -322,6 +323,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 		newsAdapter.notifyDataSetInvalidated();
 	}
 	
+	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler() {
 
 		@Override

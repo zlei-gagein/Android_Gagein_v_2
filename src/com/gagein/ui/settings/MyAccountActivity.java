@@ -1,5 +1,7 @@
 package com.gagein.ui.settings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,13 +11,18 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -23,13 +30,17 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
+import com.gagein.adapter.SettingCompanyAdapter;
 import com.gagein.http.APIParser;
+import com.gagein.model.Company;
+import com.gagein.model.DataPage;
 import com.gagein.model.UserProfile;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.CommonUtil;
+import com.gagein.util.Log;
 import com.gagein.util.MessageCode;
 
-public class MyAccountActivity extends BaseActivity implements OnFocusChangeListener, OnEditorActionListener{
+public class MyAccountActivity extends BaseActivity implements OnFocusChangeListener, OnEditorActionListener, OnItemClickListener{
 	
 	private EditText nameEdt;
 	private EditText emailEdt;
@@ -43,6 +54,12 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	private UserProfile profile;
 	private UserProfile temporaryProfile;
 	private int setSelection = 1;
+	private int searchCompany = 0;
+	private TimerTask timerTask;
+	private Timer timer;
+	private List<Company> searchCompanies = new ArrayList<Company>();
+	private SettingCompanyAdapter companyAdapter;
+	private ListView companyListView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +84,20 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		clearEmail = (LinearLayout) findViewById(R.id.clearEmailLayout);
 		clearCompany = (LinearLayout) findViewById(R.id.clearCompanyLayout);
 		clearJobTitle = (LinearLayout) findViewById(R.id.clearJobTitleLayout);
+		companyListView = (ListView) findViewById(R.id.companyListView);
 		layout = (LinearLayout) findViewById(R.id.layout);
+		
 	}
 	
 	@Override
 	protected void initData() {
 		super.initData();
+		
+		companyAdapter = new SettingCompanyAdapter(mContext, searchCompanies);
+		companyListView.setAdapter(companyAdapter);
+		companyAdapter.notifyDataSetChanged();
+		companyAdapter.notifyDataSetInvalidated();
+		
 		getMyOverView();
 	}
 	
@@ -113,6 +138,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	@Override
 	protected void setOnClickListener() {
 		super.setOnClickListener();
+		
 		layout.setOnClickListener(this);
 		leftImageBtn.setOnClickListener(this);
 		clearName.setOnClickListener(this);
@@ -127,6 +153,36 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		emailEdt.setOnEditorActionListener(this);
 		companyEdt.setOnEditorActionListener(this);
 		jobTitleEdt.setOnEditorActionListener(this);
+		
+		companyEdt.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				String character = s.toString().trim();
+				if (TextUtils.isEmpty(character) || null == character){ 
+					
+					cancelSearchTask();
+					searchCompanies.clear();
+					companyAdapter.notifyDataSetChanged();
+					
+				} else {
+					
+					scheduleSearchTask();
+					
+				};
+			}
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+		});
+
+		companyListView.setOnItemClickListener(this);
+		
 	}
 	
 	@Override
@@ -135,10 +191,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		if (v == leftImageBtn) {
 			finish();
 		} else if (v == layout) {
-			nameEdt.clearFocus();
-			emailEdt.clearFocus();
-			companyEdt.clearFocus();
-			jobTitleEdt.clearFocus();
+			clearAllEditFocus();
 		} else if (v == clearName) {
 			nameEdt.setText("");
 			clearName.setVisibility(View.GONE);
@@ -161,10 +214,18 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			
-			nameEdt.setSelection(nameEdt.getText().length());
-			emailEdt.setSelection(emailEdt.getText().length());
-			companyEdt.setSelection(companyEdt.getText().length());
-			jobTitleEdt.setSelection(jobTitleEdt.getText().length());
+			if (msg.what == setSelection) {
+				
+				nameEdt.setSelection(nameEdt.getText().length());
+				emailEdt.setSelection(emailEdt.getText().length());
+				companyEdt.setSelection(companyEdt.getText().length());
+				jobTitleEdt.setSelection(jobTitleEdt.getText().length());
+				
+			} else {
+				
+				getCompanySuggestions(companyEdt.getText().toString());
+				
+			}
 			
 		}
 		
@@ -172,6 +233,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 
 	@Override
 	public void onFocusChange(View view, boolean changed) {
+		
 		if (view == nameEdt) {
 			clearName.setVisibility(changed ? View.VISIBLE : View.GONE);
 		} else if (view == emailEdt) {
@@ -182,6 +244,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			clearJobTitle.setVisibility(changed ? View.VISIBLE : View.GONE);
 		}
 		setEditSelectionPosition();
+		
 	}
 	
 	private void setEditSelectionPosition() {
@@ -194,6 +257,25 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		    	handler.sendMessage(message);
 		    }
 		}, 20);
+	}
+	
+	/**schedule search*/
+	private void scheduleSearchTask() {
+		
+		cancelSearchTask();
+		timer = new Timer();
+		timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				
+				Message message = new Message();
+				message.what = searchCompany;
+				handler.sendMessage(message);
+				
+			}
+		};
+		timer.schedule(timerTask, 2000);
+		
 	}
 
 	@Override
@@ -229,34 +311,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			}
 			
 			// 468494# setting-my account,name, company, job title为空的时候不允许保存
-			if (canSave) {
-				hideSoftKey();
-				
-				String firstName = null;
-				String lastName = null;
-				if (!TextUtils.isEmpty(name)) {
-					int index = name.indexOf(" ");
-					if (index > 0) {
-						firstName = name.substring(0, index);
-						lastName = name.substring(index).trim();
-					} else {
-						firstName = name;
-					}
-				}
-				
-				if (TextUtils.isEmpty(firstName)) {
-					firstName = profile.firstName;
-				}
-				
-				if (TextUtils.isEmpty(lastName)) {
-					lastName = profile.lastName;
-				}
-				
-				saveProfile(firstName, lastName
-						, TextUtils.isEmpty(email) ? profile.email : email
-								, TextUtils.isEmpty(company) ? profile.orgName : company
-										, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
-			}
+			if (canSave) saveProfileWithParams();
 			
 			return true;
 		}
@@ -314,7 +369,112 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 				});
 	}
 	
+	public void getCompanySuggestions(String keyWords) {
+		
+		showLoadingDialog();
+		mApiHttp.getCompanySuggestions(keyWords, new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				
+				Log.v("silen", "jsonObject = " + jsonObject.toString());
+				
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					
+					searchCompanies.clear();
+					
+					DataPage dataPage = parser.parseSearchCompany();
+					List<Object> items = dataPage.items;
+					if (items != null) {
+						for (Object obj : items) {
+							searchCompanies.add((Company)obj);
+						}
+					}
+					companyAdapter.notifyDataSetChanged();
+					companyAdapter.notifyDataSetInvalidated();
+					CommonUtil.setViewHeight(companyListView, companyListView.getAdapter().getCount() * CommonUtil.dp2px(mContext, 71));
+					
+				}
+				dismissLoadingDialog();
+			}
+			
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				showConnectionError();
+			}
+		});
+	}
+	
+	private void saveProfileWithParams() {
+		hideSoftKey();
+		
+		String name = nameEdt.getText().toString().trim();
+		String email = emailEdt.getText().toString().trim();
+		String company = companyEdt.getText().toString().trim();
+		String jobTitle = jobTitleEdt.getText().toString().trim();
+		
+		String firstName = null;
+		String lastName = null;
+		if (!TextUtils.isEmpty(name)) {
+			int index = name.indexOf(" ");
+			if (index > 0) {
+				firstName = name.substring(0, index);
+				lastName = name.substring(index).trim();
+			} else {
+				firstName = name;
+			}
+		}
+		
+		if (TextUtils.isEmpty(firstName)) {
+			firstName = profile.firstName;
+		}
+		
+		if (TextUtils.isEmpty(lastName)) {
+			lastName = profile.lastName;
+		}
+		
+		saveProfile(firstName, lastName
+				, TextUtils.isEmpty(email) ? profile.email : email
+						, TextUtils.isEmpty(company) ? profile.orgName : company
+								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
+	}
+	
 	private void hideSoftKey() {
 		CommonUtil.hideSoftKeyBoard(mContext, MyAccountActivity.this);
 	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		
+		String companyName = searchCompanies.get(position).name;
+		companyEdt.setText(companyName);
+		cancelSearchTask();
+		clearCompany.setVisibility(View.GONE);
+		clearAllEditFocus();
+		
+		searchCompanies.clear();
+		companyAdapter.notifyDataSetChanged();
+		CommonUtil.setViewHeight(companyListView, 0);
+		
+		
+		saveProfileWithParams();
+	}
+	
+	/**stop schedule search*/
+	private void cancelSearchTask() {
+		if (timerTask != null) {
+			timerTask.cancel();
+		}
+	}
+	
+	private void clearAllEditFocus() {
+		nameEdt.clearFocus();
+		emailEdt.clearFocus();
+		companyEdt.clearFocus();
+		jobTitleEdt.clearFocus();
+	}
+	
 }

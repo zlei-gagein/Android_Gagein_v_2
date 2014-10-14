@@ -65,7 +65,7 @@ public class NewsFilterFragment extends BaseFragment implements OnItemClickListe
 	protected void initView() {
 		super.initView();
 		
-		setTitle(R.string.triggerchart);
+		setTitle(R.string.triggers);
 		
 		listView = (ListView) view.findViewById(R.id.listView);
 		selectTriggers = (TextView) view.findViewById(R.id.selectTriggers);
