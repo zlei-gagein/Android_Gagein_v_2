@@ -1,5 +1,8 @@
 package com.gagein.ui.settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -8,12 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.component.dialog.CommonDialog;
 import com.gagein.component.dialog.RateDialog;
 import com.gagein.http.APIHttp;
+import com.gagein.model.PlanInfo;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.main.LoginActivity;
 import com.gagein.util.CommonUtil;
@@ -33,6 +38,8 @@ public class SettingsActivity extends BaseActivity {
 	private Button rateBtn;
 	private Button shareBtn;
 	private Button feedbackBtn;
+	private LinearLayout switchPlanLayout;
+	private List<PlanInfo> planInfos = new ArrayList<PlanInfo>();
 //	private Button upgradeBtn;
 	
 	@Override
@@ -62,6 +69,7 @@ public class SettingsActivity extends BaseActivity {
 		feedbackBtn = (Button) findViewById(R.id.feedbackBtn);
 		versionCode = (TextView) findViewById(R.id.versionCode);
 		copyright = (TextView) findViewById(R.id.copyright);
+		switchPlanLayout = (LinearLayout) findViewById(R.id.switchPlanLayout);
 	}
 	
 	@Override
@@ -72,6 +80,9 @@ public class SettingsActivity extends BaseActivity {
 //		copyright.setText(String.format(stringFromResID(R.string.copyright), calendar.get(Calendar.YEAR) + ""));
 		copyright.setText(String.format(stringFromResID(R.string.copyright), "2014"));
 		versionCode.setText(String.format(stringFromResID(R.string.version_code), CommonUtil.getVersion(mContext)));
+		
+		planInfos = CommonUtil.readPlanInfos();
+		if (planInfos.size() > 1) switchPlanLayout.setVisibility(View.VISIBLE);
 	}
 
 	@Override

@@ -28,19 +28,30 @@
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padingleft" >
                 
-                <include layout="@layout/lines" />
-
-                <Button
-                    android:id="@+id/switchAccount"
+                <LinearLayout 
+                    android:id="@+id/switchPlanLayout"
                     android:layout_width="fill_parent"
-                    android:layout_height="@dimen/edit_hight"
-                    android:background="@null"
-                    android:drawableRight="@drawable/button_chevron"
-                    android:gravity="left|center_vertical"
-                    android:paddingRight="@dimen/marginright"
-                    android:text="@string/switch_accounts"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                    
+                    <include layout="@layout/lines" />
+
+	                <Button
+	                    android:id="@+id/switchAccount"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="@dimen/edit_hight"
+	                    android:background="@null"
+	                    android:drawableRight="@drawable/button_chevron"
+	                    android:gravity="left|center_vertical"
+	                    android:paddingRight="@dimen/marginright"
+	                    android:text="@string/switch_accounts"
+	                    android:textColor="@color/text_dark"
+	                    android:textSize="18sp" />
+                    
+                </LinearLayout>
+                
 
                 <include layout="@layout/lines" />
 

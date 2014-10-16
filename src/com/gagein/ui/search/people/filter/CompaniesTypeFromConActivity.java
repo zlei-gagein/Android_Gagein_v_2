@@ -252,22 +252,22 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 						
 					} else {
 						
+						if (position == 4) {
+							
+							List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+							String haveSelectCondition = requestDataList.get(1);
+							
+							if (haveSelectCondition.equalsIgnoreCase("false")) {
+								
+								showShortToast("You have to enter in search criteria! Try again.");
+								return;
+							}
+						}
+						
 						setCompanyTypesSelected(position);
 						
 						savedSearchLayout.setVisibility(View.GONE);
 						specificLayout.setVisibility(View.GONE);
-						
-					}
-				}
-				
-				if (position == 4) {
-					
-					List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
-					String haveSelectCondition = requestDataList.get(1);
-					
-					if (haveSelectCondition.equalsIgnoreCase("false")) {
-						
-						showShortToast("You have to enter in search criteria! Try again.");
 						
 					}
 				}

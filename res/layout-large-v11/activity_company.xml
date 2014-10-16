@@ -11,9 +11,11 @@
         layout="@layout/top" />
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -44,11 +46,11 @@
                         android:id="@+id/companyName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_dark"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textColor="@color/text_dark"
                         android:textSize="20sp" />
 
                     <ImageView
@@ -58,32 +60,31 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="2dp"
                         android:layout_toRightOf="@id/companyName"
-                        android:visibility="gone"
-                        android:background="@drawable/follow" />
+                        android:background="@drawable/follow"
+                        android:visibility="gone" />
                 </RelativeLayout>
-                
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal" >
 
                     <TextView
                         android:id="@+id/websiteAndAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
+                        android:singleLine="true"
                         android:textColor="@color/text_dark"
                         android:textSize="14sp" />
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -103,8 +104,7 @@
                 <RelativeLayout
                     android:id="@+id/oneDayLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     >
+                    android:layout_height="wrap_content" >
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -118,8 +118,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:visibility="gone"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/folScoreDay"
@@ -129,28 +129,27 @@
                             android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/one_day"
                     android:textColor="@color/text_weak"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
                 <RelativeLayout
                     android:id="@+id/oneWeekLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     >
+                    android:layout_height="wrap_content" >
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -164,8 +163,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:visibility="gone"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/folScoreWeek"
@@ -175,28 +174,27 @@
                             android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/one_week"
                     android:textColor="@color/text_weak"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
                 <RelativeLayout
                     android:id="@+id/oneMonthLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     >
+                    android:layout_height="wrap_content" >
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -210,8 +208,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:visibility="gone"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/folScoreMonth"
@@ -221,15 +219,14 @@
                             android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/one_month"
                     android:textColor="@color/text_weak"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -296,50 +293,48 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <RelativeLayout 
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-	            android:layout_marginBottom="6dp"
-	            android:layout_marginLeft="12dp"
-	            android:layout_marginTop="6dp"
-	            android:layout_marginRight="8dp"
-            >
-        
-	        <TextView
-	            android:id="@+id/filter"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@null"
-	            android:text="@string/filters"
-	            android:textColor="@color/yellow"
-	            android:textSize="18sp" />
-        
-	        <RelativeLayout 
-	            android:id="@+id/sortByLayout"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:visibility="gone">
-                
-		        <TextView
-		            android:id="@+id/sortBy"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_alignParentRight="true"
-		            android:background="@null"
-		            android:textColor="@color/yellow"
-		            android:textSize="18sp" />
-		        
-		        <TextView
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:layout_toLeftOf="@id/sortBy"
-		            android:layout_marginRight="10dp"
-		            android:background="@null"
-		            android:text="@string/sortby"
-		            android:textColor="@color/text_weak"
-		            android:textSize="18sp" />
-	        
-	        </RelativeLayout>
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="6dp" >
+
+            <TextView
+                android:id="@+id/filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:text="@string/filters"
+                android:textColor="@color/yellow"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/sortByLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/sortBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:textColor="@color/yellow"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/sortBy"
+                    android:background="@null"
+                    android:text="@string/sortby"
+                    android:textColor="@color/text_weak"
+                    android:textSize="18sp" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <ScrollView
@@ -369,7 +364,7 @@
                         android:gravity="center_horizontal"
                         android:text="@string/no_news"
                         android:textColor="@color/text_dark"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/noNewsPt"
@@ -409,7 +404,7 @@
                         android:paddingRight="15dp"
                         android:text="@string/resource_page"
                         android:textColor="@color/text_dark"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <LinearLayout
                         android:id="@+id/resourceParentLayout"
@@ -431,7 +426,7 @@
                         android:gravity="center_horizontal"
                         android:text="@string/no_news"
                         android:textColor="@color/text_dark"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/provisionPt"
@@ -448,36 +443,38 @@
                         android:id="@+id/provisionBottomLayout"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
                         android:layout_marginTop="20dp"
+                        android:gravity="center_horizontal"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:visibility="gone" >
 
-<!--                         <LinearLayout -->
-<!--                             android:id="@+id/followCompanyLayout" -->
-<!--                             android:layout_width="wrap_content" -->
-<!--                             android:layout_height="wrap_content" -->
-<!--                             android:orientation="horizontal" -->
-<!--                             android:visibility="gone" > -->
+                        <!-- <LinearLayout -->
+                        <!-- android:id="@+id/followCompanyLayout" -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:orientation="horizontal" -->
+                        <!-- android:visibility="gone" > -->
 
-<!--                             <TextView -->
-<!--                                 android:id="@+id/followCompany" -->
-<!--                                 android:layout_width="wrap_content" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:text="@string/follow_company" -->
-<!--                                 android:textColor="@color/yellow" -->
-<!--                                 android:textSize="20sp" /> -->
 
-<!--                             <TextView -->
-<!--                                 android:layout_width="wrap_content" -->
-<!--                                 android:layout_height="wrap_content" -->
-<!--                                 android:layout_marginLeft="10dp" -->
-<!--                                 android:layout_marginRight="10dp" -->
-<!--                                 android:text="@string/or" -->
-<!--                                 android:textColor="@color/text_weak" -->
-<!--                                 android:textSize="20sp" /> -->
-<!--                         </LinearLayout> -->
+                        <!-- <TextView -->
+                        <!-- android:id="@+id/followCompany" -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:text="@string/follow_company" -->
+                        <!-- android:textColor="@color/yellow" -->
+                        <!-- android:textSize="20sp" /> -->
+
+
+                        <!-- <TextView -->
+                        <!-- android:layout_width="wrap_content" -->
+                        <!-- android:layout_height="wrap_content" -->
+                        <!-- android:layout_marginLeft="10dp" -->
+                        <!-- android:layout_marginRight="10dp" -->
+                        <!-- android:text="@string/or" -->
+                        <!-- android:textColor="@color/text_weak" -->
+                        <!-- android:textSize="20sp" /> -->
+                        <!-- </LinearLayout> -->
 
                         <TextView
                             android:id="@+id/shareGagein"
@@ -507,7 +504,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/no_results"
                 android:textColor="@color/text_dark"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:visibility="visible" />
 
             <TextView
@@ -520,7 +517,7 @@
                 android:textSize="18sp"
                 android:visibility="gone" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:id="@+id/noPeople"
             android:layout_width="fill_parent"
@@ -537,7 +534,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/no_results"
                 android:textColor="@color/text_dark"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:visibility="visible" />
 
             <TextView
@@ -587,5 +584,18 @@
             android:scrollbars="none"
             android:visibility="gone" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/noLongerOperating"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="@color/text_weak"
+        android:visibility="gone"
+        android:textSize="18sp" />
 
 </LinearLayout>

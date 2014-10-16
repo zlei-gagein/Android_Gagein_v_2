@@ -2,7 +2,6 @@ package com.gagein.component.dialog;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
@@ -45,6 +44,7 @@ public class PendingCompanyDialog implements OnClickListener {
 		view = inflater.inflate(layout, null);
 		nameEdt = (EditText) view.findViewById(R.id.nameEdt);
 		websiteEdt = (EditText) view.findViewById(R.id.websiteEdt);
+		websiteEdt.requestFocus();
 		cancel = (Button) view.findViewById(R.id.cancel);
 		save = (Button) view.findViewById(R.id.save);
 		dialog.setContentView(view);
@@ -93,6 +93,8 @@ public class PendingCompanyDialog implements OnClickListener {
 		CommonUtil.setDialogWith(dialog);
 		dialog.setCancelable(false);
 		dialog.show();
+		
+		if (!CommonUtil.isTablet(mContext)) CommonUtil.showSoftKeyBoard(300);
 	}
 	
 	public ArrayList<String> getNameAndWebsite() {

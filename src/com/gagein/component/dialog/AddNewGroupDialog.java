@@ -28,7 +28,7 @@ import com.gagein.util.MessageCode;
  * 
  * @author silen
  */
-public class NewGroupDialog implements OnClickListener {
+public class AddNewGroupDialog implements OnClickListener {
 	private Context mContext;
 	private Dialog dialog;
 	private View view;
@@ -43,7 +43,7 @@ public class NewGroupDialog implements OnClickListener {
 	 * @param mContext
 	 * @param enable true ? enable : closer
 	 */
-	public NewGroupDialog(final Context mContext, int type) {
+	public AddNewGroupDialog(final Context mContext, int type) {
 		
 		this.mContext = mContext;
 		this.type = type;
@@ -82,7 +82,7 @@ public class NewGroupDialog implements OnClickListener {
 		dialog.setCancelable(false);
 		dialog.show();
 		
-		CommonUtil.showSoftKeyBoard(300);
+		if (!CommonUtil.isTablet(mContext)) CommonUtil.showSoftKeyBoard(300);
 		
 	}
 

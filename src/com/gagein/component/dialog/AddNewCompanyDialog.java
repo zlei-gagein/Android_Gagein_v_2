@@ -90,6 +90,8 @@ public class AddNewCompanyDialog implements OnClickListener {
 		CommonUtil.setDialogWith(dialog);
 		dialog.setCancelable(false);
 		dialog.show();
+		
+		if (!CommonUtil.isTablet(mContext)) CommonUtil.showSoftKeyBoard(300);
 	}
 	
 	public ArrayList<String> getNameAndWebsite() {

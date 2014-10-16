@@ -50,6 +50,11 @@ public class SortBySearchDialog {
 				}
 				sortByItems.get(position).setChecked(true);
 				adapter.notifyDataSetChanged();
+				
+				for (int i = 0; i < sortByItems.size(); i ++) {
+					if (sortByItems.get(i).getValue().equalsIgnoreCase("Name")) Constant.REVERSE = true;
+				}
+				
 				dismissDialog();
 				if (fromCompany) {
 					((SearchCompanyResultFragment)mFragment).initSearch();

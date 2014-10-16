@@ -142,6 +142,22 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 				CommonUtil.hideSoftKeyBoard(mContext, CompaniesTypeFromBuzAcivity.this);
 			}
 			
+			if (position == 2) {
+				
+				List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+				String requestStr = requestDataList.get(0);
+				String haveSelectCondition = requestDataList.get(1);
+				Log.v("silen", "requestStr = " + requestStr);
+				Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+				
+				if (haveSelectCondition.equalsIgnoreCase("false")) {
+					
+					showShortToast("You have to enter in search criteria! Try again.");
+					return;
+				}
+				
+			}
+			
 			for (int i = 0; i < companyTypes.size(); i ++) {
 				companyTypes.get(i).setChecked(false);
 			}
@@ -150,21 +166,6 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 		}
 		adapter.notifyDataSetChanged();
 		
-		if (position == 2) {
-			
-			List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
-			String requestStr = requestDataList.get(0);
-			String haveSelectCondition = requestDataList.get(1);
-			Log.v("silen", "requestStr = " + requestStr);
-			Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
-			
-			if (haveSelectCondition.equalsIgnoreCase("false")) {
-				
-				showShortToast("You have to enter in search criteria! Try again.");
-				
-			}
-			
-		}
 	}
 
 }

@@ -171,6 +171,16 @@ public class CompaniesTabletActivity extends BaseFragmentActivity implements OnF
 		}
 		
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		Constant.INDUSTRYID = "0";
+		Constant.FILTER_INDUSTRY_NAME = "";
+		Constant.industriesItem.clear();
+		
+	}
 }
 
 

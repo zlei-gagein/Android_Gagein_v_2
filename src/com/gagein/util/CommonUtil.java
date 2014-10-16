@@ -695,11 +695,14 @@ public class CommonUtil {
 		return "$" + parserNum(revenueStr);
 	}
 	
-	public static String employeesSizeFromat(String employeesStr) {//TODO
+	public static String employeesSizeFromat(String employeesStr) {
 		long employeeSize = Long.parseLong(employeesStr);
-		if (employeeSize >= 1000) {
+		if (employeeSize >= 1000 && employeeSize < 1000000) {
 			employeeSize = employeeSize/1000;
 			return employeeSize + "K";
+		} else if (employeeSize >= 1000000) {
+			employeeSize = employeeSize/1000000;
+			return employeeSize + "M";
 		}
 		return employeeSize + "";
 	}
@@ -1447,7 +1450,7 @@ public class CommonUtil {
 				for (int i = 0; i < mNewsTriggers.size(); i ++) {
 					if (mNewsTriggers.get(i).getChecked()) {
 						key = mNewsTriggers.get(i).getKey();
-						if (!key.isEmpty()) {
+						if (!key.isEmpty() && Integer.parseInt(key) > 0) {
 							newsTriggersArray.put(key);
 						}
 					}

@@ -27,7 +27,7 @@ public class CompetitorFilterActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		super.initView();
-		setTitle(R.string.competitors_filter);
+		setTitle(R.string.filters);
 		setRightButton(R.string.done);
 		
 		industry = (RelativeLayout) findViewById(R.id.industry);

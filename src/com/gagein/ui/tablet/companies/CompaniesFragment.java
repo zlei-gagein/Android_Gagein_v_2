@@ -51,6 +51,7 @@ import com.gagein.ui.company.CompanyActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class CompaniesFragment extends BaseFragment implements OnItemClickListener, IXListViewListener{
 
@@ -768,36 +769,39 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
+					selectedNum--;
+					Log.v("silen", "selectedNum = " + selectedNum);
 					for (int i = 0; i < companies.size(); i ++) {
 						if (mCompanyId == companies.get(i).orgID) {
 							companies.remove(i);
-							if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
 						}
 					}
 					
-					if (companies.size() == 0) {
-						setFiltersVisible();
-						
-						Intent intent = new Intent();
-						intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
-						mContext.sendBroadcast(intent);
-					} else {
-						Intent intent = new Intent();
-						intent.setAction(Constant.BROADCAST_REFRESH_NEWS);
-						mContext.sendBroadcast(intent);
-					}
-					selectedNum--;
 					if (selectedNum == 0) {
+						
+						if (null != noSectionIndexAdapter) noSectionIndexAdapter.notifyDataSetChanged();
+						
+						if (companies.size() == 0) {
+							setFiltersVisible();
+							
+							Intent intent = new Intent();
+							intent.setAction(Constant.BROADCAST_REFRESH_COMPANIES);
+							mContext.sendBroadcast(intent);
+						} else {
+							Intent intent = new Intent();
+							intent.setAction(Constant.BROADCAST_REFRESH_NEWS);
+							mContext.sendBroadcast(intent);
+						}
+						
 						Intent intent = new Intent();
 						intent.setAction(Constant.BROADCAST_UNFOLLOW_COMPANY);
 						mContext.sendBroadcast(intent);
 						
 						setBottomButton(null);
+						dismissLoadingDialog();
 						
 						edit = false;
 						setNotEditStatus();
-						
-						dismissLoadingDialog();
 					}
 					
 				} else {

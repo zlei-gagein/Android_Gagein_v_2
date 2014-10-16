@@ -1,10 +1,12 @@
 package com.gagein.model;
 
+import android.annotation.SuppressLint;
 import java.io.Serializable;
+import java.util.Comparator;
 
 import org.json.JSONObject;
 
-public class Agent extends DataModel implements Serializable{
+public class Agent extends DataModel implements Serializable, Comparable<Agent>{
 	
 	private static final long serialVersionUID = 1L;
 	/** ------ constants -----*/
@@ -42,8 +44,27 @@ public class Agent extends DataModel implements Serializable{
 		name = aJSONObject.optString("agent_name");
 		chartPercentage = aJSONObject.optDouble("chart_percentage");
 	}
+	
+	@Override
+	public int compareTo(Agent another) {
+		return Comparators.NAME.compare(this, another);
+	}
+	
+	public static class Comparators {
+		public static Comparator<Agent> NAME = new Comparator<Agent>() {
+			
+			@Override
+			public int compare(Agent lhs, Agent rhs) {
+				return lhs.name.trim().toUpperCase().compareTo(rhs.name.trim().toUpperCase());
+			}
+		};
+	}
+	
+	
+	
+	
+	
+	
+	
 }
 
-/**
-
- */

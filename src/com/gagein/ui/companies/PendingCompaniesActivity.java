@@ -169,8 +169,6 @@ public class PendingCompaniesActivity extends BaseActivity implements OnItemClic
 			}
 		});
 		
-		CommonUtil.showSoftKeyBoard(300);
-		
 	}
 	
 	private void addNewCompany(final PendingCompanyDialog dialog, final Company mCompany) {

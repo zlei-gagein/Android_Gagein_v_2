@@ -56,7 +56,7 @@ public class CompetitorFilterFragment extends BaseFragment {
 	@Override
 	protected void initView() {
 		super.initView();
-		setTitle(R.string.competitors_filter);
+		setTitle(R.string.filters);
 		setLeftButton(R.string.cancel);
 		setRightButton(R.string.done);
 		

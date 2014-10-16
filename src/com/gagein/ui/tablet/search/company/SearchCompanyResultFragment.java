@@ -333,7 +333,6 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 						
 						companyInfoLayout.removeView(view);
 						
-						//TODO 数据删除
 						String id = queryInfoItem.getId();
 						Filters mFilters = Constant.MFILTERS;
 						
@@ -351,7 +350,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							
-							if (id.trim().equalsIgnoreCase("4")) return;
+//							if (id.trim().equalsIgnoreCase("4")) return;//TODO
 							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
 							deleteFilters(id, companiesList);
 							
@@ -424,6 +423,7 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 	 * @param filterItems
 	 */
 	private void deleteFilters(String id, List<FilterItem> filterItems) {
+		
 		
 		for (int i = 0; i < filterItems.size(); i ++) {
 			if (id.equalsIgnoreCase(filterItems.get(i).getKey())) {

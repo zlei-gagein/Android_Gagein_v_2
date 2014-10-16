@@ -22,6 +22,7 @@
     <string name="u_remove">Remove</string>
     <string name="u_no">No</string>
     <string name="u_yes">Yes</string>
+    <string name="u_switch">Switch</string>
     
     <string name="one_day">1 Day</string>
     <string name="one_week">1 Week</string>
@@ -213,7 +214,7 @@
     <string name="removeBookmark">Remove\nBookmark</string>
     <string name="coopLink">Copy Link</string>
     <string name="flag_as_irrelevant">Flag as\nIrrelevant</string>
-    <string name="flagged_as_irrelevant">Flagged as Irrelevant</string>
+    <string name="flagged_as_irrelevant">Flagged as\nIrrelevant</string>
     <string name="twitters">Twitters</string>
     <string name="view_twitters">View Twitter Conversation</string>
     <string name="u_webpage">Webpage</string>
@@ -333,7 +334,7 @@
     <string name="no_suggested_companies">No suggested companies</string>
     <string name="email_login_title">Email Login</string>
     <string name="password">Password</string>
-    <string name="password_char">Password(6-20 characters)</string>
+    <string name="password_char">Password(6&#8211;20 characters)</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="forgot_psd_title">Forgot Password</string>
     <string name="sign_up">Sign Up</string>

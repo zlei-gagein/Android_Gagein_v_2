@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.gagein.R;
 import com.gagein.ui.tablet.settins.CategoryFragment.OnBackToFeedbackListener;
 import com.gagein.ui.tablet.settins.FeedbackFragment.OnCategoryListener;
+import com.gagein.ui.tablet.settins.SettingsFragment.OnSwitchAccountListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onFeedbackListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onMyAccountSelectedListener;
 import com.gagein.ui.tablet.settins.SettingsFragment.onNewsFilterSelectedListener;
@@ -17,11 +18,13 @@ import com.gagein.ui.tablet.settins.SettingsFragment.onTermsListener;
 import com.gagein.util.CommonUtil;
 
 public class SettingsTabletActivity extends FragmentActivity implements onNewsFilterSelectedListener, onMyAccountSelectedListener, 
-	onPrivacyListener, onTermsListener, onShareListener, onFeedbackListener, OnCategoryListener, OnBackToFeedbackListener{
+	onPrivacyListener, onTermsListener, onShareListener, onFeedbackListener, OnCategoryListener, OnBackToFeedbackListener,
+	OnSwitchAccountListener{
 	
 	protected boolean doubleBackToExitPressedOnce = false;
 	private FragmentTransaction transaction;
 	private SettingsFragment settingsFragment;
+	private SwitchPlanFragment switchPlanFragment;
 	private MyAccountFragment myAccountFragment;
 	private NewsFilterFragment newsFilterFragment;
 	private PrivacyFragment privacyFragment;
@@ -29,7 +32,6 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 	private ShareFragment shareFragment;
 	private FeedbackFragment feedbackFragment;
 	private CategoryFragment categoryFragment;
-	
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -39,10 +41,48 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		transaction = getSupportFragmentManager().beginTransaction();
 		
 		settingsFragment = new SettingsFragment();
-		myAccountFragment = new MyAccountFragment();
+		if (CommonUtil.readPlanInfos().size() > 1) {
+			switchPlanFragment = new SwitchPlanFragment();
+			transaction.add(R.id.rightLayout, switchPlanFragment);
+		} else {
+			myAccountFragment = new MyAccountFragment();
+			transaction.add(R.id.rightLayout, myAccountFragment);
+		}
 		
 		transaction.add(R.id.leftLayout, settingsFragment);
-		transaction.add(R.id.rightLayout, myAccountFragment);
+		transaction.commit();
+	}
+	
+	@Override
+	public void onSwitchAccountListener() {
+		transaction = getSupportFragmentManager().beginTransaction();
+		if (null == switchPlanFragment) {
+			switchPlanFragment = new SwitchPlanFragment();
+			transaction.add(R.id.rightLayout, switchPlanFragment);
+		}
+		
+		transaction.show(switchPlanFragment);
+		if (null != myAccountFragment) {
+			transaction.hide(myAccountFragment);
+		}
+		if (null != newsFilterFragment) {
+			transaction.hide(newsFilterFragment);
+		}
+		if (null != shareFragment) {
+			transaction.hide(shareFragment);
+		}
+		if (null != feedbackFragment) {
+			transaction.hide(feedbackFragment);
+		}
+		if (null != categoryFragment) {
+			transaction.hide(categoryFragment);
+		}
+		if (null != termsFragment) {
+			transaction.hide(termsFragment);
+		}
+		if (null != privacyFragment) {
+			transaction.hide(privacyFragment);
+		}
 		transaction.commit();
 	}
 	
@@ -56,6 +96,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 			myAccountFragment.getMyOverView();
 		}
 		transaction.show(myAccountFragment);
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != newsFilterFragment) {
 			transaction.hide(newsFilterFragment);
 		}
@@ -85,6 +128,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 			transaction.add(R.id.rightLayout, newsFilterFragment);
 		}
 		transaction.show(newsFilterFragment);
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -114,6 +160,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 			transaction.add(R.id.rightLayout, privacyFragment);
 		}
 		transaction.show(privacyFragment);
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -147,6 +196,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		
 		transaction.show(termsFragment);
 		
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -199,6 +251,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		
 		transaction.show(shareFragment);
 		
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -233,6 +288,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		
 		transaction.show(feedbackFragment);
 		
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -268,6 +326,9 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		
 		transaction.show(categoryFragment);
 		
+		if (null != switchPlanFragment) {
+			transaction.hide(switchPlanFragment);
+		}
 		if (null != myAccountFragment) {
 			transaction.hide(myAccountFragment);
 		}
@@ -308,6 +369,5 @@ public class SettingsTabletActivity extends FragmentActivity implements onNewsFi
 		}
 		transaction.commit();
 	}
-	
-	
+
 }

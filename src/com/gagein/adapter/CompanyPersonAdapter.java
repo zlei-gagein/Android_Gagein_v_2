@@ -104,12 +104,10 @@ public class CompanyPersonAdapter extends BaseAdapter {
 				
 				@Override
 				public void onClick(View arg0) {
-					ActivityHelper.startWebActivity(CommonUtil.jointPersonNameAndCompanyNameAndJobTitle(person.name, person.company.name, person.orgTitle), mContext);
+					ActivityHelper.startWebActivity(CommonUtil.jointPersonNameAndCompanyNameAndJobTitle(person.fullName, person.company.name, person.orgTitle), mContext);
 				}
 			});
 		}
-		
-
 		return convertView;
 	}
 	

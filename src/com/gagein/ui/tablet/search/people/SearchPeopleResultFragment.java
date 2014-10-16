@@ -52,7 +52,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	private TextView showDetailsTx;
 	private TextView sortByText;
 	private LinearLayout sortByDetailLayout;
-	private AutoNewLineLayout pesonalInfoLayout;
+	private AutoNewLineLayout personalInfoLayout;
 	private AutoNewLineLayout employerInfoLayout;
 	private XListView listView;
 	private Boolean showDetails = false;
@@ -68,6 +68,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	private String personal = "personal";
 	private OnHideLeftLayout onHideLeftLayout;
 	private LinearLayout wholeLayout;
+	private LinearLayout personalLayout;
 	private TextView rankText;
 	private OnUpdateFilterStatusForPeople onUpdateFilterStatusForPeople;
 	
@@ -115,11 +116,12 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		showDetailsTx = (TextView) view.findViewById(R.id.showDetails);
 		sortByText = (TextView) view.findViewById(R.id.sortBy);
 		sortByDetailLayout = (LinearLayout) view.findViewById(R.id.sortByDetailLayout);
-		pesonalInfoLayout = (AutoNewLineLayout) view.findViewById(R.id.pesonalInfoLayout);
+		personalInfoLayout = (AutoNewLineLayout) view.findViewById(R.id.pesonalInfoLayout);
 		employerInfoLayout = (AutoNewLineLayout) view.findViewById(R.id.employerInfoLayout);
 		listView = (XListView) view.findViewById(R.id.listView);
 		emptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
 		wholeLayout = (LinearLayout) view.findViewById(R.id.wholeLayout);
+		personalLayout = (LinearLayout) view.findViewById(R.id.personalLayout);
 		rankText = (TextView) view.findViewById(R.id.rank);
 		
 		CommonUtil.setLayoutWith(wholeLayout, getActivity());
@@ -241,7 +243,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		queryInfo = parser.parserQueryInfo(false);
 		
 		//set query info layout
-		pesonalInfoLayout.removeAllViews();
+		personalInfoLayout.removeAllViews();
 		employerInfoLayout.removeAllViews();
 		setPersonalInfoLayout();
 		setEmployerInfoLayout();
@@ -370,7 +372,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 						if (type.equalsIgnoreCase(employer)) {
 							employerInfoLayout.removeView(view);
 						} else if (type.equalsIgnoreCase(personal)) {
-							pesonalInfoLayout.removeView(view);
+							personalInfoLayout.removeView(view);
 						}
 						//TODO 数据删除
 						String id = queryInfoItem.getId();
@@ -471,7 +473,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				if (type.equalsIgnoreCase(employer)) {
 					employerInfoLayout.addView(view);
 				} else if (type.equalsIgnoreCase(personal)) {
-					pesonalInfoLayout.addView(view);
+					personalInfoLayout.addView(view);
 				}
 			}
 		}
@@ -512,7 +514,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			
 			CommonUtil.setFilterMaxWith(textView);
 			
-			pesonalInfoLayout.addView(view);
+			personalInfoLayout.addView(view);
 		}	
 		
 		//Job Level
@@ -536,7 +538,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					
 					@Override
 					public void onClick(View arg0) {
-						
+						//TODO
+						Log.v("silen", "peopleLocationCodes.size() = " + peopleLocationCodes.size());
 						for (int i = 0; i < peopleLocationCodes.size(); i ++) {
 							
 							String id = peopleLocationCode.getCode();
@@ -553,13 +556,16 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				
 				CommonUtil.setFilterMaxWith(textView);
 				
-				pesonalInfoLayout.addView(view);
-			}
+				personalInfoLayout.addView(view);
+			} 
 		}
 		
 		//Functional Role
 		List<QueryInfoItem> functionalRoleList = queryInfo.getFunctionalRoles();
 		setInfoDetailButton(functionalRoleList, personal, null);
+		
+		int childCount = personalInfoLayout.getChildCount();
+		personalLayout.setVisibility((childCount == 0) ? View.GONE : View.VISIBLE);
 	}
 	
 	
@@ -569,18 +575,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setInfoDetailButton(newsTriggersList, employer, null);
 		
-		//DateRange
-		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
-		setInfoDetailButton(dateRangeList, employer, null);
-		
-		//Companies
-		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
-		setInfoDetailButton(companiesList, employer, null);
-		
-		//SavedCompanies
-		List<QueryInfoItem> savedCompanies = queryInfo.getSavedCompany();
-		setInfoDetailButton(savedCompanies, employer, null);
-		
+		Log.v("silen", "0value = ");
 		//EventSearchKeywords
 		if (null != queryInfo.getEventSearchKeywords()) {
 			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
@@ -589,6 +584,58 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				setEventSearchKeywordsButton(eventSearchKeywords, type);
 			}
 		}
+		
+		//DateRange
+		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
+		setInfoDetailButton(dateRangeList, employer, null);
+		
+//		//Companies
+//		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
+//		setInfoDetailButton(companiesList, employer, null);
+		
+		//Companies
+		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
+		if (!companySearchKeywords.isEmpty()) {
+			
+			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
+			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+			TextView textView = (TextView) view.findViewById(R.id.text);
+			
+			buttonLayout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					
+					employerInfoLayout.removeView(view);
+					Constant.COMPANY_SEARCH_KEYWORDS = "";
+					
+					List<FilterItem> companyTypes = mFilters.getCompanyTypesFromCompany();
+					for (int i = 0; i < companyTypes.size(); i ++) {
+						companyTypes.get(i).setChecked(i == 2 ? true : false);
+					}
+					
+					PAGENUM = 1;
+					searchAdvancedPersons(false);
+					
+				}
+				
+			});
+			
+			textView.setText(companySearchKeywords);
+			
+			CommonUtil.setFilterMaxWith(textView);
+			
+			employerInfoLayout.addView(view);
+		}
+		
+		
+		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
+		setInfoDetailButton(companiesList, employer, null);
+		
+		//SavedCompanies
+		List<QueryInfoItem> savedCompanies = queryInfo.getSavedCompany();
+		setInfoDetailButton(savedCompanies, employer, null);
+		
 		
 		//LocationCode
 		List<QueryInfoItem> locationList = queryInfo.getLocationCode();
@@ -709,6 +756,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				searchAdvancedPersons(false);
 			}
 		});
+		
+		Log.v("silen", "value = " + value);
 		
 		textView.setText(value);
 		

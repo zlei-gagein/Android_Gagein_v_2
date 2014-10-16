@@ -49,7 +49,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private TextView showDetailsTx;
 	private TextView sortByText;
 	private LinearLayout sortByDetailLayout;
-	private AutoNewLineLayout pesonalInfoLayout;
+	private LinearLayout personalLayout;
+	private AutoNewLineLayout personalInfoLayout;
 	private AutoNewLineLayout employerInfoLayout;
 	private XListView listView;
 	private Boolean showDetails = false;
@@ -104,7 +105,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		showDetailsTx = (TextView) findViewById(R.id.showDetails);
 		sortByText = (TextView) findViewById(R.id.sortBy);
 		sortByDetailLayout = (LinearLayout) findViewById(R.id.sortByDetailLayout);
-		pesonalInfoLayout = (AutoNewLineLayout) findViewById(R.id.pesonalInfoLayout);
+		personalLayout = (LinearLayout) findViewById(R.id.personalLayout);
+		personalInfoLayout = (AutoNewLineLayout) findViewById(R.id.pesonalInfoLayout);
 		employerInfoLayout = (AutoNewLineLayout) findViewById(R.id.employerInfoLayout);
 		listView = (XListView) findViewById(R.id.listView);
 		emptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
@@ -255,7 +257,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		queryInfo = parser.parserQueryInfo(false);
 		
 		//set query info layout
-		pesonalInfoLayout.removeAllViews();
+		personalInfoLayout.removeAllViews();
 		employerInfoLayout.removeAllViews();
 		setPersonalInfoLayout();
 		setEmployerInfoLayout();
@@ -386,7 +388,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 						if (type.equalsIgnoreCase(employer)) {
 							employerInfoLayout.removeView(view);
 						} else if (type.equalsIgnoreCase(personal)) {
-							pesonalInfoLayout.removeView(view);
+							personalInfoLayout.removeView(view);
 						}
 						// 数据删除
 						Log.v("silen", "delte - queryType = " + queryType);
@@ -483,7 +485,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				if (type.equalsIgnoreCase(employer)) {
 					employerInfoLayout.addView(view);
 				} else if (type.equalsIgnoreCase(personal)) {
-					pesonalInfoLayout.addView(view);
+					personalInfoLayout.addView(view);
 				}
 			}
 		}
@@ -525,7 +527,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			
 			CommonUtil.setFilterMaxWith(textView);
 			
-			pesonalInfoLayout.addView(view);
+			personalInfoLayout.addView(view);
 		}	
 		
 		//Job Level
@@ -565,7 +567,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				
 				CommonUtil.setFilterMaxWith(textView);
 				
-				pesonalInfoLayout.addView(view);
+				personalInfoLayout.addView(view);
 			}
 		}
 		
@@ -573,6 +575,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		List<QueryInfoItem> functionalRoleList = queryInfo.getFunctionalRoles();
 		setInfoDetailButton(functionalRoleList, personal, null);
 		
+		int childCount = personalInfoLayout.getChildCount();
+		personalLayout.setVisibility((childCount == 0) ? View.GONE : View.VISIBLE);
 	}
 	
 	
@@ -595,7 +599,41 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		List<QueryInfoItem> dateRangeList = queryInfo.getDateRange();
 		setInfoDetailButton(dateRangeList, employer, null);
 		
-		//Companies
+		String companySearchKeywords = queryInfo.getCompanySearchKeywords();
+		if (!companySearchKeywords.isEmpty()) {
+			
+			final View view = LayoutInflater.from(mContext).inflate(R.layout.sort_button, null);
+			LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.buttonLayout);
+			TextView textView = (TextView) view.findViewById(R.id.text);
+			
+			buttonLayout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					
+					employerInfoLayout.removeView(view);
+					Constant.COMPANY_SEARCH_KEYWORDS = "";
+					
+					List<FilterItem> companyTypes = mFilters.getCompanyTypesFromCompany();
+					for (int i = 0; i < companyTypes.size(); i ++) {
+						companyTypes.get(i).setChecked(i == 2 ? true : false);
+					}
+					
+					PAGENUM = 1;
+					searchAdvancedPersons(false);
+					
+				}
+				
+			});
+			
+			textView.setText(companySearchKeywords);
+			
+			CommonUtil.setFilterMaxWith(textView);
+			
+			employerInfoLayout.addView(view);
+		}
+		
+		
 		List<QueryInfoItem> companiesList = queryInfo.getCompaniesForPeople();
 		setInfoDetailButton(companiesList, employer, null);
 		

@@ -1,6 +1,7 @@
 package com.gagein.ui.tablet.settins;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,12 +15,14 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gagein.R;
 import com.gagein.component.dialog.CommonDialog;
 import com.gagein.component.dialog.RateDialog;
 import com.gagein.http.APIHttp;
+import com.gagein.model.PlanInfo;
 import com.gagein.ui.BaseFragment;
 import com.gagein.ui.main.LoginActivity;
 import com.gagein.util.CommonUtil;
@@ -27,6 +30,7 @@ import com.gagein.util.Constant;
 
 public class SettingsFragment extends BaseFragment implements OnClickListener{
 	
+	private Button switchAccount;
 	private Button myAccountBtn;
 	private Button newsFilterBtn;
 	private Button privacyPolicyBtn;
@@ -41,13 +45,19 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	private Button rateBtn;
 	private Button shareBtn;
 	private Button feedbackBtn;
-	private onNewsFilterSelectedListener newsFilterSelectedListener;
+	private LinearLayout switchPlanLayout;
+	private List<PlanInfo> planInfos = new ArrayList<PlanInfo>();
+	private OnSwitchAccountListener switchAccountListener;
 	private onMyAccountSelectedListener myAccountSelectedListener;
+	private onNewsFilterSelectedListener newsFilterSelectedListener;
 	private onPrivacyListener privacySelectedListener;
 	private onTermsListener termsSelectedListener;
 	private onShareListener shareListener;
 	private onFeedbackListener feedbackListener;
 	
+	public interface OnSwitchAccountListener {
+		public void onSwitchAccountListener();
+	}
 	public interface onFeedbackListener {
 		public void onFeedbackListener();
 	}
@@ -76,6 +86,11 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		
+		try {
+			switchAccountListener = (OnSwitchAccountListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "must implement switchAccountListener");
+		}
 		try {
 			feedbackListener = (onFeedbackListener) activity;
 		} catch (ClassCastException e) {
@@ -129,6 +144,7 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 		
 		setTitle(R.string.u_settings);
 		
+		switchAccount = (Button) view.findViewById(R.id.switchAccount);
 		myAccountBtn = (Button) view.findViewById(R.id.myAccountBtn);
 		newsFilterBtn = (Button) view.findViewById(R.id.newsFilterBtn);
 		privacyPolicyBtn = (Button) view.findViewById(R.id.privacyPolicyBtn);
@@ -141,6 +157,7 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 		rateBtn = (Button) view.findViewById(R.id.rateBtn);
 		shareBtn = (Button) view.findViewById(R.id.shareBtn);
 		feedbackBtn = (Button) view.findViewById(R.id.feedbackBtn);
+		switchPlanLayout = (LinearLayout) view.findViewById(R.id.switchPlanLayout);
 	}
 	
 	@Override
@@ -148,13 +165,16 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 		super.initData();
 //		version.setText(CommonUtil.getVersion(getActivity()));
 		
-		Calendar calendar = Calendar.getInstance();
 		copyright.setText("© 2014 Gagein, Inc.");
 		versionCode.setText("Version " + CommonUtil.getVersion(mContext));
+		
+		planInfos = CommonUtil.readPlanInfos();
+		if (planInfos.size() > 1) switchPlanLayout.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	protected void setOnClickListener() {
+		switchAccount.setOnClickListener(this);
 		myAccountBtn.setOnClickListener(this);
 		newsFilterBtn.setOnClickListener(this);
 		privacyPolicyBtn.setOnClickListener(this);
@@ -170,85 +190,69 @@ public class SettingsFragment extends BaseFragment implements OnClickListener{
 	public void onClick(View v) {
 		
 		 if (v == loginOutBtn) {
-			 
-				final CommonDialog dialog = new CommonDialog(mContext);
-				dialog.setCancelable(false);
-				Window window = dialog.getWindow();
-				window.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				window.setGravity(Gravity.BOTTOM);
-				window.setWindowAnimations(R.style.dialog_animation);
-				dialog.showDialog("Log Out", new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						CommonUtil.clearLoginInfo(mContext);
-						dialog.dismissDialog();
-						Intent intent = new Intent();
-						intent.setClass(getActivity(), LoginActivity.class);
-						startActivity(intent);
-						getActivity().finish();
-					}
-				}, new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						dialog.dismissDialog();
-					}
-				});
-				
+			 final CommonDialog dialog = new CommonDialog(mContext);
+			 dialog.setCancelable(false);
+			 Window window = dialog.getWindow();
+			 window.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			 window.setGravity(Gravity.BOTTOM);
+			 window.setWindowAnimations(R.style.dialog_animation);
+			 dialog.showDialog("Log Out", new OnClickListener() {
+				 
+				 @Override
+				 public void onClick(View v) {
+					 CommonUtil.clearLoginInfo(mContext);
+					 dialog.dismissDialog();
+					 Intent intent = new Intent();
+					 intent.setClass(getActivity(), LoginActivity.class);
+					 startActivity(intent);
+					 getActivity().finish();
+				 }
+			 }, new OnClickListener() {
+				 
+				 @Override
+				 public void onClick(View v) {
+					 dialog.dismissDialog();
+				 }
+			 });
 		} else if (v == rateBtn) {
-			
 			RateDialog dialog = new RateDialog(mContext);
 			dialog.showDialog();
-			
 		} else {
-			
 			resetAllButton();
-			
-			if (v == myAccountBtn) {
-				
+			if (v == switchAccount) {
+				setSelectedButton(switchAccount);
+				switchAccountListener.onSwitchAccountListener();
+			} else if (v == myAccountBtn) {
 				setSelectedButton(myAccountBtn);
-				
 				myAccountSelectedListener.onMyAccountClickListener();
-				
 			} else if (v == newsFilterBtn) {
-				
 				setSelectedButton(newsFilterBtn);
-				
 				newsFilterSelectedListener.onNewsFilterClickListener();
-				
 			} else if (v == privacyPolicyBtn) {
-				
 				setSelectedButton(privacyPolicyBtn);
 				Constant.URL = APIHttp.serverURL + "/html/privacy.html";
 				privacySelectedListener.onPrivacyClickListener();
-				
 			} else if (v == termsBtn) {
-				
 				setSelectedButton(termsBtn);
 				Constant.URL = APIHttp.serverURL + "/html/tos.html";
 				termsSelectedListener.onTermsClickListener();
-				
 			} else if (v == tutorialBtn) {
-				
 				tutorial = !tutorial;
 				tutorialBtn.setBackgroundResource(tutorial ? R.drawable.tutorial_on : R.drawable.tutorial_off);
-				
 			} else if (v == shareBtn) {
-				
 				setSelectedButton(shareBtn);
 				shareListener.onShareListener();
-				
 			} else if (v == feedbackBtn) {
-				
 				setSelectedButton(feedbackBtn);
 				feedbackListener.onFeedbackListener();
-				
 			}
 		}
 	}
 	
 	private void resetAllButton() {
+		
+		switchAccount.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+		switchAccount.setTextColor(mContext.getResources().getColor(R.color.text_dark));
 		
 		myAccountBtn.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 		myAccountBtn.setTextColor(mContext.getResources().getColor(R.color.text_dark));

@@ -28,7 +28,6 @@ import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
 import com.gagein.model.Group;
 import com.gagein.ui.companies.CompaniesActivity;
-import com.gagein.ui.tablet.companies.CompaniesFragment;
 import com.gagein.ui.tablet.companies.CompaniesTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;

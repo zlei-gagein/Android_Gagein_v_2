@@ -380,6 +380,10 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 			transaction.hide(newsFilterFragment);
 		}
 		
+		if (null != filterNewsFragment) {
+			transaction.hide(filterNewsFragment);
+		}
+		
 		if (null != competitorFilterIndustryFragment) {
 			transaction.hide(competitorFilterIndustryFragment);
 		}
@@ -560,4 +564,25 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 	public void onRefreshCompetitors() {
 		companyFragment.refreshCompetitorsForFilter();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		companyFragment.resume();
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,6 +21,7 @@ import com.gagein.model.SocialProfile;
 import com.gagein.util.ActivityHelper;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class SearchPersonFilterAdapter extends BaseAdapter {
 	
@@ -79,6 +80,7 @@ public class SearchPersonFilterAdapter extends BaseAdapter {
 				final SocialProfile socialProfile = listSocialProfiles.get(i);
 				ImageView image = (ImageView) view.findViewById(R.id.image);
 				String type = socialProfile.capitalizedType();
+				if (type.equalsIgnoreCase("Google plus")) break;
 				setSocialImageView(type, image);
 				image.setOnClickListener(new OnClickListener() {
 					
@@ -104,7 +106,7 @@ public class SearchPersonFilterAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View arg0) {
-				ActivityHelper.startWebActivity(CommonUtil.jointPersonNameAndCompanyNameAndJobTitle(person.name, person.company.name, person.orgTitle), mContext);
+				ActivityHelper.startWebActivity(CommonUtil.jointPersonNameAndCompanyNameAndJobTitle(person.fullName, person.company.name, person.orgTitle), mContext);
 			}
 		});
 		return convertView;
@@ -127,7 +129,7 @@ public class SearchPersonFilterAdapter extends BaseAdapter {
 			image.setBackgroundResource(R.drawable.yammer);
 		} else if (type.trim().equalsIgnoreCase(Constant.LINKEDIN)) {
 			image.setBackgroundResource(R.drawable.linkedin);
-		} else if (type.trim().equalsIgnoreCase(Constant.SLIDESHARE)) {//TODO
+		} else if (type.trim().equalsIgnoreCase(Constant.SLIDESHARE)) {
 			image.setBackgroundResource(R.drawable.salesforce_button);
 		} else if (type.trim().equalsIgnoreCase(Constant.SALESFORCE)) {
 			image.setBackgroundResource(R.drawable.salesforce_button);
@@ -135,7 +137,6 @@ public class SearchPersonFilterAdapter extends BaseAdapter {
 	}
 	
 	public final class ViewHolder {
-		
 		public ImageView image;
 		public TextView name;
 		public TextView jobTitle;

@@ -1,6 +1,7 @@
 package com.gagein.ui.tablet.news;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -142,18 +143,20 @@ public class FilterNewsFragment extends BaseFragment implements OnItemClickListe
 						allTriggers.name = "All Triggers";
 						agents.add(allTriggers);
 						
+						List<Agent> allAgents = new ArrayList<Agent>();
 						for (Object obj : items) {
 							Agent agent = (Agent)obj;
 							if (agent.checked) {
-								agents.add(agent);
+								allAgents.add(agent);
 							}
 						}
 						Boolean isAllChecked = true;
-						for (int i = 0; i < agents.size(); i ++) {
-							if (i == 0) continue;
-							if (!agents.get(i).checked) isAllChecked = false;
+						for (int i = 0; i < allAgents.size(); i ++) {
+							if (!allAgents.get(i).checked) isAllChecked = false;
 						}
-						agents.get(0).checked = isAllChecked ? true : false; 
+						allAgents.get(0).checked = isAllChecked ? true : false; 
+						Collections.sort(allAgents);
+						agents.addAll(allAgents);
 						
 						Agent allNews = new Agent();
 						

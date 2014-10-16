@@ -61,17 +61,19 @@ public class FilterItem implements Serializable, Comparable<FilterItem>{
 			
 			@Override
 			public int compare(FilterItem lhs, FilterItem rhs) {
-				int lhsInt = Integer.parseInt(lhs.key.trim());
-				int rhsInt = Integer.parseInt(rhs.key.trim());
-				int comValue = 0;
-				if (lhsInt < rhsInt) {
-					comValue = -1;
-				} else if (lhsInt == rhsInt) {
-					comValue = 0;
-				} else {
-					comValue = 1;
-				}
-				return comValue;
+				
+				return lhs.value.trim().toUpperCase().compareTo(rhs.value.trim().toUpperCase());
+//				int lhsInt = Integer.parseInt(lhs.key.trim());
+//				int rhsInt = Integer.parseInt(rhs.key.trim());
+//				int comValue = 0;
+//				if (lhsInt < rhsInt) {
+//					comValue = -1;
+//				} else if (lhsInt == rhsInt) {
+//					comValue = 0;
+//				} else {
+//					comValue = 1;
+//				}
+//				return comValue;
 			}
 		};
 	}

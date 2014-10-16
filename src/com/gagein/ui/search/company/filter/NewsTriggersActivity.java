@@ -1,6 +1,7 @@
 package com.gagein.ui.search.company.filter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -104,6 +105,8 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
+		
+		Collections.sort(mNewsTriggers);
 		
 		Boolean allChecked = true;
 		for (int i = 0; i < mNewsTriggers.size() ; i++) {

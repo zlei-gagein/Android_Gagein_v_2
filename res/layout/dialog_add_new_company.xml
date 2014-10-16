@@ -56,8 +56,6 @@
         android:ellipsize="end"
         android:hint="@string/company_website"
         android:padding="10dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:singleLine="true"
         android:textColor="@color/text_dark"
         android:textColorHint="#D5D5D8"

@@ -1,9 +1,11 @@
 package com.gagein.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -43,6 +45,7 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 	protected Button leftBtn;
 	protected ImageView leftImageBtn;
 	protected ShareDialog shareDialog;
+	public static final String INDENT_EXTRA_DATA_KEY = "INDENT_BUNDLE_DATA_KEY";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,6 +143,22 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 		if (null != rightImageBtn2) rightImageBtn2.setOnClickListener(this);
 		if (null != leftBtn) leftBtn.setOnClickListener(this);
 		if (null != leftImageBtn) leftImageBtn.setOnClickListener(this);
+	}
+	
+	/**simple method for activity starting */
+	protected final void startActivitySimple(Class<?> aActivityClass) {
+		startActivityWithData(aActivityClass, null);
+	}
+	
+	/** start activity with data */
+	protected final void startActivityWithData(Class<?> aActivityClass, Object aData) {
+		if (aActivityClass != null && Activity.class.isAssignableFrom(aActivityClass)) {
+			Intent intent = new Intent(mContext, aActivityClass);
+			if (aData != null && aData instanceof Serializable) {
+				intent.putExtra(INDENT_EXTRA_DATA_KEY, (Serializable)aData);
+			}
+			startActivity(intent);
+		}
 	}
 	
 	protected void showConnectionError(Context mContext) {

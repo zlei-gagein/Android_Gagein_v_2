@@ -79,9 +79,9 @@ public class ShareActivity extends BaseActivity {
 		
 	}
 	
-	private void setReferalResultValue (int freeMonthLeft, int freeMonthTotal, int coworkerCount) {
+	private void setReferalResultValue (int freeDaysLeft, int freeMonthTotal, int coworkerCount) {
 		
-		freeMonthLeftTx.setText(freeMonthLeft + "");
+		freeMonthLeftTx.setText(freeDaysLeft + "");
 		freeMonthTotalTx.setText(freeMonthTotal + "");
 		coworkerCountTx.setText(coworkerCount + "");
 		
@@ -127,10 +127,10 @@ public class ShareActivity extends BaseActivity {
 					
 					wholeLayout.setVisibility(View.VISIBLE);
 					
-					int freeMonthLeft = parser.data().optInt("free_month_left");
+					int freeDaysLeft = parser.data().optInt("free_days_left");
 					int freeMonthTotal = parser.data().optInt("free_month_total");
 					int coworkerCount = parser.data().optInt("coworker_count");
-					setReferalResultValue(freeMonthLeft, freeMonthTotal, coworkerCount);
+					setReferalResultValue(freeDaysLeft, freeMonthTotal, coworkerCount);
 					
 				} else {
 					

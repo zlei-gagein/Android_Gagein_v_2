@@ -153,10 +153,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		
 		for (int i = 0; i < companyTypes.size(); i ++) {
 			
-			Log.v("silen", "companyTypes.Key = " + companyTypes.get(i).getKey());
-			Log.v("silen", "companyTypes.Value = " + companyTypes.get(i).getValue());
-			Log.v("silen", "companyTypes.getChecked = " + companyTypes.get(i).getChecked());
-			
 			if (companyTypes.get(i).getValue().equalsIgnoreCase("Specific Companies")) {
 				if (companyTypes.get(i).getChecked()) {
 					savedSearchLayout.setVisibility(View.VISIBLE);
@@ -208,6 +204,27 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				
 			}
 			
+			if (position == 2) {
+				
+				List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+				String requestStr = requestDataList.get(0);
+				String haveSelectCondition = requestDataList.get(1);
+				Log.v("silen", "requestStr = " + requestStr);
+				Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+				
+				if (haveSelectCondition.equalsIgnoreCase("false")) {
+					
+					showShortToast("You have to enter in search criteria! Try again.");
+					return;
+					
+				} else {
+					
+					onSearchFromCompanies.onSearchFromCompanies();
+					
+				}
+				
+			}
+			
 			for (int i = 0; i < companyTypes.size(); i ++) {
 				companyTypes.get(i).setChecked(false);
 			}
@@ -219,24 +236,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		if (position == 0) {
 			
 			onSearchFromCompanies.onSearchFromCompanies();
-			
-		} else if (position == 2) {
-			
-			List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
-			String requestStr = requestDataList.get(0);
-			String haveSelectCondition = requestDataList.get(1);
-			Log.v("silen", "requestStr = " + requestStr);
-			Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
-			
-			if (haveSelectCondition.equalsIgnoreCase("false")) {
-				
-				showShortToast("You have to enter in search criteria! Try again.");
-				
-			} else {
-				
-				onSearchFromCompanies.onSearchFromCompanies();
-				
-			}
 			
 		}
 	}

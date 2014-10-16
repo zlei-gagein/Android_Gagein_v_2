@@ -77,7 +77,7 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 		super.initView();
 		
 		setTitle(R.string.companies_filters);
-		setLeftButton(R.string.cancel);
+		setLeftImageButton(R.drawable.back_arrow);
 		
 		listView = (ListView) view.findViewById(R.id.listView);
 		
@@ -107,7 +107,7 @@ public class FilterFragment extends BaseFragment implements OnItemClickListener{
 	public void onClick(View v) {
 		super.onClick(v);
 		
-		if (v == leftBtn) {
+		if (v == leftImageBtn) {
 			
 			onFilterCancle.onFilterCancle();
 			

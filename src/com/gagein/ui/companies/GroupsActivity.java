@@ -21,7 +21,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.adapter.GroupAdapter;
-import com.gagein.component.dialog.NewGroupDialog;
+import com.gagein.component.dialog.AddNewGroupDialog;
 import com.gagein.component.xlistview.XListView;
 import com.gagein.component.xlistview.XListView.IXListViewListener;
 import com.gagein.http.APIHttpMetadata;
@@ -30,6 +30,7 @@ import com.gagein.model.Company;
 import com.gagein.model.DataPage;
 import com.gagein.model.Group;
 import com.gagein.ui.main.BaseActivity;
+import com.gagein.ui.tablet.companies.CompaniesTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 import com.gagein.util.Log;
@@ -43,6 +44,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 	private List<Company> pendingCompanies = new ArrayList<Company>();
 	private LinearLayout pendingLayout;
 	private Button pending;
+	private Boolean isFirstCreate = true;
 	
 	@Override
 	protected List<String> observeNotifications() {
@@ -67,6 +69,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 		} else if (actionName.equals(Constant.BROADCAST_ADD_NEW_COMPANIES)) {
 			
 			getPendingCompany();
+			getAllCompanyGroups(false, false);
 			
 		} else if (actionName.equals(Constant.BROADCAST_ADDED_PENDING_COMPANY)) {
 			
@@ -134,6 +137,24 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	protected void setData() {
 		super.setData();
+		
+		if (isFirstCreate) {
+			
+			isFirstCreate = !isFirstCreate;
+			
+			Group group = null;
+			for (int i = 0; i < groups.size(); i++) {
+				if (groups.get(i).getMogid().equalsIgnoreCase("-10")) {
+					group = groups.get(i);
+				}
+			}
+			Intent intent = new Intent();
+			intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompaniesTabletActivity.class : CompaniesActivity.class);
+			intent.putExtra(Constant.GROUP, group);
+			mContext.startActivity(intent);
+			
+			Constant.currentGroup = group;
+		}
 		
 		setEditButtonVisible();
 		
@@ -284,7 +305,7 @@ public class GroupsActivity extends BaseActivity implements OnItemClickListener,
 			adapter.setEdit(isEdit);
 			adapter.notifyDataSetChanged();
 			
-			NewGroupDialog dialog = new NewGroupDialog(mContext, Constant.NEW_GROUP_ONLY);
+			AddNewGroupDialog dialog = new AddNewGroupDialog(mContext, Constant.NEW_GROUP_ONLY);
 			dialog.showDialog();
 			
 		} else if (v == rightBtn) {

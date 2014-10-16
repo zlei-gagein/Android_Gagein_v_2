@@ -22,7 +22,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.gagein.R;
 import com.gagein.adapter.AddToGroupAdapter;
-import com.gagein.component.dialog.NewGroupDialog;
+import com.gagein.component.dialog.AddNewGroupDialog;
 import com.gagein.http.APIParser;
 import com.gagein.model.DataPage;
 import com.gagein.model.Group;
@@ -165,7 +165,7 @@ public class AddToGroupActivity extends BaseActivity implements OnItemClickListe
 			
 		} else if (v == newGroup) {
 			
-			NewGroupDialog dialog = new NewGroupDialog(mContext, Constant.NEW_GROUP_AND_FOLLOW);
+			AddNewGroupDialog dialog = new AddNewGroupDialog(mContext, Constant.NEW_GROUP_AND_FOLLOW);
 			dialog.showDialog();
 			
 		}

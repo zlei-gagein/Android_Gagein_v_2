@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -577,8 +578,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 				}
 			});
 			
-			CommonUtil.showSoftKeyBoard(300);
-			
 		} else if (v == companiesBtn) {
 			
 			isCompany = true;
@@ -700,6 +699,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			mApiHttp.addNewCompanyWithNameAndWebsite(name , website, false, new Listener<JSONObject>() {
 
+				@SuppressLint("DefaultLocale")
 				@Override
 				public void onResponse(JSONObject jsonObject) {
 					CommonUtil.dissmissLoadingDialog();

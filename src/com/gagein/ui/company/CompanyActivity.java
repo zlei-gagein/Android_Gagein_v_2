@@ -130,6 +130,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private TextView folScoreDay;
 	private TextView folScoreWeek;
 	private TextView folScoreMonth;
+	private TextView noLongerOperating;
+	private LinearLayout layout;
 	
 	@Override
 	protected List<String> observeNotifications() {
@@ -306,6 +308,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		folScoreDay = (TextView) findViewById(R.id.folScoreDay);
 		folScoreWeek = (TextView) findViewById(R.id.folScoreWeek);
 		folScoreMonth = (TextView) findViewById(R.id.folScoreMonth);
+		noLongerOperating = (TextView) findViewById(R.id.noLongerOperating);
+		layout = (LinearLayout) findViewById(R.id.layout);
 		
 		newsList.setPullLoadEnable(false);
 		aboutList.setPullLoadEnable(false);
@@ -514,6 +518,33 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		setRightButton(mCompany.followed ? R.string.unfollow : R.string.follow);
 	}
 	
+	public void getCompetitorsFilter() {
+		mApiHttp.getSimilarCompanies(mCompanyId, industryid, requestPageNumber, competitorSortBy,  new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+						
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					
+					dpCompetitors = parser.parseGetSimilarCompanies();
+					competitorFacet = dpCompetitors.facet;
+					if (competitorFacet != null) {
+						competitorIndustries = competitorFacet.industries;
+					}
+					
+					Constant.currentCompetitorIndustries = competitorIndustries;
+				}
+			}
+						
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+			}
+		});
+	}
+	
 	
 	public void getCompetitors(final Boolean loadMore) {
 		
@@ -536,9 +567,10 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 								competitorIndustries = competitorFacet.industries;
 							}
 							
-							if (Constant.currentCompetitorIndustries.size() <= 0) {
-								Constant.currentCompetitorIndustries = competitorIndustries;
-							}
+							//TODO
+//							if (Constant.currentCompetitorIndustries.size() <= 0) {
+//							}
+							Constant.currentCompetitorIndustries = competitorIndustries;
 							
 							List<Object> items = dpCompetitors.items;
 							if (items != null) {
@@ -600,8 +632,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		
 		if (!loadMore) showLoadingDialog();
 		mApiHttp.getCompanyPeople(mCompanyId, employeesPageNumber, Constant.PEOPLE_SORT_BY,
-				getFilterIds(Constant.currentJobLevelForCompanyPeopleFilter), 
 				getFilterIds(Constant.currentFunctionRoleForCompanyPeopleFilter), 
+				getFilterIds(Constant.currentJobLevelForCompanyPeopleFilter), 
 				getFilterIds(Constant.currentLinkedProfileForCompanyPeopleFilter), new Listener<JSONObject>() {
 
 					@Override
@@ -845,6 +877,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 						@Override
 						public void onResponse(JSONObject response) {
 							
+							dismissLoadingDialog();
+							
 							if (!loadMore) updates.clear();
 							newsList.setPullLoadEnable(false);
 							
@@ -982,12 +1016,16 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 											noNewsPt.setText(noNewsPromot);
 										} else {
 											if (mCompany.followed) {
-												String provisionPtStr = "This company is waiting to be provisioned.";
+												String provisionPtStr = "This company is no longer operating.";
 												provisionPt.setText(provisionPtStr);
 												provisionBottomLayout.setVisibility(View.GONE);
 												provisionedLayout.setVisibility(View.VISIBLE);
+												layout.setVisibility(View.GONE);
+												noLongerOperating.setText("This company is no longer operating.");
+												noLongerOperating.setVisibility(View.VISIBLE);
+												return;
 											} else {
-												String provisionPtStr = "This company is waiting to be provisioned. Help speed up processing.";
+												String provisionPtStr = "This company is no longer\noperating.";
 												provisionPt.setText(provisionPtStr);
 												provisionBottomLayout.setVisibility(View.GONE);
 												provisionedLayout.setVisibility(View.VISIBLE);
@@ -998,11 +1036,11 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 										provisionPt.setText(String.format(provisionPtStr,  (!TextUtils.isEmpty(provisionDateStr) ? provisionDateStr : "Jun 8 by 7:12am")));
 										provisionedLayout.setVisibility(View.VISIBLE);
 									}
-									
 								}
+								
+								layout.setVisibility(View.VISIBLE);
 							}
 							
-							dismissLoadingDialog();
 						}
 					}, new Response.ErrorListener() {
 
@@ -1074,17 +1112,12 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
-			
 			finish();
-			
 		} else if (v == rightBtn) {
 			
 			if (!mCompany.followed) {
-				
 				followCompany();
-				
 			} else {
-			
 				String text = mCompany.followed ? mContext.getResources().getString(R.string.unfollow) : mContext.getResources().getString(R.string.follow);
 				final CommonDialog dialog = new CommonDialog(mContext);
 				dialog.setCancelable(false);
@@ -1203,6 +1236,18 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			startActivitySimple(ShareActivity.class);
 			
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if (typeChecked == typeCompetitors) {
+			if (Constant.currentCompetitorIndustries.size() == 0) {
+				getCompetitorsFilter();
+			}
+		}
+		
 	}
 
 	private void setSortByVisible(int visible) {

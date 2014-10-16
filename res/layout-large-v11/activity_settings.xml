@@ -30,6 +30,30 @@
 		        android:layout_marginTop="@dimen/margin_top"
 		        android:background="@color/white">
 		        
+		        <LinearLayout 
+                    android:id="@+id/switchPlanLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                    
+                    <include layout="@layout/lines" />
+
+	                <Button
+	                    android:id="@+id/switchAccount"
+	                    android:layout_width="fill_parent"
+			            android:layout_height="@dimen/edit_hight"
+			            android:paddingLeft="@dimen/padingleft"
+			            android:text="@string/switch_accounts"
+			            android:textColor="@color/white"
+			            android:textSize="18sp"
+			            android:background="@color/yellow"
+			            android:gravity="left|center_vertical"
+			            android:paddingRight="@dimen/marginright" />
+                    
+                </LinearLayout>
+		        
 		        <include layout="@layout/lines"/>
 		        
 		        <Button 
@@ -38,11 +62,11 @@
 		            android:layout_height="@dimen/edit_hight"
 		            android:paddingLeft="@dimen/padingleft"
 		            android:text="@string/u_account"
-		            android:textColor="@color/white"
+		            android:textColor="@color/text_dark"
 		            android:textSize="18sp"
 		            android:gravity="left|center_vertical"
 		            android:paddingRight="@dimen/marginright"
-		            android:background="@color/yellow"
+		            android:background="@null"
 		            />
 		        
 		    	<include layout="@layout/lines"/>

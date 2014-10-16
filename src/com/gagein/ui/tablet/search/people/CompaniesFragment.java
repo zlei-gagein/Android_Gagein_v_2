@@ -281,6 +281,8 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					specificLayout.setVisibility(View.VISIBLE);
 					setCompanyTypesSelected(position);
 					
+					return;
+					
 				} else {
 					
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
@@ -289,6 +291,21 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 							showShortToast("You have no saved searches");
 							getSavedCompany(false);
 							return;
+						}
+						
+						if (position == 4) {
+							
+							List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+							String requestStr = requestDataList.get(0);
+							String haveSelectCondition = requestDataList.get(1);
+							Log.v("silen", "requestStr = " + requestStr);
+							Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+							
+							if (haveSelectCondition.equalsIgnoreCase("false")) {
+								showShortToast("You have to enter in search criteria! Try again.");
+								return;
+							}
+							
 						}
 						
 						for (int i = 0; i < mSavedSearchs.size(); i ++) {

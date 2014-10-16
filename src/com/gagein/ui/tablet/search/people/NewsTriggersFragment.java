@@ -1,6 +1,7 @@
 package com.gagein.ui.tablet.search.people;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -148,6 +149,8 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
+		
+		Collections.sort(mNewsTriggers);
 		
 		Boolean allChecked = true;
 		for (int i = 0; i < mNewsTriggers.size() ; i++) {

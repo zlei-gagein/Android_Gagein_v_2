@@ -25,8 +25,6 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:text="@string/enter_name_for_group"
         android:textColor="@color/text_dark"
         android:textSize="16sp" />
