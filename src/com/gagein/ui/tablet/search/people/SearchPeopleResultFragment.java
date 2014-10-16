@@ -69,6 +69,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 	private OnHideLeftLayout onHideLeftLayout;
 	private LinearLayout wholeLayout;
 	private LinearLayout personalLayout;
+	private LinearLayout employerLayout;
 	private TextView rankText;
 	private OnUpdateFilterStatusForPeople onUpdateFilterStatusForPeople;
 	
@@ -122,6 +123,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		emptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
 		wholeLayout = (LinearLayout) view.findViewById(R.id.wholeLayout);
 		personalLayout = (LinearLayout) view.findViewById(R.id.personalLayout);
+		employerLayout = (LinearLayout) view.findViewById(R.id.employerLayout);
 		rankText = (TextView) view.findViewById(R.id.rank);
 		
 		CommonUtil.setLayoutWith(wholeLayout, getActivity());
@@ -385,8 +387,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 							
 						} else if (queryType.equalsIgnoreCase("search_company_for_type")) {
 							
-							if (id.trim().equalsIgnoreCase("4")) return;
-							List<FilterItem> companiesList = mFilters.getCompanyTypesFromCompany();
+//							if (id.trim().equalsIgnoreCase("4")) return;
+							List<FilterItem> companiesList = mFilters.getCompanyTypesFromPeople();
 							deleteFilters(id, companiesList);
 							
 						} else if (queryType.equalsIgnoreCase("rank")) {
@@ -575,7 +577,6 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		List<QueryInfoItem> newsTriggersList = queryInfo.getNewsTriggers();
 		setInfoDetailButton(newsTriggersList, employer, null);
 		
-		Log.v("silen", "0value = ");
 		//EventSearchKeywords
 		if (null != queryInfo.getEventSearchKeywords()) {
 			String eventSearchKeywords = queryInfo.getEventSearchKeywords().getName();
@@ -678,6 +679,8 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
 		setInfoDetailButton(fiscalMonthList, employer, null);
 		
+		int childCount = employerInfoLayout.getChildCount();
+		employerLayout.setVisibility((childCount == 0) ? View.GONE : View.VISIBLE);
 	}
 	
 	/**

@@ -50,6 +50,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private TextView sortByText;
 	private LinearLayout sortByDetailLayout;
 	private LinearLayout personalLayout;
+	private LinearLayout employerLayout;
 	private AutoNewLineLayout personalInfoLayout;
 	private AutoNewLineLayout employerInfoLayout;
 	private XListView listView;
@@ -106,6 +107,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		sortByText = (TextView) findViewById(R.id.sortBy);
 		sortByDetailLayout = (LinearLayout) findViewById(R.id.sortByDetailLayout);
 		personalLayout = (LinearLayout) findViewById(R.id.personalLayout);
+		employerLayout = (LinearLayout) findViewById(R.id.employerLayout);
 		personalInfoLayout = (AutoNewLineLayout) findViewById(R.id.pesonalInfoLayout);
 		employerInfoLayout = (AutoNewLineLayout) findViewById(R.id.employerInfoLayout);
 		listView = (XListView) findViewById(R.id.listView);
@@ -682,6 +684,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		List<QueryInfoItem> fiscalMonthList = queryInfo.getFiscalMonth();
 		setInfoDetailButton(fiscalMonthList, employer, null);
 		
+		int childCount = employerInfoLayout.getChildCount();
+		employerLayout.setVisibility((childCount == 0) ? View.GONE : View.VISIBLE);
 	}
 	
 	/**
