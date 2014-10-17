@@ -120,8 +120,22 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
+			back();
 			finish();
 		}
+	}
+	
+	private void back() {
+		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            //do something...
+        	back();
+         }
+         return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
