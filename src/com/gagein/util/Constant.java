@@ -76,6 +76,8 @@ public abstract class Constant {
 	
 	public static List<SavedSearch> locationSavedSearchs = new ArrayList<SavedSearch>();
 	
+	public static List<SavedSearch> SAVEDCOMPANIES = new ArrayList<SavedSearch>();
+	
 	public static String APP_VERSION_NAME;
 	
 	public static Facet currentFacet;

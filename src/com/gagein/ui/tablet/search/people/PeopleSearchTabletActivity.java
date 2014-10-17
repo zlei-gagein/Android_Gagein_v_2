@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -167,7 +166,6 @@ public class PeopleSearchTabletActivity extends BaseFragmentActivity implements 
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
 			
 			if (null != jobTitleFragment) jobTitleFragment.refreshAdapter();
 			if (null != jobLevelFragment) jobLevelFragment.refreshAdapter();

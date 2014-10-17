@@ -113,19 +113,22 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 					specificLayout.setVisibility(View.VISIBLE);
 					edit.setText(Constant.COMPANY_SEARCH_KEYWORDS);
 				}
+			} else if (companyTypes.get(i).getValue().equalsIgnoreCase("Saved Company Search")) {
+				if (companyTypes.get(i).getChecked()) {
+					savedSearchLayout.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 		
-//		if (mFilters.getSavedCompanies().size() == 0) {
-//		}
-		
-		getSavedCompany(false);
+		if (Constant.SAVEDCOMPANIES.size() == 0) {
+			getSavedCompany(false);
+		}
 		
 	}
 	
 	private void setSavedCompany() {
 		
-		companiesAdapter = new PeopleFilterCompaniesAdapter(mContext, mSavedSearchs);
+		companiesAdapter = new PeopleFilterCompaniesAdapter(mContext, Constant.SAVEDCOMPANIES);
 		savedListView.setAdapter(companiesAdapter);
 		CommonUtil.setListViewHeight(savedListView);
 		companiesAdapter.notifyDataSetChanged();
@@ -141,7 +144,7 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
-					if (!loadMore) mSavedSearchs.clear();
+//					if (!loadMore) mSavedSearchs.clear();
 					DataPage dataPage = parser.parseGetSavedSearch();
 					List<Object> items = dataPage.items;
 					if (items != null) {
@@ -163,6 +166,8 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 							savedCompanies.add(filterItem);
 							
 							mFilters.setSavedCompanies(savedCompanies);
+							
+							Constant.SAVEDCOMPANIES = mSavedSearchs;
 						}
 						
 						if (!loadMore) setSavedCompany();
@@ -196,7 +201,21 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 		super.onClick(v);
 		if (v == leftImageBtn) {
 			finish();
+			back();
 		}
+	}
+	
+	private void back() {
+		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            //do something...
+        	back();
+         }
+         return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override

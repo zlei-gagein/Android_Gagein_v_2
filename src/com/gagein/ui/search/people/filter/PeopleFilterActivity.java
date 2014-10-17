@@ -75,6 +75,7 @@ public class PeopleFilterActivity extends BaseActivity {
 			Constant.MFILTERS.getHeadquarters().clear();
 			Constant.MFILTERS.getJobTitles().clear();
 			Constant.MFILTERS.getLocations().clear();
+			Constant.SAVEDCOMPANIES.clear();
 		}
 		
 		Constant.REVERSE = false;

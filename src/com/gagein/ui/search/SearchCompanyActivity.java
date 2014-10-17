@@ -484,6 +484,11 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 			@Override
 			public void onClick(View arg0) {
 				
+				int filterButtonCount = companyInfoLayout.getChildCount();
+				if (filterButtonCount == 1) {
+					showShortToast("You have to enter in search criteria! Try again.");
+					return;
+				}
 				companyInfoLayout.removeView(view);
 				Constant.ALLWORDS_FOR_TRIGGERS = "";
 				
@@ -602,6 +607,11 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 				@Override
 				public void onClick(View arg0) {
 					
+					int filterButtonCount = companyInfoLayout.getChildCount();
+					if (filterButtonCount == 1) {
+						showShortToast("You have to enter in search criteria! Try again.");
+						return;
+					}
 					companyInfoLayout.removeView(view);
 					Constant.COMPANY_SEARCH_KEYWORDS = "";
 					

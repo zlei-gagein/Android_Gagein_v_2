@@ -469,6 +469,13 @@ public class SearchCompanyResultFragment extends BaseFragment implements OnItemC
 			
 			@Override
 			public void onClick(View arg0) {
+				
+				int filterButtonCount = companyInfoLayout.getChildCount();
+				if (filterButtonCount == 1) {
+					showShortToast("You have to enter in search criteria! Try again.");
+					return;
+				}
+				
 				companyInfoLayout.removeView(view);
 				//TODO 数据删除
 				Log.v("silen", "type = " + type);

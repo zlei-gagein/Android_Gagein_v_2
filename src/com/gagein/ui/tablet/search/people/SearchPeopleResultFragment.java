@@ -607,6 +607,11 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				@Override
 				public void onClick(View arg0) {
 					
+					int filterButtonCount = employerInfoLayout.getChildCount() + personalInfoLayout.getChildCount();
+					if (filterButtonCount == 1) {
+						showShortToast("You have to enter in search criteria! Try again.");
+						return;
+					}
 					employerInfoLayout.removeView(view);
 					Constant.COMPANY_SEARCH_KEYWORDS = "";
 					

@@ -71,7 +71,7 @@ public class CompanyNewsFilterFragment extends BaseFragment implements OnClickLi
 		super.initView();
 		
 		setRightButton(R.string.done);
-		setTitle(R.string.news_triggers);
+		setTitle(R.string.filters);
 		
 		newsBtn = (Button) view.findViewById(R.id.newsBtn);
 		news = (RelativeLayout) view.findViewById(R.id.news);

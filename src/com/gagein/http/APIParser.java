@@ -961,18 +961,35 @@ public class APIParser {
 				}
 			}
 		} else {
-			
-			if (fromCompany) {
-				List<FilterItem> companiesForCompanyList = mFilters.getCompanyTypesFromCompany();
-				for (int i = 0; i < companiesForCompanyList.size(); i++) {
-					if (i == companiesForCompanyList.size() - 1) companiesForCompanyList.get(i).setChecked(true);
+			if (null == friendlyInfo.optJSONArray("filter_saved_company_search")) {
+				if (!TextUtils.isEmpty(friendlyInfo.optString("company_search_keywords"))) {
+					if (fromCompany) {
+						List<FilterItem> companiesForCompanyList = mFilters.getCompanyTypesFromCompany();
+						for (int i = 0; i < companiesForCompanyList.size(); i++) {
+							if (i == companiesForCompanyList.size() - 2) companiesForCompanyList.get(i).setChecked(true);
+						}
+					} else {
+						List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
+						for (int i = 0; i < companiesForPeopleList.size(); i++) {
+							if (i == companiesForPeopleList.size() - 2) companiesForPeopleList.get(i).setChecked(true);
+						}
+					}
+					
+				} else {
+					if (fromCompany) {
+						List<FilterItem> companiesForCompanyList = mFilters.getCompanyTypesFromCompany();
+						for (int i = 0; i < companiesForCompanyList.size(); i++) {
+							if (i == companiesForCompanyList.size() - 1) companiesForCompanyList.get(i).setChecked(true);
+						}
+					} else {
+						List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
+						for (int i = 0; i < companiesForPeopleList.size(); i++) {
+							if (i == companiesForPeopleList.size() - 1) companiesForPeopleList.get(i).setChecked(true);
+						}
+					}
 				}
-			} else {
-				List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
-				for (int i = 0; i < companiesForPeopleList.size(); i++) {
-					if (i == companiesForPeopleList.size() - 1) companiesForPeopleList.get(i).setChecked(true);
-				}
-			}
+					
+			} 
 		}
 		
 		//EventSearchKeywords

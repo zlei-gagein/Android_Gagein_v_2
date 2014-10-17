@@ -201,7 +201,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
-					if (!loadMore) mSavedSearchs.clear();
+//					if (!loadMore) mSavedSearchs.clear();
 					DataPage dataPage = parser.parseGetSavedSearch();
 					List<Object> items = dataPage.items;
 					if (items != null) {
@@ -267,45 +267,33 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 			// when clicked saved company search...
 			Boolean checked = companyTypes.get(position).getChecked();
 			if (checked) {
-				
 				return;
-				
 			} else {// this item is not checked
 				
 				edit.setText("");
 				Constant.COMPANY_SEARCH_KEYWORDS = "";
 				
 				if (companyTypes.get(position).getValue().equalsIgnoreCase("Specific Companies")) {
-					
 					savedSearchLayout.setVisibility(View.GONE);
 					specificLayout.setVisibility(View.VISIBLE);
 					setCompanyTypesSelected(position);
-					
 					return;
-					
 				} else {
-					
 					if (companyTypes.get(position).getValue().equalsIgnoreCase("Saved Company Search")) {
-						
 						if (mSavedSearchs.size() == 0) {
 							showShortToast("You have no saved searches");
 							getSavedCompany(false);
 							return;
 						}
-						
 						if (position == 4) {
-							
 							List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
 							String requestStr = requestDataList.get(0);
 							String haveSelectCondition = requestDataList.get(1);
-							Log.v("silen", "requestStr = " + requestStr);
-							Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
 							
 							if (haveSelectCondition.equalsIgnoreCase("false")) {
 								showShortToast("You have to enter in search criteria! Try again.");
 								return;
 							}
-							
 						}
 						
 						for (int i = 0; i < mSavedSearchs.size(); i ++) {
@@ -325,19 +313,15 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 						
 						savedSearchLayout.setVisibility(View.VISIBLE);
 						specificLayout.setVisibility(View.GONE);
-						
 					} else {
-						
 						setCompanyTypesSelected(position);
 						
 						savedSearchLayout.setVisibility(View.GONE);
 						specificLayout.setVisibility(View.GONE);
-						
 					}
 				}
 				
 				if (position == 4) {
-					
 					List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
 					String requestStr = requestDataList.get(0);
 					String haveSelectCondition = requestDataList.get(1);
@@ -349,7 +333,6 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 					} else {
 						onSearchFromCompanies.onSearchFromCompanies();
 					}
-					
 				} else {
 					onSearchFromCompanies.onSearchFromCompanies();
 				}
