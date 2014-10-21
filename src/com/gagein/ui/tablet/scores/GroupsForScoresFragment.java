@@ -133,12 +133,20 @@ public class GroupsForScoresFragment extends BaseFragment implements OnItemClick
 										if (selectedGroup.getMogid().equalsIgnoreCase(groups.get(j).getMogid())) {
 											groups.get(j).selected = true;
 										}
-										
 									}
 								}
 							}
-							
 						}
+						
+						//TODO
+//						Boolean haveSelected = false;
+//						for (int i = 0; i < groups.size(); i++) {
+//							if (groups.get(i).selected) 
+//								haveSelected = true;
+//								break;
+//						}
+//						
+//						if (!haveSelected) groups.get(0).selected = true;
 						
 						setData();
 					}
