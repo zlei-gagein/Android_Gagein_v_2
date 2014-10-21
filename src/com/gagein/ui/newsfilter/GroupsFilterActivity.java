@@ -115,6 +115,15 @@ public class GroupsFilterActivity extends BaseActivity implements OnItemClickLis
 							
 						}
 						
+						Boolean haveSelected = false;
+						for (int i = 0; i < groups.size(); i++) {
+							if (groups.get(i).selected) 
+								haveSelected = true;
+								break;
+						}
+						
+						if (!haveSelected) groups.get(0).selected = true;
+						
 						setData();
 					}
 				} else {

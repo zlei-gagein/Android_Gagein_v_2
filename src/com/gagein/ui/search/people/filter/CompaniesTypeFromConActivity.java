@@ -122,6 +122,9 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 		
 		if (Constant.SAVEDCOMPANIES.size() == 0) {
 			getSavedCompany(false);
+		} else {
+			mSavedSearchs = Constant.SAVEDCOMPANIES;
+			setSavedCompany();
 		}
 		
 	}
@@ -200,20 +203,28 @@ public class CompaniesTypeFromConActivity extends BaseActivity implements OnItem
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
-			finish();
-			back();
+			if (back()) finish();
 		}
 	}
 	
-	private void back() {
+	private Boolean back() {
 		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+		for (int i = 0; i < companyTypes.size(); i++) {
+			if (companyTypes.get(i).getChecked() && i == 3) {
+				if (TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) {
+					showShortToast("You have to enter in search criteria! Try again.");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             //do something...
-        	back();
+        	if (!back()) return false;
          }
          return super.onKeyDown(keyCode, event);
 	}

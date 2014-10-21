@@ -44,7 +44,7 @@ public class EmployeeSizeActivity extends BaseActivity implements OnItemClickLis
 	protected void initData() {
 		super.initData();
 		mFilters = Constant.MFILTERS;
-		mEmployeeSizes = mFilters.getEmployeeSizeFromBuz();//TODO
+		mEmployeeSizes = mFilters.getEmployeeSizeFromBuz();
 		
 		adapter = new FilterAdapter(mContext, mEmployeeSizes);
 		listView.setAdapter(adapter);

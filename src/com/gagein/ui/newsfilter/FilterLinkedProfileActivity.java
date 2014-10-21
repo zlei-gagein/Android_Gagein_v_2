@@ -45,10 +45,14 @@ public class FilterLinkedProfileActivity extends BaseActivity implements OnItemC
 	protected void initData() {
 		super.initData();
 		
-		mFacet = Constant.currentFacet;
-		if (null == mFacet) return;
-		linkedProfiles = mFacet.linkedProfiles;
-		if (null == linkedProfiles) return;
+		if (Constant.currentLinkedProfileForCompanyPeopleFilter.size() > 0) {
+			linkedProfiles = Constant.currentLinkedProfileForCompanyPeopleFilter;
+		} else {
+			mFacet = Constant.currentFacet;
+			if (null == mFacet) return;
+			linkedProfiles = mFacet.linkedProfiles;
+			if (null == linkedProfiles) return;
+		}
 		
 		setData();
 	}

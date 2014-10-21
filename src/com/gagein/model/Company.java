@@ -243,8 +243,7 @@ public class Company extends DataModel implements Serializable, Comparable<Compa
 		this.websiteKey = aJSONObject.optString("websiteKey");
 		
 		// related company
-		JSONObject relatedComData = aJSONObject
-				.optJSONObject("related_company");
+		JSONObject relatedComData = aJSONObject.optJSONObject("related_company");
 		if (relatedComData != null) {
 			relatedCompany = new Company();
 			relatedCompany.parseData(relatedComData);

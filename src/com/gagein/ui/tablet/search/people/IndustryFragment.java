@@ -18,6 +18,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.Filters;
 import com.gagein.model.filter.Industry;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class IndustryFragment extends BaseFragment implements OnItemClickListener{
@@ -94,6 +95,8 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 		mFilters = Constant.MFILTERS;
 		mIndustries = mFilters.getIndustries();
 		
+		CommonUtil.setFilterToDefaultForIndustry(mIndustries);
+		
 		parentAdapter = new IndustryFilterAdapter(mContext, mIndustries);
 		setListViewHeight(parentAdapter, parentListView);
 		parentListView.setAdapter(parentAdapter);
@@ -118,6 +121,16 @@ public class IndustryFragment extends BaseFragment implements OnItemClickListene
 			childrenListView.setAdapter(childrenAdapter);
 			childrenAdapter.notifyDataSetChanged();
 			childrenAdapter.notifyDataSetInvalidated();
+		}
+		
+		Boolean haveSelectedChildren = false;
+		for (int i = 0; i < childrenIndustries.size(); i++) {
+			if (childrenIndustries.get(i).getChecked()) haveSelectedChildren = true;
+		}
+		if (!haveSelectedChildren) {
+			for (int i = 0; i < childrenIndustries.size(); i++) {
+				childrenIndustries.get(i).setChecked(i == 0 ? true : false);
+			}
 		}
 	}
 	

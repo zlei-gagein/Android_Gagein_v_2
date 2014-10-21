@@ -33,6 +33,7 @@ import com.gagein.ui.main.BaseActivity;
 import com.gagein.ui.tablet.company.CompanyTabletActivity;
 import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class ScoresActivity extends BaseActivity implements IXListViewListener, OnItemClickListener{
 	
@@ -48,6 +49,7 @@ public class ScoresActivity extends BaseActivity implements IXListViewListener, 
 	private int resultCodeForScoresSort = 22;
 	private LinearLayout emptyLayout;
 	private LinearLayout sortLayout;
+	private Boolean requestingData = true;
 	
 	@Override
 	public void handleNotifications(Context aContext, Intent intent) {
@@ -192,6 +194,7 @@ public class ScoresActivity extends BaseActivity implements IXListViewListener, 
 
 	@Override
 	public void onLoadMore() {
+		if (requestingData) return;
 		getCompaniesOfGroup(false, true, false);
 	}
 	
@@ -230,12 +233,13 @@ public class ScoresActivity extends BaseActivity implements IXListViewListener, 
 				groupIds.add(group.getMogid());
 			}
 		}
+		Log.v("silen", "groupIds.size() = " + groupIds.size());
 		
 		return groupIds;
 	}
 	
 	private void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore, Boolean refresh) {
-		
+		requestingData = true;
 		if (showDialog) showLoadingDialog();
 		if (refresh) nextPage = "";
 		
@@ -243,7 +247,7 @@ public class ScoresActivity extends BaseActivity implements IXListViewListener, 
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
-				
+				requestingData = false;
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
@@ -290,6 +294,7 @@ public class ScoresActivity extends BaseActivity implements IXListViewListener, 
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingData = false;
 				showConnectionError();
 			}
 		});

@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class RevenueSizeFragment extends BaseFragment implements OnItemClickListener{
@@ -86,6 +87,8 @@ public class RevenueSizeFragment extends BaseFragment implements OnItemClickList
 		
 		mFilters = Constant.MFILTERS;
 		mSalesVolumes = mFilters.getSalesVolumeFromBuz();
+		
+		CommonUtil.setFilterToDefault(mSalesVolumes);
 		
 		adapter = new FilterAdapter(mContext, mSalesVolumes);
 		listView.setAdapter(adapter);

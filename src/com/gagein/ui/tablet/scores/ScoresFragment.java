@@ -47,6 +47,7 @@ public class ScoresFragment extends BaseFragment implements OnClickListener, IXL
 	private ScoresAdapter adapter;
 	private LinearLayout emptyLayout;
 	private LinearLayout sortLayout;
+	private Boolean requestingData = true;
 	private OnGroupFilterClickListener onGroupFilterListener;
 	
 	
@@ -172,6 +173,7 @@ public class ScoresFragment extends BaseFragment implements OnClickListener, IXL
 
 	@Override
 	public void onLoadMore() {
+		if (requestingData) return;
 		getCompaniesOfGroup(false, true, false);
 	}
 	
@@ -206,7 +208,7 @@ public class ScoresFragment extends BaseFragment implements OnClickListener, IXL
 	}
 	
 	public void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore, Boolean refresh) {
-		
+		requestingData = true;
 		if (showDialog) showLoadingDialog(mContext);
 		if (refresh) nextPage = "";
 		
@@ -214,7 +216,7 @@ public class ScoresFragment extends BaseFragment implements OnClickListener, IXL
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
-				
+				requestingData = false;
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
@@ -261,6 +263,7 @@ public class ScoresFragment extends BaseFragment implements OnClickListener, IXL
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingData = false;
 				showConnectionError(mContext);
 			}
 		});

@@ -147,6 +147,8 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		mFilters = Constant.MFILTERS;
 		mNewsTriggers = mFilters.getNewsTriggers();
 		
+//		CommonUtil.setFilterToDefault(mNewsTriggers);
+		
 		Collections.sort(mNewsTriggers);
 		
 		Boolean allChecked = true;
@@ -591,7 +593,7 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 		
 		Boolean haveSelecked = false;
 		for (int i = 0; i < mNewsTriggers.size(); i ++) {
-			if (mNewsTriggers.get(i).getChecked()) {
+			if (mNewsTriggers.get(i).getChecked() && i != 0) {
 				haveSelecked = true;
 				break;
 			}
@@ -602,6 +604,8 @@ public class NewsTriggersFragment extends BaseFragment implements OnItemClickLis
 			if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
 				setAllWords();
 			}
+			
+			thePastLayout.setVisibility(View.GONE);
 			
 		} else {
 			

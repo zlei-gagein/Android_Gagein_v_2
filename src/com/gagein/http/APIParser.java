@@ -441,9 +441,9 @@ public class APIParser {
 		if (data == null)
 			return null;
 
-		Company result = new Company();
-		result.parseData(data);
-		return result;
+		Company company = new Company();
+		company.parseData(data);
+		return company;
 	}
 
 	public Person parseGetPersonOverview() {
@@ -984,7 +984,11 @@ public class APIParser {
 					} else {
 						List<FilterItem> companiesForPeopleList = mFilters.getCompanyTypesFromPeople();
 						for (int i = 0; i < companiesForPeopleList.size(); i++) {
-							if (i == companiesForPeopleList.size() - 1) companiesForPeopleList.get(i).setChecked(true);
+							if (i == companiesForPeopleList.size() - 1) {
+								companiesForPeopleList.get(i).setChecked(true);
+							} else {
+								companiesForPeopleList.get(i).setChecked(false);
+							}
 						}
 					}
 				}

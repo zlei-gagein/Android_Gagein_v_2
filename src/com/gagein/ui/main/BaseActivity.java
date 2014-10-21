@@ -387,7 +387,7 @@ public class BaseActivity extends Activity implements OnReceiveListener, OnClick
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				showConnectionError();
+				dismissLoadingDialog();
 			}
 		});
 		

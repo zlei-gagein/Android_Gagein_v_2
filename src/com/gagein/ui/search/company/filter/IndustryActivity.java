@@ -53,6 +53,16 @@ public class IndustryActivity extends BaseActivity implements OnItemClickListene
 		mFilters = Constant.MFILTERS;
 		mIndustries = mFilters.getIndustries();
 		
+		Boolean haveSelectedIndustry = false;
+		for (int i = 0; i < mIndustries.size(); i++) {
+			if (mIndustries.get(i).getChecked()) haveSelectedIndustry = true;
+		}
+		if (!haveSelectedIndustry) { 
+			for (int i = 0; i < mIndustries.size(); i++) {
+				mIndustries.get(i).setChecked(i == 0 ? true : false);
+			}
+		}
+		
 		parentAdapter = new IndustryFilterAdapter(mContext, mIndustries);
 		setListViewHeight(parentAdapter, parentListView);
 		parentListView.setAdapter(parentAdapter);
@@ -77,6 +87,16 @@ public class IndustryActivity extends BaseActivity implements OnItemClickListene
 			childrenListView.setAdapter(childrenAdapter);
 			childrenAdapter.notifyDataSetChanged();
 			childrenAdapter.notifyDataSetInvalidated();
+		}
+		
+		Boolean haveSelectedChildren = false;
+		for (int i = 0; i < childrenIndustries.size(); i++) {
+			if (childrenIndustries.get(i).getChecked()) haveSelectedChildren = true;
+		}
+		if (!haveSelectedChildren) {
+			for (int i = 0; i < childrenIndustries.size(); i++) {
+				childrenIndustries.get(i).setChecked(i == 0 ? true : false);
+			}
 		}
 	}
 	

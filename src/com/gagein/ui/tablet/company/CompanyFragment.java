@@ -144,6 +144,8 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 	private String provisionDateStr;
 	private LinearLayout layout;
 	private TextView noLongerOperating;
+	private TextView relatedCompanyName;
+	private LinearLayout relatedLayout;
 	
 	public interface OnNewsFilterClickListener {
 		public void onNewsFilterClickListener();
@@ -246,6 +248,8 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		folScoreMonth = (TextView) view.findViewById(R.id.folScoreMonth);
 		noLongerOperating = (TextView) view.findViewById(R.id.noLongerOperating);
 		layout = (LinearLayout) view.findViewById(R.id.layout);
+		relatedLayout = (LinearLayout) view.findViewById(R.id.relatedLayout);
+		relatedCompanyName = (TextView) view.findViewById(R.id.relatedCompanyName);
 		
 		CommonUtil.setLayoutWith(wholeLayout, getActivity());
 		newsList.setPullLoadEnable(false);
@@ -614,7 +618,9 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 							dpPersons = parser.parseGetCompanyPeople();
 							personFacetItems.clear();
 							facet = dpPersons.facet;
+							
 							Constant.currentFacet = facet;
+							
 							if (facet != null) {
 								// job levels
 								List<FacetItem> jobLevels = facet.jobLevels;
@@ -976,22 +982,33 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 											String noNewsPromot = "There are no news stories in the last 180 days.";
 											noNewsPt.setText(noNewsPromot);
 										} else {
-											if (mCompany.followed) {
-												String provisionPtStr = "This company is no longer operating.";
-												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.GONE);
-												provisionedLayout.setVisibility(View.VISIBLE);
-												layout.setVisibility(View.GONE);
+											if (grade.equalsIgnoreCase("oob")) {
 												noLongerOperating.setText("This company is no longer\noperating.");
 												noLongerOperating.setVisibility(View.VISIBLE);
 												return;
 											} else {
-												String provisionPtStr = "This company is waiting to be provisioned. Follow to speed up processing.";
-												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.GONE);
-												provisionedLayout.setVisibility(View.VISIBLE);
+												if (mCompany.followed) {
+													String provisionPtStr = "This company is waiting to be provisioned.";
+													provisionPt.setText(provisionPtStr);
+													provisionBottomLayout.setVisibility(View.GONE);
+													provisionedLayout.setVisibility(View.VISIBLE);
+													layout.setVisibility(View.VISIBLE);
+//												noLongerOperating.setText("This company is no longer\noperating.");
+//												noLongerOperating.setVisibility(View.VISIBLE);
+													return;
+												} else {
+													String provisionPtStr = "This company is waiting to be provisioned. Follow to speed up processing.";
+													provisionPt.setText(provisionPtStr);
+													provisionBottomLayout.setVisibility(View.GONE);
+													provisionedLayout.setVisibility(View.VISIBLE);
+												}
 											}
 										}
+									} else if (null != mCompany.relatedCompany) {
+										relatedLayout.setVisibility(View.VISIBLE);
+										relatedCompanyName.setText(mCompany.relatedCompany.name);
+										layout.setVisibility(View.GONE);
+										return;
 									} else {
 										String provisionPtStr = "This company is being provisioned and will be done by %s.";
 										provisionPt.setText(String.format(provisionPtStr,  (!TextUtils.isEmpty(provisionDateStr) ? provisionDateStr : "Jun 8 by 7:12am")));
@@ -1189,6 +1206,11 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 			if (isNoCompetitor) noCompetitors.setVisibility(View.VISIBLE);
 			if (haveGotCompetitors) setFilterAndSortByVisible(isNoCompetitor);
 			
+		} else if (v == relatedCompanyName) {
+			Intent intent = new Intent();
+			intent.setClass(mContext, CommonUtil.isTablet(mContext) ? CompanyTabletActivity.class : CompanyActivity.class);
+			intent.putExtra(Constant.COMPANYID, mCompany.relatedCompany.orgID);
+			startActivity(intent);
 		}
 	}
 	
@@ -1353,6 +1375,7 @@ public class CompanyFragment extends BaseFragment implements OnItemClickListener
 		competitorsBtn.setOnClickListener(this);
 		filterBtn.setOnClickListener(this);
 		sortBy.setOnClickListener(this);
+		relatedCompanyName.setOnClickListener(this);
 	}
 
 }

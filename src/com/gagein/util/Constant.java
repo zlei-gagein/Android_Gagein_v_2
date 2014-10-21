@@ -18,6 +18,7 @@ import com.gagein.model.ScoresSort;
 import com.gagein.model.Update;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
+import com.gagein.model.filter.Location;
 
 /**
  * 存放应用常量
@@ -327,6 +328,7 @@ public abstract class Constant {
 	public static int NEW_GROUP_ONLY = 1;
 	
 	public static int NEW_GROUP_AND_FOLLOW = 2;
+	
 	
 }
 

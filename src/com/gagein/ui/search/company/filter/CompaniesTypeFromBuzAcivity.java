@@ -73,9 +73,7 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 							return false;
 							
 						} else {
-							
 							Constant.COMPANY_SEARCH_KEYWORDS = text;
-							
 						}
 					}
 					
@@ -120,20 +118,28 @@ public class CompaniesTypeFromBuzAcivity extends BaseActivity implements OnItemC
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
-			back();
-			finish();
+			if (back()) finish();
 		}
 	}
 	
-	private void back() {
+	private Boolean back() {
 		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+		for (int i = 0; i < companyTypes.size(); i++) {
+			if (companyTypes.get(i).getChecked() && i == 1) {
+				if (TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) {
+					showShortToast("You have to enter in search criteria! Try again.");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             //do something...
-        	back();
+        	if (!back()) return false;
          }
          return super.onKeyDown(keyCode, event);
 	}

@@ -64,6 +64,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	private Timer timer;
 	private List<Company> searchCompanies = new ArrayList<Company>();
 	private SettingCompanyAdapter companyAdapter;
+	private long companyId = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -181,6 +182,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		emailEdt.setText(profile.email);
 		companyEdt.setText(profile.orgName);
 		jobTitleEdt.setText(profile.orgTitle);
+		cancelSearchTask();
 	}
 	
 	public void getMyOverView() {
@@ -266,7 +268,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 			}
 			
 			// 468494# setting-my account,name, company, job title为空的时候不允许保存
-			if (canSave) saveProfileWithParams();
+			if (canSave) saveProfileWithParams(false);
 			
 			return true;
 		}
@@ -274,7 +276,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		return false;
 	}
 
-	private void saveProfileWithParams() {
+	private void saveProfileWithParams(Boolean fromOnItemClick) {
 		hideSoftKey();
 		
 		String name = nameEdt.getText().toString().trim();
@@ -304,8 +306,8 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		
 		saveProfile(firstName, lastName
 				, TextUtils.isEmpty(email) ? profile.email : email
-						, TextUtils.isEmpty(company) ? profile.orgName : company
-								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
+						, companyId, TextUtils.isEmpty(company) ? profile.orgName : company
+								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle, fromOnItemClick);
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -397,16 +399,22 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		}, 20);
 	}
 	
-	private void saveProfile(String firstName, String lastName, String email, String company, String jobTitle) {
+	private void saveProfile(String firstName, String lastName, String email, long companyId, String company, String jobTitle, final Boolean fromOnItemClick) {
 		showLoadingDialog(mContext);
 		temporaryProfile = new UserProfile();
 		temporaryProfile.firstName = firstName;
 		temporaryProfile.lastName = lastName;
 		temporaryProfile.email = email;
-		temporaryProfile.orgName = company;
 		temporaryProfile.orgTitle = jobTitle;
+		if (fromOnItemClick) {
+			temporaryProfile.orgID = companyId;
+			temporaryProfile.orgName = company;
+		} else {
+			temporaryProfile.orgID = 0;
+			temporaryProfile.orgName = "";
+		}
 		
-		mApiHttp.changeProfile(firstName, lastName, email, company, jobTitle,
+		mApiHttp.changeProfile(firstName, lastName, email, companyId, company, jobTitle,
 				new Listener<JSONObject>() {
 
 			@Override
@@ -428,6 +436,8 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 							emailEdt.setText(temporaryProfile.email);
 							companyEdt.setText(temporaryProfile.orgName);
 							jobTitleEdt.setText(temporaryProfile.orgTitle);
+							
+							if (fromOnItemClick) cancelSearchTask();
 							
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
@@ -462,6 +472,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
 		String companyName = searchCompanies.get(position).name;
+		companyId = searchCompanies.get(position).orgID;
 		companyEdt.setText(companyName);
 		cancelSearchTask();
 		clearCompany.setVisibility(View.GONE);
@@ -472,7 +483,7 @@ public class MyAccountFragment extends BaseFragment implements OnClickListener, 
 		CommonUtil.setViewHeight(companyListView, 0);
 		
 		
-		saveProfileWithParams();
+		saveProfileWithParams(true);
 	}
 	
 }

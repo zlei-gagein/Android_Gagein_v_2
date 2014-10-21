@@ -111,6 +111,8 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	private SearchSavedAdapter savedAdapter;
     private Boolean havePurchased = true;
     private Boolean getSavedSearchsOK = false;
+    private Boolean requestingCompany = true;
+    private Boolean requestingPerson = true;
     
     @Override
 	public void handleNotifications(Context aContext, Intent intent) {
@@ -387,13 +389,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void searchCompanies(final String character, final Boolean loadMore) {
-		
+		requestingCompany = true;
 		if (!loadMore) showLoadingDialog();
 		mApiHttp.searchCompanies(character , PAGE_NUM_COMPANY, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
-				
+				requestingCompany = false;
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					
@@ -435,6 +437,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingCompany = false;
 				showConnectionError();
 			}
 		});
@@ -446,10 +449,13 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 	}
 	
 	private void searchPartPersons(String character, final Boolean loadMore) {
+		requestingPerson = true;
 		mApiHttp.searchAllPersons(character , PAGE_NUM_PERSON, new Listener<JSONObject>() {
 			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				requestingPerson = false;
+				
 				APIParser parser = new APIParser(jsonObject);
 				Log.v("silen", parser.data().toString());
 				
@@ -495,16 +501,19 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingPerson = false;
 				showConnectionError();
 			}
 		});
 	}
 	
 	private void searchAllPersons(String character) {
+		requestingPerson = true;
 		mApiHttp.searchAllPersons(character, PAGE_NUM_PERSON, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				requestingPerson = false;
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					searchPersons.clear();
@@ -515,17 +524,19 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 							searchPersons.add((Person)obj);
 						}
 					}
+					Boolean haveMorePerson = page.hasMore;
+					personList.setPullLoadEnable(haveMorePerson);
 					
 					if (searchPersons.size() == 0) {
-						
 						personList.setVisibility(View.GONE);
 						noPeopleResultsLayout.setVisibility(isPerson ? View.VISIBLE : View.GONE);
-						
 					} else {
-						
+						if (isPerson) {
+							personList.setAdapter(personAdapter);
+							personAdapter.notifyDataSetChanged();
+						}
 						personList.setVisibility(isPerson ? View.VISIBLE : View.GONE);
 						noPeopleResultsLayout.setVisibility(View.GONE);
-						
 					}
 				}
 				dismissLoadingDialog();
@@ -535,6 +546,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingPerson = false;
 				showConnectionError();
 			}
 		});
@@ -980,9 +992,11 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 					return;
 				}
 				
-				//TODO
 				if (null != Constant.MFILTERS) {
 					Constant.MFILTERS.getHeadquarters().clear();
+					Constant.MFILTERS.getJobTitles().clear();
+					Constant.MFILTERS.getLocations().clear();
+					Constant.SAVEDCOMPANIES.clear();
 				}
 				Constant.REVERSE = false;
 				Constant.COMPANY_SEARCH_KEYWORDS = "";
@@ -1034,8 +1048,10 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener,
 			return;
 		}
 		if (isCompany) {
+			if (requestingCompany) return;
 			searchCompanies(searchEdt.getText().toString() , true);
 		} else if (isPerson) {
+			if (requestingPerson) return;
 			searchPartPersons(searchEdt.getText().toString() , true);
 		}
 	}

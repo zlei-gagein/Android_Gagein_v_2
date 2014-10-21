@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class JobLevelFragment extends BaseFragment implements OnItemClickListener{
@@ -86,6 +87,8 @@ public class JobLevelFragment extends BaseFragment implements OnItemClickListene
 		
 		mFilters = Constant.MFILTERS;
 		mJobLevels = mFilters.getJobLevel();
+		
+		CommonUtil.setFilterToDefault(mJobLevels);
 		
 		adapter = new FilterAdapter(mContext, mJobLevels);
 		listView.setAdapter(adapter);

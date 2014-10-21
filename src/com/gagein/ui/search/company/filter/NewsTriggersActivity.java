@@ -527,7 +527,7 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 		
 		Boolean haveSelecked = false;
 		for (int i = 0; i < mNewsTriggers.size(); i ++) {
-			if (mNewsTriggers.get(i).getChecked()) {
+			if (mNewsTriggers.get(i).getChecked() && i != 0) {
 				haveSelecked = true;
 				break;
 			}
@@ -538,6 +538,8 @@ public class NewsTriggersActivity extends BaseActivity implements OnItemClickLis
 			if (!TextUtils.isEmpty(Constant.ALLWORDS_FOR_TRIGGERS)) {
 				setAllWords();
 			}
+			
+			thePastLayout.setVisibility(View.GONE);
 			
 		} else {
 			

@@ -146,6 +146,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 	private Boolean inTrial = false;
 	private Boolean isTeam = false;
 	private Boolean isOwner = false;
+	private Boolean isFree = false;
 	
 	private void billingGetInfo() {
 		
@@ -162,6 +163,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 					inTrial = parser.data().optInt("is_trial") == 0 ? false : true;
 					isTeam = parser.data().optInt("is_team") == 0 ? false : true;
 					isOwner = parser.data().optInt("is_owner") == 0 ? false : true;
+					isFree = parser.data().optInt("is_free") == 0 ? false : true;
 					
 				}
 				
@@ -169,7 +171,7 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 				Log.v("silen", "billingStatus = " + billingStatus);
 				
 				if (billingStatus == APIHttpMetadata.kBillingStatusNotPurchased || billingStatus == APIHttpMetadata.kBillingStatusPurchaseExpired
-						|| billingStatus == APIHttpMetadata.kBillingStatusSeatRemoved) {
+						|| billingStatus == APIHttpMetadata.kBillingStatusSeatRemoved || billingStatus == APIHttpMetadata.kBillingStatusTrailEnd) {
 					Intent intent = new Intent();
 					intent.setClass(mContext, BillingFailedActivity.class);
 					intent.putExtra(Constant.BILLINGSTATUS, billingStatus);
@@ -204,7 +206,8 @@ public class MainTabActivity extends TabActivity implements OnClickListener {
 	            if (isAvailable()) {
 	                return APIHttpMetadata.kBillingStatusInTrail;
 	            } else {
-	                return APIHttpMetadata.kBillingStatusNotPurchased;
+	            	if (inTrial && !isFree) return APIHttpMetadata.kBillingStatusTrailEnd;
+	            	return APIHttpMetadata.kBillingStatusNotPurchased;
 	            }
 	            
 	        } else {

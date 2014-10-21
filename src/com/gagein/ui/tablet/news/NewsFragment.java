@@ -60,6 +60,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	private List<Company> pendingCompanies = new ArrayList<Company>();
 //	private LinearLayout pendingLayout;
 	private Button pending;
+	private Boolean requestingNews = true;
 	private OnFilterClickListener filterListener;
 	
 	
@@ -207,14 +208,14 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 	}
 	
 	private void getNews(long aNewsID, final byte aPageFlag, long aPageTime, final Boolean showDialog, final Boolean loadMore) {
-		
+		requestingNews = true;
 		if (showDialog) showLoadingDialog(mContext);
 		
 		mApiHttp.getCompanyUpdates(getAgentsId(), getGroupsId(), companyId, aNewsID, aPageFlag, aPageTime, CommonUtil.stringSimilarIDsWithUpdates(updates), new Listener<JSONObject>() {
 			
 			@Override
 			public void onResponse(JSONObject jsonObject) {
-				
+				requestingNews = false;
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					if (!loadMore) updates.clear();
@@ -260,6 +261,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingNews = false;
 				showConnectionError(mContext);
 				handler.sendEmptyMessage(FRESHOK);
 			}
@@ -360,6 +362,7 @@ public class NewsFragment extends BaseFragment implements OnClickListener, IXLis
 
 	@Override
 	public void onLoadMore() {
+		if (requestingNews) return;
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {

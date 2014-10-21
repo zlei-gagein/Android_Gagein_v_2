@@ -160,6 +160,10 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		mFilters = Constant.MFILTERS;
 		companyTypes = mFilters.getCompanyTypesFromPeople();
 		
+		for (int i = 0; i < companyTypes.size(); i ++) {//TODO
+			Log.v("silen", "i = " + "i:" + companyTypes.get(i).getChecked());
+		}
+		
 		adapter = new FilterAdapter(mContext, companyTypes);
 		listView.setAdapter(adapter);
 		CommonUtil.setListViewHeight(listView);
@@ -174,6 +178,12 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 				} else {
 					specificLayout.setVisibility(View.GONE);
 					edit.setText("");
+				}
+			} else if (companyTypes.get(i).getValue().equalsIgnoreCase("Saved Company Search")) {
+				if (companyTypes.get(i).getChecked() && mSavedSearchs.size() > 0) {
+					savedSearchLayout.setVisibility(View.VISIBLE);
+				} else {
+					savedSearchLayout.setVisibility(View.GONE);
 				}
 			}
 		}
@@ -250,11 +260,26 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		savedListView.setOnItemClickListener(this);
 	}
 	
+	public Boolean back() {
+		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+		for (int i = 0; i < companyTypes.size(); i++) {
+			if (companyTypes.get(i).getChecked() && i == 3) {
+				if (TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) {
+					for (int j = 0; j < companyTypes.size(); j++) {
+						showShortToast("You have to enter in search criteria! Try again.");
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
-			onCompaniesFinish.onCompaniesFinish();
+			if (back()) onCompaniesFinish.onCompaniesFinish();
 		}
 	}
 	
@@ -367,6 +392,21 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	}
 
 	private void setCompanyTypesSelected(int position) {
+		if (position == 4) {
+			List<String> requestDataList = CommonUtil.packageRequestDataForCompanyOrPeople(true, true);
+			String requestStr = requestDataList.get(0);
+			String haveSelectCondition = requestDataList.get(1);
+			Log.v("silen", "requestStr = " + requestStr);
+			Log.v("silen", "haveSelectCondition = " + requestDataList.get(1));
+			
+			if (haveSelectCondition.equalsIgnoreCase("false")) {
+				showShortToast("You have to enter in search criteria! Try again.");
+				return;
+			} else {
+				onSearchFromCompanies.onSearchFromCompanies();
+			}
+		}
+		
 		for (int i = 0; i < companyTypes.size(); i ++) {
 			companyTypes.get(i).setChecked(false);
 		}

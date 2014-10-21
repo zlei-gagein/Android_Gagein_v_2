@@ -287,6 +287,7 @@ public class NewsFilterFragment extends BaseFragment implements OnItemClickListe
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
 					Log.v("silen", "parser.isOK()");
+					getSelecedNewsTriggers();
 				} else {
 					alertMessageForParser(parser);
 				}

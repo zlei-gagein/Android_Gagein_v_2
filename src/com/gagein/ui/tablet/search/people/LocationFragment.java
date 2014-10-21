@@ -142,7 +142,7 @@ public class LocationFragment extends BaseFragment implements OnItemClickListene
 					
 					cancelSearchTask();
 					searchLocations.clear();
-					searchLocationAdapter.notifyDataSetChanged();
+					if(null != searchLocationAdapter) searchLocationAdapter.notifyDataSetChanged();
 					noResultLayout.setVisibility(View.GONE);
 					
 				} else {

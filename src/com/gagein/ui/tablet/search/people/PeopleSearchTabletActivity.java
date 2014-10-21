@@ -1206,6 +1206,9 @@ public class PeopleSearchTabletActivity extends BaseFragmentActivity implements 
 	@Override
 	public void onBackPressed() {
 		if (leftLayout.getVisibility() == View.VISIBLE) {
+			if (companiesFragment != null && companiesFragment.isVisible()) {
+				if (!companiesFragment.back()) return;
+			}
 			setLeftLayoutVisible(View.GONE);
 		} else {
 			super.onBackPressed();

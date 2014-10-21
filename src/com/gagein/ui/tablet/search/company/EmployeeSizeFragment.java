@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class EmployeeSizeFragment extends BaseFragment implements OnItemClickListener{
@@ -85,7 +86,9 @@ public class EmployeeSizeFragment extends BaseFragment implements OnItemClickLis
 	public void setInitialData() {
 		
 		mFilters = Constant.MFILTERS;
-		mEmployeeSizes = mFilters.getEmployeeSizeFromBuz();//TODO
+		mEmployeeSizes = mFilters.getEmployeeSizeFromBuz();
+		
+		CommonUtil.setFilterToDefault(mEmployeeSizes);
 		
 		adapter = new FilterAdapter(mContext, mEmployeeSizes);
 		listView.setAdapter(adapter);

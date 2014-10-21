@@ -206,7 +206,6 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 			@Override
 			public void onResponse(JSONObject jsonObject) {
 				APIParser parser = new APIParser(jsonObject);
-				Log.v("silen", "jsonObject = " + jsonObject.toString());
 				if (parser.isOK()) {
 					parserIsOk(loadMore, parser);
 				} else {
@@ -357,10 +356,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 					public void onClick(View arg0) {
 						
 						//判断是否有选中条件 
+						Log.v("silen", "queryType00 = " + queryType);
 						List<QueryInfoItem> conditions = queryInfo.allConditions(false);
 						if (conditions.size() <= 1) {
-							showShortToast("You have to enter in search criteria! Try again.");
-							return;
+							if (!(personalInfoLayout.getChildCount() >= 1 && employerInfoLayout.getChildCount() >=1)) {
+								showShortToast("You have to enter in search criteria! Try again.");
+								return;
+							}
 						} else if (conditions.size() == 2) {
 							QueryInfoItem condition1 = conditions.get(0);
 							QueryInfoItem condition2 = conditions.get(1);
@@ -407,9 +409,15 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 							deleteFilters(id, mileStoneDateRangeList);
 							
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
-							
 							List<Industry> industryList = mFilters.getIndustries();
-							deleteIndustryFilters(id, industryList);
+							for (int j = 0; j < industryList.size(); j++) {
+								Industry industry = industryList.get(j);
+								if (industry.getChecked()) {
+									List<Industry> chiIndustries = industry.getChildrens();
+									deleteIndustryFilters(id, industryList);
+									deleteIndustryFilters(id, chiIndustries);
+								}
+							}
 							
 						} else if (queryType.equalsIgnoreCase("location_code")) {
 							
@@ -455,6 +463,13 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 						} else if (queryType.equalsIgnoreCase("dop_functional_role")) {
 							List<FilterItem> functionalRoleList = mFilters.getFunctionalRoles();
 							deleteFilters(id, functionalRoleList);
+						} else if (queryType.equalsIgnoreCase("filter_saved_company_search")) {//TODO
+							List<FilterItem> companyTypes = mFilters.getCompanyTypesFromPeople();
+							for (int j = 0; j < companyTypes.size(); j++) {
+								companyTypes.get(j).setChecked((j == companyTypes.size() -1) ? true : false);
+							}
+							PAGENUM = 1;
+							searchAdvancedPersons(false);
 						}
 						
 						Intent intent = new Intent();
@@ -536,20 +551,20 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				final Location peopleLocationCode = peopleLocationCodes.get(i);
 				
 				buttonLayout.setOnClickListener(new OnClickListener() {
-				
 					
 					@Override
 					public void onClick(View arg0) {
-						//TODO
-						Log.v("silen", "peopleLocationCodes.size() = " + peopleLocationCodes.size());
-						for (int i = 0; i < peopleLocationCodes.size(); i ++) {
+						String id = peopleLocationCode.getCode();
+						
+						for (int j = 0; j < mFilters.getLocations().size(); j++) {
 							
-							String id = peopleLocationCode.getCode();
-							if (id.equalsIgnoreCase(peopleLocationCodes.get(i).getCode())) {
-								mFilters.getLocations().get(i).setChecked(false);
+							if (id.equalsIgnoreCase(mFilters.getLocations().get(j).getCode())) {
+								mFilters.getLocations().get(j).setChecked(false);
 								PAGENUM = 1;
 								searchAdvancedPersons(false);
+								return;
 							}
+							
 						}
 					}
 				});
@@ -747,7 +762,7 @@ public class SearchPeopleResultFragment extends BaseFragment implements IXListVi
 				
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
-				Log.v("silen", "type = " + type);
+				Log.v("silen", "type00 = " + type);
 				Constant.ALLWORDS_FOR_TRIGGERS = "";
 //				Constant.EXACTWORDS = "";
 //				Constant.ANYWORDS = "";

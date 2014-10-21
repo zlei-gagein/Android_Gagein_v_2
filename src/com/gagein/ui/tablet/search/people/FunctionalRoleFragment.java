@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class FunctionalRoleFragment extends BaseFragment implements OnItemClickListener{
@@ -86,6 +87,8 @@ public class FunctionalRoleFragment extends BaseFragment implements OnItemClickL
 		
 		mFilters = Constant.MFILTERS;
 		mFunctionalRoles = mFilters.getFunctionalRoles();
+		
+		CommonUtil.setFilterToDefault(mFunctionalRoles);
 		
 		adapter = new FilterAdapter(mContext, mFunctionalRoles);
 		listView.setAdapter(adapter);

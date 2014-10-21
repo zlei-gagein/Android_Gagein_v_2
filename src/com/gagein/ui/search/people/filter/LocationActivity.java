@@ -101,7 +101,7 @@ public class LocationActivity extends BaseActivity implements OnItemClickListene
 					
 					cancelSearchTask();
 					searchLocations.clear();
-					searchLocationAdapter.notifyDataSetChanged();
+					if (null != searchLocationAdapter) searchLocationAdapter.notifyDataSetChanged();
 					noResultLayout.setVisibility(View.GONE);
 					
 				} else {

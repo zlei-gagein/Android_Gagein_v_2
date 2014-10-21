@@ -380,9 +380,15 @@ public class SearchCompanyActivity extends BaseActivity implements OnItemClickLi
 							deleteFilters(id, mileStoneDateRangeList);
 							
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
-							
 							List<Industry> industryList = mFilters.getIndustries();
-							deleteIndustryFilters(id, industryList);
+							for (int j = 0; j < industryList.size(); j++) {
+								Industry industry = industryList.get(j);
+								if (industry.getChecked()) {
+									List<Industry> chiIndustries = industry.getChildrens();
+									deleteIndustryFilters(id, industryList);
+									deleteIndustryFilters(id, chiIndustries);
+								}
+							}
 							
 						} else if (queryType.equalsIgnoreCase("location_code")) {
 							

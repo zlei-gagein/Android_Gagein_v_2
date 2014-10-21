@@ -995,7 +995,8 @@ public class CommonUtil {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("plain/text");
 		intent.putExtra(Intent.EXTRA_EMAIL, "emailaddress@emailaddress.com");
-		intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(aContent));
+		intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(aContent));//TODO
+//		intent.putExtra(Intent.EXTRA_TEXT, aContent);
 		intent.putExtra(Intent.EXTRA_SUBJECT, aSubject);
 		aContext.startActivity(Intent.createChooser(intent, "Send Email"));
 	}
@@ -1464,6 +1465,8 @@ public class CommonUtil {
 						}
 					}
 					jsonObject.put("search_date_range", dateRange);
+					
+					haveSelectCondition = true;
 				}
 			}
 
@@ -1475,14 +1478,13 @@ public class CommonUtil {
 				if (searchCompanyForTypes.get(i).getChecked()) {
 					
 					String key = searchCompanyForTypes.get(i).getKey();
+					if (key.equalsIgnoreCase("1") && TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) break;
 					jsonObject.put("search_company_for_type", key);
-					
-					Log.v("silen", "key = " + key);
 					
 					if (key.equalsIgnoreCase("1")) {//specific
 						
-						Log.v("silen", "Constant.COMPANY_SEARCH_KEYWORDS = " + Constant.COMPANY_SEARCH_KEYWORDS);
-						jsonObject.put("company_search_keywords", Constant.COMPANY_SEARCH_KEYWORDS);
+						if (!TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) 
+							jsonObject.put("company_search_keywords", Constant.COMPANY_SEARCH_KEYWORDS);
 						
 					} else if (key.equalsIgnoreCase("3")) {//saved companies search
 						
@@ -1892,7 +1894,6 @@ public class CommonUtil {
 			folRankTx.setTextColor(mContext.getResources().getColor(R.color.white));
 			folScoreTx.setTextColor(mContext.getResources().getColor(R.color.white));
 		}
-		
 	}
 	
 	public static String splitNumberByComma(long num) {
@@ -1906,6 +1907,31 @@ public class CommonUtil {
 			sb.insert(number.length() - 6,",");
 		}
 		return sb.toString();
+	}
+	
+	
+	public static void setFilterToDefault(List<FilterItem> filterItems) {
+		Boolean haveChecked = false;
+		for (int i = 0; i < filterItems.size(); i++) {
+			if (filterItems.get(i).getChecked()) haveChecked = true;
+		}
+		if (!haveChecked) {
+			for (int i = 0; i < filterItems.size(); i++) {
+				filterItems.get(i).setChecked(i == 0 ? true : false);
+			}
+		}
+	}
+	
+	public static void setFilterToDefaultForIndustry(List<Industry> industries) {
+		Boolean haveChecked = false;
+		for (int i = 0; i < industries.size(); i++) {
+			if (industries.get(i).getChecked()) haveChecked = true;
+		}
+		if (!haveChecked) {
+			for (int i = 0; i < industries.size(); i++) {
+				industries.get(i).setChecked(i == 0 ? true : false);
+			}
+		}
 	}
 	
 	

@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class OwnershipFragment extends BaseFragment implements OnItemClickListener{
@@ -86,6 +87,8 @@ public class OwnershipFragment extends BaseFragment implements OnItemClickListen
 		
 		mFilters = Constant.MFILTERS;
 		mOwnerships = mFilters.getOwnerships();
+		
+		CommonUtil.setFilterToDefault(mOwnerships);
 		
 		adapter = new FilterAdapter(mContext, mOwnerships);
 		listView.setAdapter(adapter);

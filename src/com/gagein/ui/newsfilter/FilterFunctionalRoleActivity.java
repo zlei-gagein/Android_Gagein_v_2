@@ -45,10 +45,14 @@ public class FilterFunctionalRoleActivity extends BaseActivity implements OnItem
 	protected void initData() {
 		super.initData();
 		
-		mFacet = Constant.currentFacet;
-		if (null == mFacet) return;
-		functionalRoles = mFacet.functionalRoles;
-		if (null == functionalRoles) return;
+		if (Constant.currentFunctionRoleForCompanyPeopleFilter.size() > 0) {
+			functionalRoles = Constant.currentFunctionRoleForCompanyPeopleFilter;
+		} else {
+			mFacet = Constant.currentFacet;
+			if (null == mFacet) return;
+			functionalRoles = mFacet.functionalRoles;
+			if (null == functionalRoles) return;
+		}
 		
 		setData();
 	}

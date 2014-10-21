@@ -22,6 +22,7 @@ import com.gagein.model.DataPage;
 import com.gagein.model.Group;
 import com.gagein.ui.main.BaseActivity;
 import com.gagein.util.Constant;
+import com.gagein.util.Log;
 
 public class GroupsForScoresActivity extends BaseActivity implements OnItemClickListener{
 	
@@ -115,6 +116,16 @@ public class GroupsForScoresActivity extends BaseActivity implements OnItemClick
 							}
 							
 						}
+						
+						//TODO
+//						Boolean haveSelected = false;
+//						for (int i = 0; i < groups.size(); i++) {
+//							if (groups.get(i).selected) 
+//								haveSelected = true;
+//								break;
+//						}
+//						
+//						if (!haveSelected) groups.get(0).selected = true;
 						
 						setData();
 					}

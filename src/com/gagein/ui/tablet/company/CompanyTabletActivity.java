@@ -272,6 +272,10 @@ public class CompanyTabletActivity extends BaseFragmentActivity implements OnNew
 			transaction.hide(peopleFilterFragment);
 		}
 		
+		if (null != filterNewsFragment) {
+			transaction.hide(filterNewsFragment);
+		}
+		
 		transaction.commit();
 		setLeftLayoutVisible(View.VISIBLE);
 		

@@ -167,28 +167,22 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				showConnectionError();
 			}
 		});
-		
 	}
 	
 	public void initSearch() {
-		
 		PAGENUM = 1;
 		searchAdvancedPersons(false);
-		
 	}
 	
 	private void setTitle(long num) {
-		
 		if (num == 0) {
 			setTitle("No people found");
 		} else {
 			setTitle(CommonUtil.splitNumberByComma(num) + " people found");
 		}
-		
 	}
 	
 	public void setSortBy() {
-		
 		sortByList = mFilters.getSortByFromContact();
 		for (int i = 0; i < sortByList.size(); i ++) {
 			if (sortByList.get(i).getChecked()) {
@@ -197,11 +191,9 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				setRank(value);
 			}
 		}
-		
 	}
 	
 	private void setRank(String value) {
-		
 		if (value.equalsIgnoreCase("Job Level") || value.equalsIgnoreCase("Company Name")) {
 			rankText.setText(!Constant.REVERSE ?  " : High-Low" : " : Low-High");
 		} else if (value.equalsIgnoreCase("Name")) {
@@ -210,11 +202,9 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			Constant.REVERSE = false;
 			rankText.setText("");
 		}
-		
 	}
 	
 	private void searchAdvancedPersons(final Boolean loadMore) {
-		
 		if (!loadMore) showLoadingDialog();
 		mApiHttp.searchAdvancedPersons(PAGENUM, CommonUtil.packageRequestDataForCompanyOrPeople(false, true).get(0), new Listener<JSONObject>() {
 
@@ -222,7 +212,6 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			public void onResponse(JSONObject jsonObject) {
 				
 				APIParser parser = new APIParser(jsonObject);
-				Log.v("silen", "jsonObject = " + jsonObject.toString());
 				if (parser.isOK()) {
 					parserIsOk(loadMore, parser);
 				} else {
@@ -232,13 +221,11 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				
 			}
 		}, new Response.ErrorListener() {
-
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				showConnectionError();
 			}
 		});
-		
 	}
 	
 	private void setSavedStatus(JSONObject jsonObject) {
@@ -374,8 +361,10 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 						//判断是否有选中条件 
 						List<QueryInfoItem> conditions = queryInfo.allConditions(false);
 						if (conditions.size() <= 1) {
-							showDialog("You have to enter in search criteria! Try again.");
-							return;
+							if (!(personalInfoLayout.getChildCount() >= 1 && employerInfoLayout.getChildCount() >=1)) {
+								showDialog("You have to enter in search criteria! Try again.");
+								return;
+							}
 						} else if (conditions.size() == 2) {
 							QueryInfoItem condition1 = conditions.get(0);
 							QueryInfoItem condition2 = conditions.get(1);
@@ -432,9 +421,15 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 							deleteFilters(id, mileStoneDateRangeList);
 						} else if (queryType.equalsIgnoreCase("org_industries")) {
 							List<Industry> industryList = mFilters.getIndustries();
-							deleteIndustryFilters(id, industryList);
+							for (int j = 0; j < industryList.size(); j++) {
+								Industry industry = industryList.get(j);
+								if (industry.getChecked()) {
+									List<Industry> chiIndustries = industry.getChildrens();
+									deleteIndustryFilters(id, industryList);
+									deleteIndustryFilters(id, chiIndustries);
+								}
+							}
 						} else if (queryType.equalsIgnoreCase("location_code")) {
-							
 							List<Location> locationList = mFilters.getHeadquarters();
 							deleteLocationFilters(id, locationList);
 							
@@ -467,6 +462,13 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 						} else if (queryType.equalsIgnoreCase("dop_functional_role")) {
 							List<FilterItem> functionalRoleList = mFilters.getFunctionalRoles();
 							deleteFilters(id, functionalRoleList);
+						} else if (queryType.equalsIgnoreCase("filter_saved_company_search")) {//TODO
+							List<FilterItem> companyTypes = mFilters.getCompanyTypesFromPeople();
+							for (int j = 0; j < companyTypes.size(); j++) {
+								companyTypes.get(j).setChecked((j == companyTypes.size() -1) ? true : false);
+							}
+							PAGENUM = 1;
+							searchAdvancedPersons(false);
 						}
 						
 						Intent intent = new Intent();
@@ -553,14 +555,17 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 					@Override
 					public void onClick(View arg0) {
 						
-						for (int i = 0; i < peopleLocationCodes.size(); i ++) {
+						String id = peopleLocationCode.getCode();
+						
+						for (int j = 0; j < mFilters.getLocations().size(); j++) {
 							
-							String id = peopleLocationCode.getCode();
-							if (id.equalsIgnoreCase(peopleLocationCodes.get(i).getCode())) {
-								mFilters.getLocations().get(i).setChecked(false);
+							if (id.equalsIgnoreCase(mFilters.getLocations().get(j).getCode())) {
+								mFilters.getLocations().get(j).setChecked(false);
 								PAGENUM = 1;
 								searchAdvancedPersons(false);
+								return;
 							}
+							
 						}
 					}
 				});
@@ -612,6 +617,8 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 				
 				@Override
 				public void onClick(View arg0) {
+					Log.v("silen", "employerInfoLayout.getChildCount() = " + employerInfoLayout.getChildCount());
+					Log.v("silen", "personalInfoLayout.getChildCount() = " + personalInfoLayout.getChildCount());
 					int filterButtonCount = employerInfoLayout.getChildCount() + personalInfoLayout.getChildCount();
 					if (filterButtonCount == 1) {
 						showShortToast("You have to enter in search criteria! Try again.");
@@ -654,6 +661,7 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 		
 		//Industries
 		List<QueryInfoItem> industriesList = queryInfo.getIndustries();
+		Log.v("silen", "industriesList.size() = " + industriesList.size());
 		setInfoDetailButton(industriesList, employer, null);
 		
 		//EmployeeSize
@@ -713,11 +721,19 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 	private void deleteIndustryFilters(String id, List<Industry> industries) {
 		
 		for (int i = 0; i < industries.size(); i ++) {
+			Log.v("silen", "id = " + id);
+			Log.v("silen", "industries.get(i).getId() = " + industries.get(i).getId());
 			if (id.equalsIgnoreCase(industries.get(i).getId())) {
 				industries.get(i).setChecked(false);
 				PAGENUM = 1;
 				searchAdvancedPersons(false);
+				return;
 			}
+		}
+		
+		for (int i = 0; i < mFilters.getIndustries().size(); i++) {//TODO
+			String newId = mFilters.getIndustries().get(i).getId();
+			Log.v("silen", "newId = " + newId);
 		}
 		
 	}
@@ -757,6 +773,13 @@ public class SearchPersonActivity extends BaseActivity implements IXListViewList
 			@Override
 			public void onClick(View arg0) {
 				
+				Log.v("silen", "employerInfoLayout.getChildCount() = " + employerInfoLayout.getChildCount());
+				Log.v("silen", "personalInfoLayout.getChildCount() = " + personalInfoLayout.getChildCount());
+				int filterButtonCount = employerInfoLayout.getChildCount() + personalInfoLayout.getChildCount();
+				if (filterButtonCount == 1) {
+					showShortToast("You have to enter in search criteria! Try again.");
+					return;
+				}
 				employerInfoLayout.removeView(view);
 				//TODO 数据删除
 				Log.v("silen", "type = " + type);

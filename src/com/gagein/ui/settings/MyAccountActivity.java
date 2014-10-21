@@ -60,6 +60,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	private List<Company> searchCompanies = new ArrayList<Company>();
 	private SettingCompanyAdapter companyAdapter;
 	private ListView companyListView;
+	private long companyId = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		emailEdt.setText(profile.email);
 		companyEdt.setText(profile.orgName);
 		jobTitleEdt.setText(profile.orgTitle);
+		cancelSearchTask();
 	}
 	
 	private void getMyOverView() {
@@ -311,7 +313,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 			}
 			
 			// 468494# setting-my account,name, company, job title为空的时候不允许保存
-			if (canSave) saveProfileWithParams();
+			if (canSave) saveProfileWithParams(false);
 			
 			return true;
 		}
@@ -319,16 +321,22 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		return false;
 	}
 	
-	private void saveProfile(String firstName, String lastName, String email, String company, String jobTitle) {
+	private void saveProfile(String firstName, String lastName, String email, long companyId, String company, String jobTitle, final Boolean fromOnItemClick) {
 		showLoadingDialog();
 		temporaryProfile = new UserProfile();
 		temporaryProfile.firstName = firstName;
 		temporaryProfile.lastName = lastName;
 		temporaryProfile.email = email;
-		temporaryProfile.orgName = company;
 		temporaryProfile.orgTitle = jobTitle;
+		if (fromOnItemClick) {
+			temporaryProfile.orgID = companyId;
+			temporaryProfile.orgName = company;
+		} else {
+			temporaryProfile.orgID = 0;
+			temporaryProfile.orgName = "";
+		}
 		
-		mApiHttp.changeProfile(firstName, lastName, email, company, jobTitle,
+		mApiHttp.changeProfile(firstName, lastName, email, companyId, company, jobTitle,
 				new Listener<JSONObject>() {
 
 			@Override
@@ -350,6 +358,8 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 							emailEdt.setText(temporaryProfile.email);
 							companyEdt.setText(temporaryProfile.orgName);
 							jobTitleEdt.setText(temporaryProfile.orgTitle);
+							
+							if (fromOnItemClick) cancelSearchTask();
 							
 						} else {
 							String msg = MessageCode.messageForCode(parser.messageCode());
@@ -408,7 +418,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		});
 	}
 	
-	private void saveProfileWithParams() {
+	private void saveProfileWithParams(Boolean fromOnItemClick) {
 		hideSoftKey();
 		
 		String name = nameEdt.getText().toString().trim();
@@ -438,8 +448,8 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		
 		saveProfile(firstName, lastName
 				, TextUtils.isEmpty(email) ? profile.email : email
-						, TextUtils.isEmpty(company) ? profile.orgName : company
-								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle);
+						, companyId, TextUtils.isEmpty(company) ? profile.orgName : company
+								, TextUtils.isEmpty(jobTitle) ? profile.orgTitle : jobTitle, fromOnItemClick);
 	}
 	
 	private void hideSoftKey() {
@@ -450,6 +460,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		
 		String companyName = searchCompanies.get(position).name;
+		companyId = searchCompanies.get(position).orgID;
 		companyEdt.setText(companyName);
 		cancelSearchTask();
 		clearCompany.setVisibility(View.GONE);
@@ -459,8 +470,7 @@ public class MyAccountActivity extends BaseActivity implements OnFocusChangeList
 		companyAdapter.notifyDataSetChanged();
 		CommonUtil.setViewHeight(companyListView, 0);
 		
-		
-		saveProfileWithParams();
+		saveProfileWithParams(true);
 	}
 	
 	/**stop schedule search*/

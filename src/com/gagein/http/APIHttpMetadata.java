@@ -134,6 +134,7 @@ public class APIHttpMetadata {
 	public static final byte kBillingStatusPurchaseExpired  = 105;
 	public static final byte kBillingStatusTeamMemberExpired  = 106;
 	public static final byte kBillingStatusSeatRemoved      = 107;
+	public static final byte kBillingStatusTrailEnd          = 108;
 	
 	//From platform
 	public static final int GWEB = 1000;

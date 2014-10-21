@@ -1182,7 +1182,7 @@ public class APIHttp {
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
-	public void changeProfile(String firstName, String lastName, String aEmail, String aCompanyName, String aJobTitle,
+	public void changeProfile(String firstName, String lastName, String aEmail, long companyId, String aCompanyName, String aJobTitle,
 			Listener<JSONObject> listener, ErrorListener errorListener) {
 		String url = apiRootPath + "member/me/info/update";
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -1190,7 +1190,10 @@ public class APIHttp {
 		params.put("mem_first_name", firstName);
 		params.put("mem_last_name", lastName);
 		params.put("mem_email", aEmail);
-		params.put("org_name", aCompanyName);
+		if (companyId > 0) {
+			params.put("orgid", "" + companyId);
+			params.put("org_name", aCompanyName);
+		}
 		params.put("mem_org_title", aJobTitle);
 		connectURL(Method.POST, listener, errorListener, url, params);
 	}
@@ -1707,7 +1710,7 @@ public class APIHttp {
 		if (!TextUtils.isEmpty(folRank)) params.put("sort_by", folRank);
 		params.put("followed_company_type", followedCompanyType + "");
 //		params.put("follow_link_type", followLinkType + "");
-		if (!TextUtils.isEmpty(nextPage)) params.put("page", nextPage);
+		if (!TextUtils.isEmpty(nextPage)) params.put("page", CommonUtil.urlEncodedString(nextPage));
 		params.put("only_basic_info", false + "");
 		params.put("reverse", true + "");
 		addBasicParams(params);
@@ -1785,6 +1788,14 @@ public class APIHttp {
 		HashMap<String, String> params = new HashMap<String, String>();
 		addBasicParams(params);
 		connectURL(Method.GET, listener, errorListener, url, params);
+	}
+	
+	public void shareGetId(String shareSource, Listener<JSONObject> listener, ErrorListener errorListener) {
+		String url = apiRootPath + "member/me/share/shareid";
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("share_source", shareSource);
+		addBasicParams(params);
+		connectURL(Method.POST, listener, errorListener, url, params);
 	}
 	
 	

@@ -1,5 +1,7 @@
 package com.gagein.ui.tablet.settins;
 
+import java.util.Date;
+
 import org.json.JSONObject;
 
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.Response.Listener;
 import com.gagein.R;
+import com.gagein.http.APIHttp;
 import com.gagein.http.APIHttpMetadata;
 import com.gagein.http.APIParser;
 import com.gagein.ui.BaseFragment;
@@ -145,6 +148,55 @@ public class ShareFragment extends BaseFragment{
 		});
 	}
 	
+	private void shareGetId(final String source) {
+		showLoadingDialog(mContext);
+		mApiHttp.shareGetId(source, new Listener<JSONObject>() {
+			
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				dismissLoadingDialog();
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+					long time = new Date().getTime();
+					String shareId = parser.data().optString("shareid");
+					String owenerId = CommonUtil.getMemid(mContext);
+					String url = "http://www.gagein.com/referral/?t=%1$s&source=%2$s&owner=%3$s&shareid=%4$s";
+					
+					if (source.equalsIgnoreCase("se100")) {
+						String url1 = APIHttp.serverURL + "/dragon/ShareProxy?url=" + CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId));
+//						String content = CommonUtil.stringFromResID(R.string.share_email_content, mContext) + 
+//								APIHttp.serverURL + "/dragon/ShareProxy?url=" + CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId));
+						String content = "<div><p>I highly recommend award winning Gagein as the best way to find new high value sales prospects.For about the cost of 2 Starbucks ventis a month, Gagein sends me actionable news every day that pinpoints when and why to call my prospects to have the best chance of closing a deal.</p>"
+								+ "<p>Click here to start your free 30 day trial.</p>"
+								+ "<p>%s</p>"
+								+ "</div>";
+						CommonUtil.sendEmail(CommonUtil.stringFromResID(R.string.share_email_subject, mContext), String.format(content, url1), mContext);
+					} else if (source.equalsIgnoreCase("sln100")) {
+						startWebActivity(APIHttp.serverURL + "/dragon/ShareProxy?url=" + 
+								CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId) + "&type=linkedin"));
+					} else if (source.equalsIgnoreCase("stw100")) {
+						startWebActivity(APIHttp.serverURL + "/dragon/ShareProxy?url=" + 
+								CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId) + "&type=twitter&title=I'm finding high value sales prospects with Gagein. Get your FREE account today"));
+					}else if (source.equalsIgnoreCase("sfb100")) {
+						startWebActivity(APIHttp.serverURL + "/dragon/ShareProxy?url=" + 
+								CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId) + "&type=facebook"));
+					} else if (source.equalsIgnoreCase("sgp100")) {
+						startWebActivity(APIHttp.serverURL + "/dragon/ShareProxy?url=" + 
+								CommonUtil.urlEncodedString(String.format(url, time, source, owenerId, shareId) + "&type=google+plus"));
+					}
+					
+				} else {
+				}
+			}
+		}, new Response.ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				dismissLoadingDialog();
+			}
+		});
+	}
+	
 	@Override
 	protected void setOnClickListener() {
 		super.setOnClickListener();
@@ -160,15 +212,15 @@ public class ShareFragment extends BaseFragment{
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == mail) {
-			CommonUtil.sendEmail(CommonUtil.stringFromResID(R.string.share_email_subject, mContext), CommonUtil.stringFromResID(R.string.share_email_content, mContext), mContext);
+			shareGetId("se100");
 		} else if (v == linkedIn) {
-			startWebActivity(CommonUtil.stringFromResID(R.string.share_to_linkedin_url));
+			shareGetId("sln100");
 		} else if (v == twitter) {
-			startWebActivity(CommonUtil.stringFromResID(R.string.share_to_twitter_url));
+			shareGetId("stw100");
 		} else if (v == facebook) {
-			startWebActivity(CommonUtil.stringFromResID(R.string.share_to_facebook_url));
+			shareGetId("sfb100");
 		} else if (v == googlePlus) {
-			startWebActivity(CommonUtil.stringFromResID(R.string.share_to_googleplus_url));
+			shareGetId("sgp100");
 		}
 	}
 	

@@ -57,7 +57,6 @@ public class CompetitorFilterFragment extends BaseFragment {
 	protected void initView() {
 		super.initView();
 		setTitle(R.string.filters);
-		setLeftButton(R.string.cancel);
 		setRightButton(R.string.done);
 		
 		industry = (RelativeLayout) view.findViewById(R.id.industry);

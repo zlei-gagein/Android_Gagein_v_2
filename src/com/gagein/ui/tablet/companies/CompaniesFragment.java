@@ -90,6 +90,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	public String nextPage = "";
 	private Boolean haveGotSuggestedCompanies = false;
 	private List<Company> suggestedCompanies = new ArrayList<Company>();
+	private Boolean requestingCompanies = true;
 	private OnFilterClickListener filterListener;
 	private OnBackClickListener onBackClickListener;
 	
@@ -220,6 +221,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 	}
 	
 	public void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore) {
+		requestingCompanies = true;
 		
 		if (showDialog) CommonUtil.showLoadingDialog(mContext);
 		
@@ -227,6 +229,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				requestingCompanies = false;
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
@@ -290,6 +293,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingCompanies = false;
 				CommonUtil.dissmissLoadingDialog();
 				CommonUtil.showLongToast(mContext.getResources().getString(R.string.connection_error));
 			}
@@ -900,6 +904,7 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 
 	@Override
 	public void onLoadMore() {
+		if (requestingCompanies) return;
 		getCompaniesOfGroup(false, true);
 	}
 }

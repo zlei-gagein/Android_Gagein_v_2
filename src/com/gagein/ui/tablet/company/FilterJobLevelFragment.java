@@ -66,10 +66,14 @@ public class FilterJobLevelFragment extends BaseFragment implements OnItemClickL
 	protected void initData() {
 		super.initData();
 		
-		mFacet = Constant.currentFacet;
-		if (null == mFacet) return;
-		jobLevels = mFacet.jobLevels;
-		if (null == jobLevels) return;
+		if (Constant.currentJobLevelForCompanyPeopleFilter.size() > 0) {
+			jobLevels = Constant.currentJobLevelForCompanyPeopleFilter;
+		} else {
+			mFacet = Constant.currentFacet;
+			if (null == mFacet) return;
+			jobLevels = mFacet.jobLevels;
+			if (null == jobLevels) return;
+		}
 		
 		setData();
 	}

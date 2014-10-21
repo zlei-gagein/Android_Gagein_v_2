@@ -172,11 +172,26 @@ public class CompaniesFragment extends BaseFragment implements OnItemClickListen
 		listView.setOnItemClickListener(this);
 	}
 	
+	public Boolean back() {
+		Constant.COMPANY_SEARCH_KEYWORDS = edit.getText().toString().trim();
+		for (int i = 0; i < companyTypes.size(); i++) {
+			if (companyTypes.get(i).getChecked() && i == 1) {
+				if (TextUtils.isEmpty(Constant.COMPANY_SEARCH_KEYWORDS)) {
+					for (int j = 0; j < companyTypes.size(); j++) {
+						showShortToast("You have to enter in search criteria! Try again.");
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		if (v == leftImageBtn) {
-			onCompaniesFinish.onCompaniesFinish();
+			if (back()) onCompaniesFinish.onCompaniesFinish();
 		}
 	}
 	

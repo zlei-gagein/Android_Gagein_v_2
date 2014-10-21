@@ -131,6 +131,8 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 	private TextView folScoreWeek;
 	private TextView folScoreMonth;
 	private TextView noLongerOperating;
+	private TextView relatedCompanyName;
+	private LinearLayout relatedLayout;
 	private LinearLayout layout;
 	
 	@Override
@@ -309,7 +311,9 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		folScoreWeek = (TextView) findViewById(R.id.folScoreWeek);
 		folScoreMonth = (TextView) findViewById(R.id.folScoreMonth);
 		noLongerOperating = (TextView) findViewById(R.id.noLongerOperating);
+		relatedCompanyName = (TextView) findViewById(R.id.relatedCompanyName);
 		layout = (LinearLayout) findViewById(R.id.layout);
+		relatedLayout = (LinearLayout) findViewById(R.id.relatedLayout);
 		
 		newsList.setPullLoadEnable(false);
 		aboutList.setPullLoadEnable(false);
@@ -567,10 +571,9 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 								competitorIndustries = competitorFacet.industries;
 							}
 							
-							//TODO
-//							if (Constant.currentCompetitorIndustries.size() <= 0) {
-//							}
-							Constant.currentCompetitorIndustries = competitorIndustries;
+							if (Constant.currentCompetitorIndustries.size() <= 0) {
+								Constant.currentCompetitorIndustries = competitorIndustries;
+							}
 							
 							List<Object> items = dpCompetitors.items;
 							if (items != null) {
@@ -1010,27 +1013,39 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 										String noNewsPromot = "There are no news stories in the last 180 days.";
 										noNewsPt.setText(noNewsPromot);
 									} else if (!haveProcessed) {
+										Log.v("silen", "grade = " + grade);
 										if (grade.equalsIgnoreCase("a1")) {
 											noNewsShowLayout.setVisibility(View.VISIBLE);
 											String noNewsPromot = "There are no news stories in the last 180 days.";
 											noNewsPt.setText(noNewsPromot);
 										} else {
-											if (mCompany.followed) {
-												String provisionPtStr = "This company is no longer operating.";
-												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.GONE);
-												provisionedLayout.setVisibility(View.VISIBLE);
-												layout.setVisibility(View.GONE);
-												noLongerOperating.setText("This company is no longer operating.");
+											if (grade.equalsIgnoreCase("oob")) {
+												noLongerOperating.setText("This company is no longer\noperating.");
 												noLongerOperating.setVisibility(View.VISIBLE);
 												return;
 											} else {
-												String provisionPtStr = "This company is no longer\noperating.";
-												provisionPt.setText(provisionPtStr);
-												provisionBottomLayout.setVisibility(View.GONE);
-												provisionedLayout.setVisibility(View.VISIBLE);
+												if (mCompany.followed) {
+													String provisionPtStr = "This company is waiting to be provisioned.";
+													provisionPt.setText(provisionPtStr);
+													provisionBottomLayout.setVisibility(View.GONE);
+													provisionedLayout.setVisibility(View.VISIBLE);
+													layout.setVisibility(View.VISIBLE);
+	//												noLongerOperating.setText("This company is no longer\noperating.");
+	//												noLongerOperating.setVisibility(View.VISIBLE);
+													return;
+												} else {
+													String provisionPtStr = "This company is waiting to be provisioned. Follow to speed up processing.";
+													provisionPt.setText(provisionPtStr);
+													provisionBottomLayout.setVisibility(View.GONE);
+													provisionedLayout.setVisibility(View.VISIBLE);
+												}
 											}
 										}
+									} else if (null != mCompany.relatedCompany) {
+										relatedLayout.setVisibility(View.VISIBLE);
+										relatedCompanyName.setText(mCompany.relatedCompany.name);
+										layout.setVisibility(View.GONE);
+										return;
 									} else {
 										String provisionPtStr = "This company is being provisioned and will be done by %s.";
 										provisionPt.setText(String.format(provisionPtStr,  (!TextUtils.isEmpty(provisionDateStr) ? provisionDateStr : "Jun 8 by 7:12am")));
@@ -1235,6 +1250,11 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 			
 			startActivitySimple(ShareActivity.class);
 			
+		} else if (v == relatedCompanyName) {
+			Intent intent = new Intent();
+			intent.setClass(mContext, CompanyActivity.class);
+			intent.putExtra(Constant.COMPANYID, mCompany.relatedCompany.orgID);
+			startActivity(intent);
 		}
 	}
 	
@@ -1446,6 +1466,7 @@ public class CompanyActivity extends BaseActivity implements OnItemClickListener
 		competitorsBtn.setOnClickListener(this);
 		filterBtn.setOnClickListener(this);
 		sortBy.setOnClickListener(this);
+		relatedCompanyName.setOnClickListener(this);
 		
 		shareGagein.setOnClickListener(this);
 		

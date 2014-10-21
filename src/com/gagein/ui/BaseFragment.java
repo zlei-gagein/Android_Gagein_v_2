@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,13 +25,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Response.Listener;
 import com.gagein.R;
 import com.gagein.component.dialog.ShareDialog;
 import com.gagein.http.APIHttp;
 import com.gagein.http.APIParser;
+import com.gagein.model.Agent;
+import com.gagein.model.DataPage;
 import com.gagein.model.Update;
+import com.gagein.model.filter.FilterItem;
 import com.gagein.util.ActivityHelper;
 import com.gagein.util.CommonUtil;
+import com.gagein.util.Constant;
 import com.gagein.util.ConfigurableReceiver.OnReceiveListener;
 
 public class BaseFragment extends Fragment implements OnReceiveListener , OnClickListener{
@@ -247,6 +256,65 @@ public class BaseFragment extends Fragment implements OnReceiveListener , OnClic
 		window.setGravity(Gravity.BOTTOM);
 		window.setWindowAnimations(R.style.dialog_animation);
 		shareDialog.setCancelable(false);
+	}
+	
+	protected void getSelecedNewsTriggers() {
+		
+		mApiHttp.getAgentFilters(new Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject jsonObject) {
+				
+				List<Agent> agents = new ArrayList<Agent>();
+				List<FilterItem> newsTriggers = new ArrayList<FilterItem>();
+				
+				APIParser parser = new APIParser(jsonObject);
+				if (parser.isOK()) {
+
+					DataPage agentsPage = parser.parseGetAgentFiltersList();
+					List<Object> items = agentsPage.items;
+					if (items != null) {
+						
+						Agent allTriggers = new Agent();
+						allTriggers.agentID = "-10";
+						allTriggers.name = "All";
+						agents.add(allTriggers);
+						
+						for (Object obj : items) {
+							Agent agent = (Agent)obj;
+							if (agent.checked) {
+								agents.add(agent);
+							}
+						}
+						
+						for (int i = 0; i < agents.size(); i ++) {
+							Agent agent = agents.get(i);
+							FilterItem newsTrigger = new FilterItem();
+							newsTrigger.setKey(agent.agentID);
+							newsTrigger.setValue(agent.name);
+							newsTriggers.add(newsTrigger);
+						}
+						
+						Constant.MFILTERS.setNewsTriggers(newsTriggers);
+					}
+					
+					if (agents.size() > 0) setData();
+					
+				} else {
+					alertMessageForParser(parser);
+				}
+				
+				dismissLoadingDialog();
+			}
+			
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				dismissLoadingDialog();
+			}
+		});
+		
 	}
 	
 }

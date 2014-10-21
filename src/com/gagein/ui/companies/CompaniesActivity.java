@@ -84,6 +84,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	private TextView noCompaniesPt;
 	private String nextPage = "";
 	private Boolean haveGotSuggestedCompanies = false;
+	private Boolean requestingCompanies = true;
 	private List<Company> suggestedCompanies = new ArrayList<Company>();
 	
 	@Override
@@ -242,13 +243,15 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 	}
 	
 	private void getCompaniesOfGroup(Boolean showDialog, final Boolean loadMore) {
-		
+		requestingCompanies = true;
 		if (showDialog) showLoadingDialog();
 		
 		mApiHttp.getCompaniesOfGroupNew("", group.getFollowLinkType(), nextPage, getGroupIds(), getIndustriesIds(), APIHttpMetadata.kGGExceptPendingFollowCompanies, new Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				
+				requestingCompanies = false;
 				
 				APIParser parser = new APIParser(jsonObject);
 				if (parser.isOK()) {
@@ -312,6 +315,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 
 			@Override
 			public void onErrorResponse(VolleyError error) {
+				requestingCompanies = false;
 				showConnectionError();
 			}
 		});
@@ -935,6 +939,7 @@ public class CompaniesActivity extends BaseActivity implements OnItemClickListen
 
 	@Override
 	public void onLoadMore() {
+		if (requestingCompanies) return;
 		getCompaniesOfGroup(false, true);
 	}
 	

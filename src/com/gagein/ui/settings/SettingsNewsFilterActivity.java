@@ -287,11 +287,12 @@ public class SettingsNewsFilterActivity extends BaseActivity implements OnItemCl
 								@Override
 								public void run() {
 									finish();
+									getSelecedNewsTriggers();
 								}
 							});
 						}
 					};
-					timer.schedule(timerTask, 1000);
+					timer.schedule(timerTask, 200);
 				} else {
 					alertMessageForParser(parser);
 				}

@@ -17,6 +17,7 @@ import com.gagein.http.APIHttp;
 import com.gagein.model.filter.FilterItem;
 import com.gagein.model.filter.Filters;
 import com.gagein.ui.BaseFragment;
+import com.gagein.util.CommonUtil;
 import com.gagein.util.Constant;
 
 public class FiscalYearFragment extends BaseFragment implements OnItemClickListener{
@@ -85,6 +86,8 @@ public class FiscalYearFragment extends BaseFragment implements OnItemClickListe
 		
 		mFilters = Constant.MFILTERS;
 		mFiscalYearEndMonths = mFilters.getFiscalYearEndMonths();
+		
+		CommonUtil.setFilterToDefault(mFiscalYearEndMonths);
 		
 		adapter = new FilterAdapter(mContext, mFiscalYearEndMonths);
 		listView.setAdapter(adapter);

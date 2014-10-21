@@ -55,6 +55,7 @@ public class BillingFailedActivity extends BaseActivity {
 			break;
 			
 		case APIHttpMetadata.kBillingStatusPurchaseExpired:
+		case APIHttpMetadata.kBillingStatusTrailEnd:
 			titleStr = CommonUtil.stringFromResID(R.string.trial_ended);
 			contentStr = CommonUtil.stringFromResID(R.string.trial_ended_pt);
 			break;
